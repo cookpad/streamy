@@ -4,44 +4,35 @@ module Streamy
       def initializer(redshift:, s3:)
         @redshift = redshift
         @s3 = s3
+        configure_redshift
+        configure_buffered_redshift
       end
 
-      def find(query)
-        # currently raw SQL
-        reader.read(query)
+      def entries
+        Redshift::Entry.all
       end
 
-      def find_each(conditions = {})
-        query = Redshift::Query.new(redshift.merge(conditions)).to_sql
-
-        reader.buffered_read(query) do |result|
-          yield(result)
-        end
-      end
-
-      def capture
-        Streamy.message_bus = FileMessageBus.new(file_path)
-
-        yield
-
-        writer.upload(file_path)
-        FileUtils.rm(file_path)
+      def import(&block)
+        importer.import(&block)
       end
 
       private
 
         attr_reader :redshift, :s3
 
-        def file_path
-          Pathname.new(Dir.tmpdir).join("domain_events_export.json.gz")
+        def configure_redshift
+          #Redshift::Entry.database = redshift[:schema]
+          Redshift::Entry.table_name = redshift[:table]
         end
 
-        def reader
-          @_reader ||= Redshift::BufferedReader.new(reader_config)
+        def configure_buffered_redshift
+          RedshiftConnector.logger = NullLogger.new
+          RedshiftConnector::Exporter.default_data_source = Entry
+          RedshiftConnector::S3Bucket.add reader_config[:bucket], reader_config
         end
 
-        def writer
-          @_writer ||= Redshift::BufferedWriter.new(writer_config)
+        def importer
+          Redshift::Importer.new(importer_config)
         end
 
         def reader_config
@@ -53,7 +44,7 @@ module Streamy
           }
         end
 
-        def writer_config
+        def importer_config
           {
             folder: s3[:write_folder],
             iam_role: s3[:iam_role],

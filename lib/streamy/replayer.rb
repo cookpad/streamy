@@ -6,14 +6,14 @@ module Streamy
     end
 
     def run
-      Streamy.data_store.find_each(start_time: from, topics: topics) do |row|
-        Streamy.logger.info "importing #{row}"
-        yield(row)
+      Streamy.data_store.entries.where("event_time >= ?", start_time, topic: topics).find_each do
+        Streamy.logger.info "importing #{entry}"
+        yield(entry)
       end
     end
 
     private
 
-      attr_reader :from, :topics
+      attr_reader :start_time, :topics
   end
 end
