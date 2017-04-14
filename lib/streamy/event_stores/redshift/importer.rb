@@ -26,7 +26,7 @@ module Streamy
           end
 
           def file_path
-            Pathname.new(Dir.tmpdir).join("domain_events_export.json.gz")
+            Pathname.new(Dir.home).join("domain_events_export.json.gz")
           end
 
           def file_store
