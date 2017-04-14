@@ -36,4 +36,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "aws-sdk", "~> 2"
   spec.add_dependency "fluent-logger"
+  spec.add_dependency "redshift-connector"
 end

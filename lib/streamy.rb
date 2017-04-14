@@ -1,10 +1,8 @@
 require "streamy/version"
 require "streamy/event"
-require "streamy/exporter"
 require "streamy/profiler"
+require "streamy/replayer"
 require "streamy/simple_logger"
-require "streamy/uploader"
-
 
 # Message Buses
 require "streamy/message_buses/test_message_bus"
@@ -13,10 +11,6 @@ require "streamy/message_buses/fluent_message_bus"
 
 # Event stores
 require "streamy/event_stores/copy_buffered_redshift_event_store"
-
-# Junk
-require "redshift_connector"
-require "streamy/event_stores/redshift/connection"
 
 
 module Streamy

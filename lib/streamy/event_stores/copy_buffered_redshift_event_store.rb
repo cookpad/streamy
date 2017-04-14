@@ -1,7 +1,10 @@
+require "streamy/event_stores/redshift/entry"
+require "streamy/event_stores/redshift/importer"
+
 module Streamy
   module EventStores
     class CopyBufferedRedshiftEventStore
-      def initializer(redshift:, s3:)
+      def initialize(redshift:, s3:)
         @redshift = redshift
         @s3 = s3
         configure_redshift
@@ -10,6 +13,10 @@ module Streamy
 
       def entries
         Redshift::Entry.all
+      end
+
+      def connection
+        entries.connection
       end
 
       def import(&block)
@@ -21,13 +28,13 @@ module Streamy
         attr_reader :redshift, :s3
 
         def configure_redshift
-          #Redshift::Entry.database = redshift[:schema]
-          Redshift::Entry.table_name = redshift[:table]
+          Redshift::Entry.establish_connection :"#{Rails.env}_redshift" # How to configure this?
+          Redshift::Entry.table_name = "#{redshift[:schema]}.#{redshift[:table]}"
         end
 
         def configure_buffered_redshift
-          RedshiftConnector.logger = NullLogger.new
-          RedshiftConnector::Exporter.default_data_source = Entry
+          RedshiftConnector.logger = Streamy.logger
+          RedshiftConnector::Exporter.default_data_source = Redshift::Entry
           RedshiftConnector::S3Bucket.add reader_config[:bucket], reader_config
         end
 

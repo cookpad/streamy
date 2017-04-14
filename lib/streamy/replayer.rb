@@ -6,7 +6,7 @@ module Streamy
     end
 
     def run
-      Streamy.data_store.entries.where("event_time >= ?", start_time, topic: topics).find_each do
+      entries.find_each do |entry|
         Streamy.logger.info "importing #{entry}"
         yield(entry)
       end
@@ -15,5 +15,9 @@ module Streamy
     private
 
       attr_reader :start_time, :topics
+
+      def entries
+        Streamy.data_store.entries.where("event_time >= ?", start_time, topic: topics)
+      end
   end
 end
