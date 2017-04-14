@@ -1,5 +1,5 @@
-module MessageBuses
-  module Streamy
+module Streamy
+  module MessageBuses
     class FluentMessageBus
       TAG = "domain_events"
 

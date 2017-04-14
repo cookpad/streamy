@@ -10,7 +10,7 @@ require "streamy/message_buses/file_message_bus"
 require "streamy/message_buses/fluent_message_bus"
 
 # Event stores
-require "streamy/event_stores/copy_buffered_redshift_event_store"
+require "streamy/event_stores/copy_buffered_redshift_store"
 
 
 module Streamy

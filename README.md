@@ -12,13 +12,10 @@ Add this line to your application's Gemfile:
 gem 'streamy'
 ```
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install streamy
+```ruby
+Streamy.message_bus = Streamy::MessageBuses::FluentMessageBus.new(Rails.configuration.x.fluent.tag_prefix)
+Streamy.event_store = Streamy::EventStores::CopyBufferedRedshiftStore.new(Rails.configuration.x.event_store)
+```
 
 ## Usage
 
