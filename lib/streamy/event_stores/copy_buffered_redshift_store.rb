@@ -4,6 +4,8 @@ require "streamy/event_stores/redshift/importer"
 module Streamy
   module EventStores
     class CopyBufferedRedshiftStore
+      delegate :connection, to: :data_source # gives us raw access to redshift for now
+
       def initialize(redshift:, s3:)
         @redshift = redshift
         @s3 = s3
@@ -12,29 +14,29 @@ module Streamy
       end
 
       def entries
-        Redshift::Entry.all
+        data_source.all
       end
 
       def import(&block)
         importer.import(&block)
       end
 
-      def connection
-        entries.connection
-      end
-
       private
 
         attr_reader :redshift, :s3
 
+        def data_source
+          Redshift::Entry
+        end
+
         def configure_redshift
-          Redshift::Entry.establish_connection redshift[:db]
-          Redshift::Entry.table_name = "#{redshift[:schema]}.#{redshift[:table]}"
+          data_source.establish_connection redshift[:db]
+          data_source.table_name = "#{redshift[:schema]}.#{redshift[:table]}"
         end
 
         def configure_buffered_redshift
           RedshiftConnector.logger = Streamy.logger
-          RedshiftConnector::Exporter.default_data_source = Redshift::Entry
+          RedshiftConnector::Exporter.default_data_source = data_source
           RedshiftConnector::S3Bucket.add reader_config[:bucket], reader_config
         end
 
