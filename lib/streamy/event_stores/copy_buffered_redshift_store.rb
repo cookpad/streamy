@@ -28,7 +28,7 @@ module Streamy
         attr_reader :redshift, :s3
 
         def configure_redshift
-          Redshift::Entry.establish_connection :"#{Rails.env}_redshift"
+          Redshift::Entry.establish_connection redshift[:db]
           Redshift::Entry.table_name = "#{redshift[:schema]}.#{redshift[:table]}"
         end
 
