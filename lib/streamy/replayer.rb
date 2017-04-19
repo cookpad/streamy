@@ -17,7 +17,7 @@ module Streamy
       attr_reader :start_time, :topics
 
       def entries
-        Streamy.data_store.entries.where("event_time >= ?", start_time, topic: topics)
+        Streamy.event_store.entries.order(event_time: :asc).where("event_time >= ?", start_time).where(topic: topics)
       end
   end
 end
