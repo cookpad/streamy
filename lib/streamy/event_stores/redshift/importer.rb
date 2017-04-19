@@ -19,7 +19,7 @@ module Streamy
           attr_accessor :config
 
           def pipe_messages_to_file
-            Streamy.message_bus = FileMessageBus.new(file_path)
+            Streamy.message_bus = MessageBuses::FileMessageBus.new(file_path)
           end
 
           def gzip_file
