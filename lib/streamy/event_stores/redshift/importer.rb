@@ -8,9 +8,9 @@ module Streamy
 
         def import
           pipe_messages_to_file
+          yield
           gzip_file
           upload_file
-          yield
           remove_file
         end
 
