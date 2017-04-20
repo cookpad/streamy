@@ -6,8 +6,8 @@ module Streamy
     end
 
     def run
-      entries.find_each do |entry|
-        Streamy.logger.info "importing #{entry}"
+      entries.buffered do |entry|
+        Streamy.logger.info "importing #{entry.attributes}"
         yield(entry)
       end
     end
@@ -17,7 +17,7 @@ module Streamy
       attr_reader :start_time, :topics
 
       def entries
-        Streamy.event_store.entries.where("event_time >= ?", start_time).where(topic: topics)
+        Streamy.event_store.entries.where("event_time >= ?", start_time).order(event_time: :asc).where(topic: topics)
       end
   end
 end

@@ -35,7 +35,7 @@ module Streamy
           end
 
           def file_path
-            Pathname.new(Dir.home).join("domain_events_export.json")
+            Pathname.new(Dir.home).join("domain_events_export.json").to_s
           end
 
           def gzip_file_path
