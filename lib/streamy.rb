@@ -1,5 +1,6 @@
 require "streamy/version"
 require "streamy/event"
+require "streamy/event_processor"
 require "streamy/profiler"
 require "streamy/replayer"
 require "streamy/simple_logger"
