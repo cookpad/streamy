@@ -15,8 +15,8 @@ require "streamy/event_stores/copy_buffered_redshift_store"
 
 module Streamy
   class << self
-    attr_accessor :message_bus, :event_store
-    attr_reader :logger
-    @logger = SimpleLogger.new
+    attr_accessor :message_bus, :event_store, :logger
   end
+
+  self.logger = SimpleLogger.new
 end
