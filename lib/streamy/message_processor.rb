@@ -1,5 +1,5 @@
 module Streamy
-	class EventProcessor
+	class MessageProcessor
 		def self.process(message)
 			new(message).process
 		end

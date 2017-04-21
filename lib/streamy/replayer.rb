@@ -8,7 +8,8 @@ module Streamy
     def run
       entries.buffered do |row|
         Streamy.logger.info "importing #{row}"
-        yield(row)
+        message = Message.new_from_redshift(*row)
+        Streamy.message_processor.process(message)
       end
     end
 

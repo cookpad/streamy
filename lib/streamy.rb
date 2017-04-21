@@ -1,8 +1,15 @@
+# Rails
+
+require "active_support"
+require "active_record"
+
 require "streamy/version"
 require "streamy/event"
-require "streamy/event_processor"
-require "streamy/profiler"
+require "streamy/event_handler"
+require "streamy/message"
+require "streamy/message_processor"
 require "streamy/replayer"
+require "streamy/profiler"
 require "streamy/simple_logger"
 
 # Message Buses
@@ -16,8 +23,9 @@ require "streamy/event_stores/copy_buffered_redshift_store"
 
 module Streamy
   class << self
-    attr_accessor :message_bus, :event_store, :logger
+    attr_accessor :message_bus, :event_store, :message_processor, :logger
   end
 
   self.logger = SimpleLogger.new
+  self.message_processor  = MessageProcessor
 end
