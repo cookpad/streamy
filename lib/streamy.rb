@@ -1,7 +1,7 @@
-# Rails
-
+# External
 require "active_support"
 require "active_record"
+require "redshift-connector"
 
 require "streamy/version"
 require "streamy/event"
@@ -27,5 +27,5 @@ module Streamy
   end
 
   self.logger = SimpleLogger.new
-  self.message_processor  = MessageProcessor
+  self.message_processor =  MessageProcessor
 end

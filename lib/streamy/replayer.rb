@@ -1,7 +1,7 @@
 module Streamy
   class Replayer
-    def initialize(start_time: nil, topics: [])
-      @start_time = start_time
+    def initialize(from: nil, topics: [])
+      @from = from
       @topics = topics
     end
 
@@ -15,7 +15,7 @@ module Streamy
 
     private
 
-      attr_reader :start_time, :topics
+      attr_reader :from, :topics
 
       def entries
         Streamy.
@@ -23,7 +23,7 @@ module Streamy
           entries.
           select(:key, :topic, :type, :body, :event_time).
           where(topic: topics).
-          where("event_time >= ?", start_time).
+          where("event_time >= ?", from).
           order(event_time: :asc)
       end
   end
