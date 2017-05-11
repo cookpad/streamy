@@ -1,5 +1,16 @@
 require "test_helper"
 
+module EventHandlers
+  class BookmarkedRecipe < Streamy::EventHandler
+    cattr_accessor :debug
+    self.debug = []
+
+    def process
+      self.debug << body.symbolize_keys
+    end
+  end
+end
+
 module Streamy
   class ReplayerTest < Minitest::Test
     def test_retrieving_and_replaying_past_events
@@ -10,13 +21,11 @@ module Streamy
       event_time = "2017-01-04 19:00:00 +0000"
       row = [key, topic, type, body, event_time]
 
-      RedshiftConnector.expects(:foreach).yields(row)
+      EventStores::Redshift::Entry.expects(:buffered).yields(row)
 
       Replayer.new(from: "2014-09-15").run
 
-      #assert_equal 1, RecipeReport.where(recipe_id: 1).count
-      #assert_equal 1, AuthorReport.where(author_id: 2).count
-      #assert_equal "bookmarks", MessageLog.first.topic
+      assert_equal EventHandlers::BookmarkedRecipe.debug.last, { recipe_id: 1, recipe_author_id: 2 }
     end
   end
 end

@@ -9,9 +9,7 @@ module Streamy
     end
 
     def process
-      ActiveRecord::Base.transaction do
-        handler.new(attributes).process
-      end
+      handler.new(attributes).process
     end
 
     private

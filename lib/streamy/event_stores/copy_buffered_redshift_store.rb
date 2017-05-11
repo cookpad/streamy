@@ -14,7 +14,7 @@ module Streamy
       end
 
       def entries
-        data_source.all
+        data_source
       end
 
       def import(&block)
@@ -31,7 +31,7 @@ module Streamy
 
         def configure_redshift
           data_source.establish_connection redshift[:db]
-          data_source.table_name = "#{redshift[:schema]}.#{redshift[:table]}"
+          data_source.table_name = [redshift[:schema], redshift[:table]].join(".")
         end
 
         def configure_buffered_redshift

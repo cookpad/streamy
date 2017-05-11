@@ -6,7 +6,7 @@ module Streamy
     end
 
     def run
-      entries.buffered do |row|
+      entries.find_each do |row|
         Streamy.logger.info "importing #{row}"
         message = Message.new_from_redshift(*row)
         Streamy.message_processor.process(message)
