@@ -12,14 +12,54 @@ Add this line to your application's Gemfile:
 gem 'streamy'
 ```
 
-```ruby
-Streamy.message_bus = Streamy::MessageBuses::FluentMessageBus.new(Rails.configuration.x.fluent.tag_prefix)
-Streamy.event_store = Streamy::EventStores::CopyBufferedRedshiftStore.new(Rails.configuration.x.event_store)
-```
 
 ## Usage
 
-TODO: Write usage instructions here
+
+### Broadcasting events
+
+Add this to config/initializer/event_store.rb
+
+```ruby
+Streamy.message_bus = Streamy::MessageBuses::FluentMessageBus.new("td.global")
+```
+
+Create an event:
+
+```ruby
+module Events
+  class ReceivedPayment < Streamy::Event
+    def topic
+       "payments"
+    end
+
+    def body
+      {
+        amount: 200
+      }
+    end
+
+    def event_time
+      Time.now
+    end
+  end
+end
+```
+
+Publish it:
+
+
+```ruby
+Events::ReceivedPayment.publish
+```
+
+### Consuming events
+
+Add this to config/initializer/event_store.rb
+
+```ruby
+Streamy.event_store = Streamy::EventStores::CopyBufferedRedshiftStore.new(Rails.configuration.x.event_store)
+```
 
 ## Development
 
