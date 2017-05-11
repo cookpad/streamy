@@ -1,7 +1,9 @@
 # External
+# TODO: Move into classes that use them
 require "active_support"
 require "active_record"
 require "redshift-connector"
+require "fluent-logger"
 
 require "streamy/version"
 require "streamy/event"
