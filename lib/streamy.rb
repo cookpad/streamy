@@ -22,10 +22,11 @@ require "streamy/message_buses/fluent_message_bus"
 # Event stores
 require "streamy/event_stores/copy_buffered_redshift_store"
 
+require "streamy/railtie" if defined?(Rails)
 
 module Streamy
   class << self
-    attr_accessor :message_bus, :event_store, :message_processor, :logger
+    attr_accessor :message_bus, :event_store, :message_processor, :logger, :multilangdaemon_properties_file
   end
 
   self.logger = SimpleLogger.new
