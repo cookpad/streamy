@@ -49,6 +49,6 @@ class RecordProcessor < Aws::KCLrb::RecordProcessorBase
     end
 
     def logger
-      @_logger ||= SimpleLogger.new Rails.root.join("log", "consumer.log")
+      @_logger ||= Streamy::SimpleLogger.new Rails.root.join("log", "consumer.log")
     end
 end
