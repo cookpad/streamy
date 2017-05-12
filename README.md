@@ -55,11 +55,26 @@ Events::ReceivedPayment.publish
 
 ### Consuming events
 
+
+Add a properties file for each environment:
+
+```ruby
+# kcl/consumer.development.properties
+executableName = consumer.rb
+streamName = global-reports-staging-001
+applicationName = global_reports_staging
+AWSCredentialsProvider = DefaultAWSCredentialsProviderChain
+processingLanguage = ruby
+initialPositionInStream = TRIM_HORIZON
+```
+
 Add this to config/initializer/event_store.rb
 
 ```ruby
 Streamy.event_store = Streamy::EventStores::CopyBufferedRedshiftStore.new(Rails.configuration.x.event_store)
 ```
+
+
 
 ## Development
 
