@@ -22,6 +22,7 @@ require "streamy/message_buses/fluent_message_bus"
 # Event stores
 require "streamy/event_stores/copy_buffered_redshift_store"
 
+require "streamy/railtie" if defined?(Rails)
 
 module Streamy
   class << self
