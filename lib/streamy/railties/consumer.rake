@@ -85,7 +85,7 @@ namespace :streamy do
       end
 
       def config_file
-        Streamy.multilangdaemon_properties_file
+        "./config/streamy/consumer.#{Rails.env}.properties"
       end
 
       def classpath
