@@ -58,7 +58,7 @@ namespace :streamy do
 
     desc "Actual code run by multilang daemon"
     task process: :environment do
-      record_processor = RecordProcessor.new
+      record_processor = Streamy::RecordProcessor.new
       driver = Aws::KCLrb::KCLProcess.new(record_processor)
       driver.run
     end
