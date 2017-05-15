@@ -67,7 +67,9 @@ namespace :streamy do
     task :run => :download_jars do
       puts "Running the Kinesis sample processing application..."
       ENV['PATH'] = "#{ENV['PATH']}:#{KCL_DIR}"
+      trap('SIGINT') { cleanup }
       sh *kcl_command
+      cleanup
     end
 
     private
@@ -76,7 +78,7 @@ namespace :streamy do
         %W(
         #{java_path}/bin/java
         -classpath #{classpath}
-        com.amazonaws.services.kinesis.multilang.MultiLangDaemon #{config_file}
+        com.amazonaws.services.kinesis.multilang.MultiLangDaemon #{properties_file}
         )
       end
 
@@ -84,8 +86,25 @@ namespace :streamy do
         ENV["JAVA_HOME"] || fail("JAVA_HOME environment variable not set.")
       end
 
-      def config_file
-        "./config/streamy/consumer.#{Rails.env}.properties"
+      def properties_file
+        File.open(properties_file_path, "w") do |file|
+          Streamy.consumer_properties.each do |key, value|
+            file.puts("#{key} = #{value}")
+          end
+        end
+        properties_file_path
+      end
+
+      def properties_file_path
+        File.join(KCL_DIR, properties_file_name)
+      end
+
+      def properties_file_name
+        "consumer-#{Process.pid}.properties"
+      end
+
+      def cleanup
+        sh "rm #{properties_file_path}"
       end
 
       def classpath
