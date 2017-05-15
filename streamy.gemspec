@@ -41,6 +41,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activerecord", ">= 4.0.0"
   spec.add_dependency "aws-kclrb"
   spec.add_dependency "aws-sdk", "~> 2"
+  spec.add_dependency "aws-kclrb"
   spec.add_dependency "fluent-logger"
   spec.add_dependency "redshift-connector"
   spec.add_dependency "webmock"
