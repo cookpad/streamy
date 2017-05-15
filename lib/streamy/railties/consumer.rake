@@ -68,8 +68,9 @@ namespace :streamy do
       ENV['PATH'] = "#{ENV['PATH']}:#{KCL_DIR}"
       trap('SIGINT') { cleanup }
       prepare_properties_file
-      sh *kcl_command
-      cleanup
+      sh(*kcl_command) do
+        cleanup
+      end
     end
 
     private
