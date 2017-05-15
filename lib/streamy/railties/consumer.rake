@@ -104,7 +104,7 @@ namespace :streamy do
       end
 
       def cleanup
-        sh "rm #{properties_file_path}"
+        File.delete(properties_file_path)
       end
 
       def classpath
