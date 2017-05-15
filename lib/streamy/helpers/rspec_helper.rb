@@ -1,4 +1,5 @@
 require "streamy/helpers/have_hash_matcher"
+require "streamy/helpers/consumer_macros"
 
 module Streamy
   module Helpers
@@ -16,6 +17,8 @@ module Streamy
 
       RSpec.configure do |config|
         config.include Streamy::Helpers::RspecHelper
+        config.include Streamy::Helpers::ConsumerMacros
+
         config.before(:each) do
           Streamy.message_bus.deliveries.clear
         end

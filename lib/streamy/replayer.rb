@@ -1,12 +1,13 @@
 module Streamy
   class Replayer
-    def initialize(from: nil, topics: [])
+    def initialize(from: nil, topics:)
       @from = from
       @topics = topics
     end
 
     def run
-      entries.find_each do |row|
+      # TODO: This is tied to redshift currently as we are forced to use `buffered`
+      entries.buffered do |row|
         Streamy.logger.info "importing #{row}"
         message = Message.new_from_redshift(*row)
         Streamy.message_processor.process(message)
