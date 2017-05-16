@@ -19,6 +19,7 @@ require "streamy/simple_logger"
 require "streamy/message_buses/test_message_bus"
 require "streamy/message_buses/file_message_bus"
 require "streamy/message_buses/fluent_message_bus"
+require "streamy/message_buses/kinesis_message_bus"
 
 # Event stores
 require "streamy/event_stores/copy_buffered_redshift_store"
