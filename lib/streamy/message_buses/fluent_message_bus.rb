@@ -21,7 +21,7 @@ module Streamy
         attr_reader :tag_prefix
 
         def client
-          Fluent::Logger::FluentLogger.new(tag_prefix)
+          @client ||= Fluent::Logger::FluentLogger.new(tag_prefix)
         end
     end
   end
