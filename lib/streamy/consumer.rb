@@ -1,3 +1,5 @@
+require "aws/kclrb"
+
 module Streamy
   class Consumer < Aws::KCLrb::RecordProcessorBase
     def init_processor(shard_id)
