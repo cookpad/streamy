@@ -17,11 +17,15 @@ module Streamy
       attr_reader :message
 
       def handler
-        handler_class_name.safe_constantize || raise("No event handler found for #{handler_class_name}")
+        handler_class_name.safe_constantize || raise(handler_not_found_error)
       end
 
       def handler_class_name
         "EventHandlers::#{message.type.camelize}"
+      end
+
+      def handler_not_found_error
+        EventHandlerNotFoundError.new(handler_class_name)
       end
 
       def attributes

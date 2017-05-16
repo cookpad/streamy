@@ -8,9 +8,7 @@ module Streamy
     def run
       # TODO: This is tied to redshift currently as we are forced to use `buffered`
       entries.buffered do |row|
-        Streamy.logger.info "importing #{row}"
-        message = Message.new_from_redshift(*row)
-        Streamy.message_processor.process(message)
+        replay(row)
       end
     end
 
@@ -26,6 +24,12 @@ module Streamy
           where(topic: topics).
           where("event_time >= ?", from).
           order(event_time: :asc)
+      end
+
+      def replay(row)
+        Streamy.logger.info "importing #{row}"
+        message = Message.new_from_redshift(*row)
+        Streamy.message_processor.process(message)
       end
   end
 end

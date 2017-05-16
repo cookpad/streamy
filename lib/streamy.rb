@@ -2,6 +2,7 @@
 # TODO: Move into classes that use them
 require "active_support"
 require "active_record"
+require "aws/kclrb"
 require "redshift-connector"
 require "fluent-logger"
 
@@ -9,6 +10,7 @@ require "streamy/version"
 require "streamy/consumer"
 require "streamy/event"
 require "streamy/event_handler"
+require "streamy/event_handler_not_found_error"
 require "streamy/message"
 require "streamy/message_processor"
 require "streamy/replayer"
