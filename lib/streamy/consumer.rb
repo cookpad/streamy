@@ -1,5 +1,5 @@
 module Streamy
-  class RecordProcessor < Aws::KCLrb::RecordProcessorBase
+  class Consumer < Aws::KCLrb::RecordProcessorBase
     def init_processor(shard_id)
       logger.info "Initializing shard: #{shard_id}"
     end
@@ -15,7 +15,9 @@ module Streamy
         end
       end
 
-      add_checkpoint(checkpointer, sequence_number: last_sequence_number)
+      if last_sequence_number
+        add_checkpoint(checkpointer)
+      end
     end
 
     def shutdown(checkpointer, reason)
@@ -37,16 +39,20 @@ module Streamy
         self.last_sequence_number = record["sequenceNumber"]
       end
 
-      def add_checkpoint(checkpointer, sequence_number: nil)
-        logger.debug "Adding checkpoint: #{sequence_number}"
+      def add_checkpoint(checkpointer)
+        logger.debug "Adding checkpoint: #{sequence_number_log}"
         begin
-          checkpointer.checkpoint(sequence_number)
+          checkpointer.checkpoint(last_sequence_number)
         rescue Aws::KCLrb::CheckpointError => e
           logger.info "Retrying checkpoint #{e}"
           # Here, we simply retry once.
           # More sophisticated retry logic is recommended.
-          checkpointer.checkpoint(sequence_number) if sequence_number
+          checkpointer.checkpoint(last_sequence_number)
         end
+      end
+
+      def sequence_number_log
+        last_sequence_number || "<no sequence number>"
       end
 
       def logger

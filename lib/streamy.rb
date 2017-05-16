@@ -6,6 +6,7 @@ require "redshift-connector"
 require "fluent-logger"
 
 require "streamy/version"
+require "streamy/consumer"
 require "streamy/event"
 require "streamy/event_handler"
 require "streamy/message"

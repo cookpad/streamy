@@ -56,10 +56,9 @@ namespace :streamy do
       task :download_jars => local_jar_file
     end
 
-    desc "Actual code run by multilang daemon"
     task process: :environment do
-      record_processor = Streamy::RecordProcessor.new
-      driver = Aws::KCLrb::KCLProcess.new(record_processor)
+      consumer = Streamy::Consumer.new
+      driver = Aws::KCLrb::KCLProcess.new(consumer)
       driver.run
     end
 
