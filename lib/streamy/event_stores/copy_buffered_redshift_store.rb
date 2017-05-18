@@ -17,8 +17,8 @@ module Streamy
         data_source
       end
 
-      def import(&block)
-        importer.import(&block)
+      def import(file_name, &block)
+        build_importer(file_name: file_name).import(&block)
       end
 
       private
@@ -40,8 +40,9 @@ module Streamy
           RedshiftConnector::S3Bucket.add reader_config[:bucket], reader_config
         end
 
-        def importer
-          Redshift::Importer.new(importer_config)
+        def build_importer(file_name:)
+          options = importer_config.merge(file_name: file_name)
+          Redshift::Importer.new(options)
         end
 
         def reader_config
@@ -56,7 +57,6 @@ module Streamy
         def importer_config
           {
             folder: s3[:write_folder],
-            iam_role: s3[:iam_role],
             region: s3[:region],
             bucket: s3[:bucket]
           }
