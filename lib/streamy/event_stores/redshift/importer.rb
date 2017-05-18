@@ -7,6 +7,7 @@ module Streamy
         end
 
         def import
+          remove_file
           pipe_messages_to_file
           yield
           gzip_file
@@ -31,7 +32,7 @@ module Streamy
           end
 
           def remove_file
-            FileUtils.rm(gzip_file_path)
+            FileUtils.rm_f(gzip_file_path)
           end
 
           def file_path
