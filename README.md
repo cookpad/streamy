@@ -1,9 +1,5 @@
 # Streamy
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/streamy`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -55,18 +51,44 @@ Events::ReceivedPayment.publish
 
 ### Consuming events
 
+Configure the consumer:
 
-Add a properties file for each environment:
+```yaml
+# config/streamy_consumer_properties.yml
+development: &defaults
+  executableName: bin/rake streamy:consumer:process
+  streamName: global-domain-events-staging
+  applicationName: global-name-of-app-development
+  AWSCredentialsProvider: DefaultAWSCredentialsProviderChain
+  processingLanguage: ruby
+  initialPositionInStream: TRIM_HORIZON
+
+test:
+  <<: *defaults
+
+staging:
+  <<: *defaults
+  applicationName: global-name-of-app-staging
+
+production:
+  <<: *defaults
+  streamName: global-domain-events
+  applicationName: global-name-of-app
+```
+
+Add an event handler:
 
 ```ruby
-# kcl/consumer.development.properties
-executableName = consumer.rb
-streamName = global-reports-staging-001
-applicationName = global_reports_staging
-AWSCredentialsProvider = DefaultAWSCredentialsProviderChain
-processingLanguage = ruby
-initialPositionInStream = TRIM_HORIZON
+module EventHandlers
+  class ReceivedPayment < Streamy::EventHandler
+    def process
+      PaymentCounter.increment(body[:amount])
+    end
+  end
+end
 ```
+
+### Replaying events
 
 Add this to config/initializer/event_store.rb
 
@@ -74,7 +96,11 @@ Add this to config/initializer/event_store.rb
 Streamy.event_store = Streamy::EventStores::CopyBufferedRedshiftStore.new(Rails.configuration.x.event_store)
 ```
 
+Run the replayer:
 
+```ruby
+Streamy::Replayer.new(from: "2017-01-01", topics: %w(payments)).run
+```
 
 ## Development
 
