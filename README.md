@@ -88,6 +88,12 @@ module EventHandlers
 end
 ```
 
+Start the consumer:
+
+```bash
+JAVA_HOME=/usr bin/rake streamy:consumer:run
+```
+
 ### Replaying events
 
 Add this to config/initializer/event_store.rb
