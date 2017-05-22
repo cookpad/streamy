@@ -56,12 +56,9 @@ Configure the consumer:
 ```yaml
 # config/streamy_consumer_properties.yml
 development: &defaults
-  executableName: bin/rake streamy:consumer:process
   streamName: global-domain-events-staging
   applicationName: global-name-of-app-development
   AWSCredentialsProvider: DefaultAWSCredentialsProviderChain
-  processingLanguage: ruby
-  initialPositionInStream: TRIM_HORIZON
 
 test:
   <<: *defaults

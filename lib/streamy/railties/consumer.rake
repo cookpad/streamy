@@ -96,7 +96,15 @@ namespace :streamy do
       end
 
       def consumer_properties
-        Rails.application.config_for(:streamy_consumer_properties)
+        Rails.application.config_for(:streamy_consumer_properties).reverse_merge(default_properties)
+      end
+
+      def default_properties
+        {
+          executableName: "bin/rake streamy:consumer:process",
+          processingLanguage: "ruby",
+          initialPositionInStream: "TRIM_HORIZON"
+        }
       end
 
       def classpath
