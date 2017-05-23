@@ -13,7 +13,7 @@ module Streamy
           process(record)
         rescue => e
           logger.error "#{e}: Failed to process record '#{record}'"
-          break
+          pause
         end
       end
 
@@ -33,12 +33,16 @@ module Streamy
 
     private
 
-      attr_accessor :last_sequence_number
+      attr_accessor :last_sequence_number, :paused
 
       def process(record)
-        message = Streamy::Message.new_from_base64(record["data"])
-        Streamy.message_processor.process(message)
-        self.last_sequence_number = record["sequenceNumber"]
+        if paused
+          logger.error "Currently paused, ignoring record: " + record["sequenceNumber"]
+        else
+          message = Streamy::Message.new_from_base64(record["data"])
+          Streamy.message_processor.process(message)
+          self.last_sequence_number = record["sequenceNumber"]
+        end
       end
 
       def add_checkpoint(checkpointer)
@@ -51,6 +55,11 @@ module Streamy
           # More sophisticated retry logic is recommended.
           checkpointer.checkpoint(last_sequence_number)
         end
+      end
+
+      def pause
+        logger.info "Pausing consumer"
+        self.paused = true
       end
 
       def sequence_number_log
