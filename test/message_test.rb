@@ -9,18 +9,15 @@ module Streamy
     end
 
     def test_base_64_decoding_from_kinesis
-      assert_equal "bookmarks", fixture.topic
-      assert_equal "a8ee7b85-b8df-43dc-9198-adcb93479d60", fixture.key
-      assert fixture.body.present?
+      message = Message.new_from_base64(valid_base64)
+      assert_equal "bookmarks", message.topic
+      assert_equal "a8ee7b85-b8df-43dc-9198-adcb93479d60", message.key
+      assert message.body.present?
     end
 
     private
 
-      def fixture
-        @_fixture ||= Message.new_from_base64(base64)
-      end
-
-      def base64
+      def valid_base64
         "
 eyJjb3VudHJ5IjoiVVMiLCJsYW5ndWFnZSI6ImVuIiwicHJvdmlkZXJfaWQiOiIxIiwia2V5IjoiYThlZTdiODUtYjhkZi00M2RjLTkxOTgtYWRjYjkzNDc5ZDYwIiwidG9waWMiO\
 iJib29rbWFya3MiLCJ0eXBlIjoiYm9va21hcmtlZF9yZWNpcGUiLCJib2R5Ijp7InJlY2lwZV9pZCI6MTg4NDgwOSwicmVjaXBlX2F1dGhvcl9pZCI6MzEwNjYxMSwiYm9va21hcm\

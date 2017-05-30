@@ -10,12 +10,15 @@ require "streamy/version"
 require "streamy/consumer"
 require "streamy/event"
 require "streamy/event_handler"
-require "streamy/event_handler_not_found_error"
 require "streamy/message"
 require "streamy/message_processor"
 require "streamy/replayer"
 require "streamy/profiler"
 require "streamy/simple_logger"
+
+# Errors
+require "streamy/errors/event_handler_not_found_error"
+require "streamy/errors/type_not_found_error"
 
 # Message Buses
 require "streamy/message_buses/test_message_bus"

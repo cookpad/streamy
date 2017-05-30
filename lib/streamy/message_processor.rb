@@ -21,7 +21,11 @@ module Streamy
       end
 
       def handler_class_name
-        "EventHandlers::#{message.type.camelize}"
+        "EventHandlers::#{message_type.camelize}"
+      end
+
+      def message_type
+        message.type || raise(TypeNotFoundError)
       end
 
       def handler_not_found_error
