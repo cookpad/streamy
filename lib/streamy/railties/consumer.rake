@@ -103,7 +103,8 @@ namespace :streamy do
         {
           executableName: "bin/rake streamy:consumer:process",
           processingLanguage: "ruby",
-          initialPositionInStream: "TRIM_HORIZON"
+          initialPositionInStream: "TRIM_HORIZON",
+          AWSCredentialsProvider: "DefaultAWSCredentialsProviderChain"
         }
       end
 
