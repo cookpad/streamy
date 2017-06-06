@@ -40,7 +40,10 @@ MAVEN_PACKAGES = [
   ['com.amazonaws', 'aws-java-sdk-cloudwatch', '1.11.14'],
   ['com.google.guava', 'guava', '18.0'],
   ['com.google.protobuf', 'protobuf-java', '2.6.1'],
-  ['commons-lang', 'commons-lang', '2.6']
+  ['commons-lang', 'commons-lang', '2.6'],
+  ['org.apache.logging.log4j', 'log4j-api', '2.8.2'],
+  ['org.apache.logging.log4j', 'log4j-core', '2.8.2'],
+  ['org.apache.logging.log4j', 'log4j-jcl', '2.8.2']
 ]
 
 namespace :streamy do
