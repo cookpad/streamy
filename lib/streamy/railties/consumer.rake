@@ -1,4 +1,5 @@
 require "open-uri"
+require "streamy/java_properties_file"
 
 KCL_DIR = File.expand_path("../../../kcl", File.dirname(__FILE__))
 JAR_DIR = File.join(KCL_DIR, "jars")
@@ -69,17 +70,18 @@ namespace :streamy do
     task :run => :download_jars do
       puts "Running the Kinesis sample processing application..."
       ENV['PATH'] = "#{ENV['PATH']}:#{KCL_DIR}"
-      prepare_properties_file
       sh *kcl_command
     end
 
     private
 
       def kcl_command
+
         %W(
         #{java_path}/bin/java
+        -Dlog4j.configurationFile=#{log4j2_properties_file.path}
         -classpath #{classpath}
-        com.amazonaws.services.kinesis.multilang.MultiLangDaemon #{properties_file.path}
+        com.amazonaws.services.kinesis.multilang.MultiLangDaemon #{consumer_properties_file.path}
         )
       end
 
@@ -87,28 +89,27 @@ namespace :streamy do
         ENV["JAVA_HOME"] || fail("JAVA_HOME environment variable not set.")
       end
 
-      def properties_file
-        @_properties_file ||= Tempfile.new ["streamy-consumer-config", ".properties"]
-      end
-
-      def prepare_properties_file
-        consumer_properties.each do |key, value|
-          properties_file.puts("#{key} = #{value}")
-        end
-        properties_file.flush
-      end
-
-      def consumer_properties
-        Rails.application.config_for(:streamy_consumer_properties).reverse_merge(default_properties)
-      end
-
-      def default_properties
-        {
+      def consumer_properties_file
+        JavaPropertiesFile.new("consumer", {
           executableName: "bin/rake streamy:consumer:process",
           processingLanguage: "ruby",
           initialPositionInStream: "TRIM_HORIZON",
           AWSCredentialsProvider: "DefaultAWSCredentialsProviderChain"
-        }
+        })
+      end
+
+      def log4j2_properties_file
+        JavaPropertiesFile.new("log4j2", {
+          "name": "PropertiesConfig",
+          "appenders": "console",
+          "appender.console.type": "Console",
+          "appender.console.name": "STDOUT",
+          "appender.console.layout.type": "PatternLayout",
+          "appender.console.layout.pattern": "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n",
+          "rootLogger.level": "warn",
+          "rootLogger.appenderRefs": "stdout",
+          "rootLogger.appenderRef.stdout.ref": "STDOUT"
+        })
       end
 
       def classpath
