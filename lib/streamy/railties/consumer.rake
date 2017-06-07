@@ -78,9 +78,9 @@ namespace :streamy do
       def kcl_command
         %W(
         #{java_path}/bin/java
-        -Dlog4j.configurationFile=#{properties_file_for(:logger).path}
+        -Dlog4j.configurationFile=#{logger_properties_file_path}
         -classpath #{classpath}
-        com.amazonaws.services.kinesis.multilang.MultiLangDaemon #{properties_file_for(:consumer).path}
+        com.amazonaws.services.kinesis.multilang.MultiLangDaemon #{consumer_properties_file_path}
         )
       end
 
@@ -88,40 +88,42 @@ namespace :streamy do
         ENV["JAVA_HOME"] || fail("JAVA_HOME environment variable not set.")
       end
 
-      def properties_file_for(name)
-        JavaPropertiesFile.new(name, properties_for(name))
+      def consumer_properties_file_path
+        JavaPropertiesFile.new(consumer_properties).path
       end
 
-      def rails_config_for(name)
-        Rails.application.config_for("streamy_#{name}_properties")
-      rescue RuntimeError
-        {}
+      def logger_properties_file_path
+        JavaPropertiesFile.new(logger_properties).path
       end
 
-      def properties_for(name)
-        default_properties[name.to_sym].
-          merge(rails_config_for(name))
+      def consumer_properties
+        consumer_defaults.merge(custom_configuration)
       end
 
-      def default_properties
+      def custom_configuration
+        Rails.application.config_for("streamy_consumer_properties")
+      end
+
+      def consumer_defaults
         {
-          consumer: {
-            executableName: "bin/rake streamy:consumer:process",
-            processingLanguage: "ruby",
-            initialPositionInStream: "TRIM_HORIZON",
-            AWSCredentialsProvider: "DefaultAWSCredentialsProviderChain"
-          },
-          logger: {
-            "name": "PropertiesConfig",
-            "appenders": "console",
-            "appender.console.type": "Console",
-            "appender.console.name": "STDOUT",
-            "appender.console.layout.type": "PatternLayout",
-            "appender.console.layout.pattern": "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n",
-            "rootLogger.level": java_logger_level,
-            "rootLogger.appenderRefs": "stdout",
-            "rootLogger.appenderRef.stdout.ref": "STDOUT"
-          }
+          executableName: "bin/rake streamy:consumer:process",
+          processingLanguage: "ruby",
+          initialPositionInStream: "TRIM_HORIZON",
+          AWSCredentialsProvider: "DefaultAWSCredentialsProviderChain"
+        }
+      end
+
+      def logger_properties
+        {
+          "name": "PropertiesConfig",
+          "appenders": "console",
+          "appender.console.type": "Console",
+          "appender.console.name": "STDOUT",
+          "appender.console.layout.type": "PatternLayout",
+          "appender.console.layout.pattern": "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n",
+          "rootLogger.level": java_logger_level,
+          "rootLogger.appenderRefs": "stdout",
+          "rootLogger.appenderRef.stdout.ref": "STDOUT"
         }
       end
 

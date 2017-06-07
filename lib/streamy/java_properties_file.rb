@@ -1,8 +1,8 @@
 require "tempfile"
 
 class JavaPropertiesFile < Tempfile
-  def initialize(name, properties = {})
-    super [name.to_s, ".properties"]
+  def initialize(properties = {})
+    super ["", ".properties"]
     @properties = properties
     write_properties
   end
