@@ -1,0 +1,10 @@
+machine:
+  ruby:
+    version: 2.3.3
+database:
+  override:
+    - echo "No database step needed"
+test:
+  override:
+    - bundle exec rake
+
