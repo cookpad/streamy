@@ -1,4 +1,5 @@
 require "open-uri"
+require "streamy/java_properties_file"
 
 KCL_DIR = File.expand_path("../../../kcl", File.dirname(__FILE__))
 JAR_DIR = File.join(KCL_DIR, "jars")
@@ -40,7 +41,10 @@ MAVEN_PACKAGES = [
   ['com.amazonaws', 'aws-java-sdk-cloudwatch', '1.11.14'],
   ['com.google.guava', 'guava', '18.0'],
   ['com.google.protobuf', 'protobuf-java', '2.6.1'],
-  ['commons-lang', 'commons-lang', '2.6']
+  ['commons-lang', 'commons-lang', '2.6'],
+  ['org.apache.logging.log4j', 'log4j-api', '2.8.2'],
+  ['org.apache.logging.log4j', 'log4j-core', '2.8.2'],
+  ['org.apache.logging.log4j', 'log4j-jcl', '2.8.2']
 ]
 
 namespace :streamy do
@@ -66,7 +70,6 @@ namespace :streamy do
     task :run => :download_jars do
       puts "Running the Kinesis sample processing application..."
       ENV['PATH'] = "#{ENV['PATH']}:#{KCL_DIR}"
-      prepare_properties_file
       sh *kcl_command
     end
 
@@ -75,8 +78,9 @@ namespace :streamy do
       def kcl_command
         %W(
         #{java_path}/bin/java
+        -Dlog4j.configurationFile=#{logger_properties_file_path}
         -classpath #{classpath}
-        com.amazonaws.services.kinesis.multilang.MultiLangDaemon #{properties_file.path}
+        com.amazonaws.services.kinesis.multilang.MultiLangDaemon #{consumer_properties_file_path}
         )
       end
 
@@ -84,28 +88,51 @@ namespace :streamy do
         ENV["JAVA_HOME"] || fail("JAVA_HOME environment variable not set.")
       end
 
-      def properties_file
-        @_properties_file ||= Tempfile.new ["streamy-consumer-config", ".properties"]
+      def consumer_properties_file_path
+        JavaPropertiesFile.new(consumer_properties).path
       end
 
-      def prepare_properties_file
-        consumer_properties.each do |key, value|
-          properties_file.puts("#{key} = #{value}")
-        end
-        properties_file.flush
+      def logger_properties_file_path
+        JavaPropertiesFile.new(logger_properties).path
       end
 
       def consumer_properties
-        Rails.application.config_for(:streamy_consumer_properties).reverse_merge(default_properties)
+        consumer_defaults.merge(custom_configuration)
       end
 
-      def default_properties
+      def custom_configuration
+        Rails.application.config_for("streamy_consumer_properties")
+      end
+
+      def consumer_defaults
         {
           executableName: "bin/rake streamy:consumer:process",
           processingLanguage: "ruby",
           initialPositionInStream: "TRIM_HORIZON",
           AWSCredentialsProvider: "DefaultAWSCredentialsProviderChain"
         }
+      end
+
+      def logger_properties
+        {
+          "name": "PropertiesConfig",
+          "appenders": "console",
+          "appender.console.type": "Console",
+          "appender.console.name": "STDOUT",
+          "appender.console.layout.type": "PatternLayout",
+          "appender.console.layout.pattern": "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n",
+          "rootLogger.level": java_logger_level,
+          "rootLogger.appenderRefs": "stdout",
+          "rootLogger.appenderRef.stdout.ref": "STDOUT"
+        }
+      end
+
+      def java_logger_level
+        if Rails.logger.level <= Logger::Severity::INFO
+          "info"
+        else
+          "warn"
+        end
       end
 
       def classpath
