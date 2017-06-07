@@ -37,5 +37,5 @@ module Streamy
   end
 
   self.logger = SimpleLogger.new
-  self.message_processor =  MessageProcessor
+  self.message_processor = MessageProcessor
 end
