@@ -118,11 +118,15 @@ namespace :streamy do
             "appender.console.name": "STDOUT",
             "appender.console.layout.type": "PatternLayout",
             "appender.console.layout.pattern": "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n",
-            "rootLogger.level": "warn",
+            "rootLogger.level": logger_severity,
             "rootLogger.appenderRefs": "stdout",
             "rootLogger.appenderRef.stdout.ref": "STDOUT"
           }
         }
+      end
+
+      def logger_severity
+        %w(info info warn error fatal).fetch(Rails.logger.level, "off")
       end
 
       def classpath
