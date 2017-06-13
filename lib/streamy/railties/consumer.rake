@@ -128,7 +128,7 @@ namespace :streamy do
       end
 
       def java_logger_level
-        if Rails.logger.level <= Logger::Severity::INFO
+        if Rails.configuration.log_level == :debug
           "info"
         else
           "warn"
