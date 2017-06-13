@@ -68,7 +68,6 @@ namespace :streamy do
 
     desc "Run KCL sample processor"
     task :run => :download_jars do
-      puts "Running the Kinesis sample processing application..."
       ENV['PATH'] = "#{ENV['PATH']}:#{KCL_DIR}"
       sh *kcl_command
     end
