@@ -66,7 +66,7 @@ namespace :streamy do
       driver.run
     end
 
-    desc "Run KCL sample processor"
+    desc "Run KCL processor"
     task :run => :download_jars do
       ENV['PATH'] = "#{ENV['PATH']}:#{KCL_DIR}"
       sh *kcl_command
@@ -120,18 +120,10 @@ namespace :streamy do
           "appender.console.name": "STDOUT",
           "appender.console.layout.type": "PatternLayout",
           "appender.console.layout.pattern": "%d{yyyy-MM-dd HH:mm:ss} - %msg%n",
-          "rootLogger.level": java_logger_level,
+          "rootLogger.level": "info",
           "rootLogger.appenderRefs": "stdout",
           "rootLogger.appenderRef.stdout.ref": "STDOUT"
         }
-      end
-
-      def java_logger_level
-        if Rails.configuration.log_level == :debug
-          "info"
-        else
-          "warn"
-        end
       end
 
       def classpath
