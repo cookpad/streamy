@@ -66,8 +66,9 @@ module Streamy
         last_sequence_number || "<no sequence number>"
       end
 
+      # Cannot use STDOUT https://github.com/awslabs/amazon-kinesis-client-ruby/blob/b7a3ed38f282a53b73a5cdde677bc50671ee2ed8/samples/sample_kcl.rb#L24-L27
       def logger
-        @_logger ||= Streamy::SimpleLogger.new Rails.root.join("log", "consumer.log")
+        @_logger ||= Streamy::SimpleLogger.new(STDERR)
       end
   end
 end

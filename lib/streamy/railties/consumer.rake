@@ -106,7 +106,7 @@ namespace :streamy do
 
       def consumer_defaults
         {
-          executableName: "bin/rake streamy:consumer:process",
+          executableName: "bundle exec rake streamy:consumer:process",
           processingLanguage: "ruby",
           initialPositionInStream: "TRIM_HORIZON",
           AWSCredentialsProvider: "DefaultAWSCredentialsProviderChain"
@@ -120,7 +120,7 @@ namespace :streamy do
           "appender.console.type": "Console",
           "appender.console.name": "STDOUT",
           "appender.console.layout.type": "PatternLayout",
-          "appender.console.layout.pattern": "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n",
+          "appender.console.layout.pattern": "%d{yyyy-MM-dd HH:mm:ss} - %msg%n",
           "rootLogger.level": java_logger_level,
           "rootLogger.appenderRefs": "stdout",
           "rootLogger.appenderRef.stdout.ref": "STDOUT"
