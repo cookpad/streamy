@@ -12,7 +12,7 @@ module EventHandlers
 end
 
 class DummyMessageProcessor < Streamy::MessageProcessor
-  def process
+  def process(message)
     super
   rescue Streamy::EventHandlerNotFoundError
   end
@@ -21,7 +21,7 @@ end
 module Streamy
   class ReplayerTest < Minitest::Test
     def setup
-      Streamy.message_processor = DummyMessageProcessor
+      Streamy.message_processor = DummyMessageProcessor.new
     end
 
     def test_retrieving_and_replaying_past_events

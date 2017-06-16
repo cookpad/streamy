@@ -5,7 +5,7 @@ module Streamy
     def test_processing_empty_message
       message = Message.new({})
       assert_raises(TypeNotFoundError) do
-        MessageProcessor.process(message)
+        MessageProcessor.new.process(message)
       end
     end
   end
