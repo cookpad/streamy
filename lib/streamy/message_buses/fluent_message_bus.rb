@@ -13,7 +13,8 @@ module Streamy
           topic: topic,
           type: type,
           body: body,
-          event_time: event_time
+          event_time: event_time,
+          timestamp: Time.current.to_i
       end
 
       private
