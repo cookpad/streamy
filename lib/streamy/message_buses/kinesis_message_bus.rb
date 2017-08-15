@@ -7,7 +7,11 @@ module Streamy
         @stream = stream
       end
 
-      def deliver(key:, topic:, type:, body:, event_time:)
+      def deliver(*args)
+        deliver_now(*args)
+      end
+
+      def deliver_now(key:, topic:, type:, body:, event_time:)
         client.put_record(
           stream_name: stream,
           partition_key: partition_key,
