@@ -9,7 +9,6 @@ module Streamy
   require "streamy/consumer"
   require "streamy/event"
   require "streamy/event_handler"
-  require "streamy/message"
   require "streamy/message_processor"
   require "streamy/profiler"
   require "streamy/simple_logger"
