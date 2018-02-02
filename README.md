@@ -11,13 +11,14 @@ gem 'streamy'
 
 ## Usage
 
-
 ### Broadcasting events
 
-Add this to config/initializer/event_store.rb
+Add this to config/initializer/streamy.rb
 
 ```ruby
-Streamy.message_bus = Streamy::MessageBuses::FluentMessageBus.new("td.global")
+Streamy.message_bus = Streamy::MessageBuses::RabbitMessageBus.new(
+  uri: "amqp://..."
+)
 ```
 
 Create an event:
@@ -54,26 +55,20 @@ Events::ReceivedPayment.publish
 Configure the consumer:
 
 ```yaml
-# config/streamy_consumer_properties.yml
-development: &defaults
-  streamName: global-domain-events-staging
-  applicationName: global-name-of-app-development
-  AWSCredentialsProvider: DefaultAWSCredentialsProviderChain
-
-test:
-  <<: *defaults
-
-staging:
-  <<: *defaults
-  applicationName: global-name-of-app-staging
-
-production:
-  <<: *defaults
-  streamName: global-domain-events
-  applicationName: global-name-of-app
+# config/rabbit_mq.yml
+enable_http_api_use: false
+uri: amqp://...
 ```
 
-Add an event handler:
+Add consumer(s):
+
+```ruby
+# app/consumers/event_consumer.rb
+class EventConsumer
+  include Streamy::Consumer
+end
+
+Add event handler(s):
 
 ```ruby
 module EventHandlers
@@ -85,36 +80,16 @@ module EventHandlers
 end
 ```
 
-Start the consumer:
+Start consuming:
 
 ```bash
-JAVA_HOME=/usr bin/rake streamy:consumer:run
+bin/rake streamy:consumer:run
 ```
 
 ### Replaying events
 
-Add this to config/initializer/event_store.rb
-
-```ruby
-Streamy.event_store = Streamy::EventStores::CopyBufferedRedshiftStore.new(Rails.configuration.x.event_store)
-```
-
-Run the replayer:
-
-```ruby
-Streamy::Replayer.new(from: "2017-01-01", topics: %w(payments)).run
-```
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/cookpad/streamy. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
-
+- Use global-events to replay events on a replay queue
+- Once caught up, switch to main (paused) queue
 
 ## License
 
