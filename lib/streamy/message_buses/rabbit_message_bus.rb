@@ -17,6 +17,7 @@ module Streamy
       def deliver_now(key:, topic:, type:, body:, event_time:)
         Hutch.publish(
           "#{topic_prefix}.#{topic}.#{type}",
+          topic: topic,
           key: key,
           body: body,
           type: type,
