@@ -7,7 +7,6 @@ module Streamy
         @topic_prefix = topic_prefix
         Hutch::Config.set(:uri, uri)
         Hutch::Config.set(:enable_http_api_use, false)
-        Hutch.connect
       end
 
       def deliver(*args)
@@ -15,6 +14,7 @@ module Streamy
       end
 
       def deliver_now(key:, topic:, type:, body:, event_time:)
+        Hutch.connect
         Hutch.publish(
           "#{topic_prefix}.#{topic}.#{type}",
           topic: topic,
