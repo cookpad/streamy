@@ -67,6 +67,7 @@ Add consumer(s):
 class EventConsumer
   include Streamy::Consumer
 end
+```
 
 Add event handler(s):
 
