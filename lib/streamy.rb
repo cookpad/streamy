@@ -20,8 +20,10 @@ module Streamy
   # Message Buses
   require "streamy/message_buses/test_message_bus"
   require "streamy/message_buses/rabbit_message_bus"
-  require "streamy/message_buses/rabbit_message_bus/resquer"
-  require "streamy/message_buses/rabbit_message_bus/aborter"
+
+  # Hutch Acknowledgements
+  require "streamy/hutch/acknowledgements/reque_on_all_failures"
+  require "streamy/hutch/acknowledgements/abort_on_all_failures"
 
   # Rake task
   require "streamy/railtie" if defined?(Rails)
