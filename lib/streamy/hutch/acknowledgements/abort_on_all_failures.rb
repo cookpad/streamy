@@ -4,8 +4,10 @@ module Streamy
   module Hutch
     module Acknowledgements
       class AbortOnAllFailures < ::Hutch::Acknowledgements::Base
+        include ::Hutch::Logging
+
         def handle(*)
-          puts "[x] abort consumer"
+          logger.debug "[x] abort consumer"
 
           exit
         end
