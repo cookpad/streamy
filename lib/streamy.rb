@@ -20,6 +20,8 @@ module Streamy
   # Message Buses
   require "streamy/message_buses/test_message_bus"
   require "streamy/message_buses/rabbit_message_bus"
+  require "streamy/message_buses/rabbit_message_bus/resquer"
+  require "streamy/message_buses/rabbit_message_bus/aborter"
 
   # Rake task
   require "streamy/railtie" if defined?(Rails)
