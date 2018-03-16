@@ -6,13 +6,11 @@ namespace :streamy do
         raise "Missing `rabbitmq_uri` for '#{Rails.env}' environment, set this value in `config/secrets.yml`"
       end
 
-      system(
-        {
-          "HUTCH_URI" => Rails.application.secrets.rabbitmq_uri,
-          "HUTCH_ENABLE_HTTP_API_USE" => "false"
-        },
-        "bundle exec hutch"
-      )
+      Hutch::Config[:uri] = Rails.application.secrets.rabbitmq_uri
+      Hutch::Config[:enable_http_api_use] = false
+
+      cli = Hutch::CLI.new
+      cli.run(ARGV)
     end
   end
 end
