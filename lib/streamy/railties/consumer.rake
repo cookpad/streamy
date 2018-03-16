@@ -8,6 +8,8 @@ namespace :streamy do
 
       Hutch::Config[:uri] = Rails.application.secrets.rabbitmq_uri
       Hutch::Config[:enable_http_api_use] = false
+      Hutch::Config[:error_acknowledgements] << Streamy::RabbitMq::Acknowledgements::RequeueOnAllFailures.new
+      Hutch::Config[:error_acknowledgements] << Streamy::RabbitMq::Acknowledgements::AbortOnAllFailures.new
 
       cli = Hutch::CLI.new
       cli.run(ARGV)
