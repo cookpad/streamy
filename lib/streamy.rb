@@ -22,8 +22,8 @@ module Streamy
   require "streamy/message_buses/rabbit_message_bus"
 
   # Hutch Acknowledgements
-  require "streamy/hutch/acknowledgements/requeue_on_all_failures"
-  require "streamy/hutch/acknowledgements/abort_on_all_failures"
+  require "streamy/rabbit_mq/acknowledgements/requeue_on_all_failures"
+  require "streamy/rabbit_mq/acknowledgements/abort_on_all_failures"
 
   # Rake task
   require "streamy/railtie" if defined?(Rails)

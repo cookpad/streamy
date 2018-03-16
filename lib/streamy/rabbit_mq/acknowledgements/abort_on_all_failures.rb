@@ -1,10 +1,10 @@
 require "hutch"
 
 module Streamy
-  module Hutch
+  module RabbitMq
     module Acknowledgements
-      class AbortOnAllFailures < ::Hutch::Acknowledgements::Base
-        include ::Hutch::Logging
+      class AbortOnAllFailures < Hutch::Acknowledgements::Base
+        include Hutch::Logging
 
         def handle(*)
           logger.debug "[x] abort consumer"
