@@ -1,7 +1,7 @@
 namespace :streamy do
   namespace :consumer do
     desc "Start consuming"
-    task run: :environment do
+    task :run do
       if Rails.application.secrets.rabbitmq_uri.blank?
         raise "Missing `rabbitmq_uri` for '#{Rails.env}' environment, set this value in `config/secrets.yml`"
       end
