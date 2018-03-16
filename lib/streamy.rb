@@ -15,11 +15,13 @@ module Streamy
 
   # Errors
   require "streamy/errors/event_handler_not_found_error"
+  require "streamy/errors/publication_failed_error"
   require "streamy/errors/type_not_found_error"
 
   # Message Buses
   require "streamy/message_buses/test_message_bus"
   require "streamy/message_buses/rabbit_message_bus"
+  require "streamy/message_buses/rabbit_message_bus/message"
 
   # Rake task
   require "streamy/railtie" if defined?(Rails)

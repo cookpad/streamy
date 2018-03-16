@@ -3,8 +3,7 @@ require "hutch"
 module Streamy
   module MessageBuses
     class RabbitMessageBus
-      def initialize(uri:, topic_prefix: Streamy::DEFAULT_TOPIC_PREFIX)
-        @topic_prefix = topic_prefix
+      def initialize(uri:)
         Hutch::Config.set(:uri, uri)
         Hutch::Config.set(:enable_http_api_use, false)
       end
@@ -14,20 +13,14 @@ module Streamy
       end
 
       def deliver_now(key:, topic:, type:, body:, event_time:)
-        Hutch.connect
-        Hutch.publish(
-          "#{topic_prefix}.#{topic}.#{type}",
-          topic: topic,
+        Message.new(
           key: key,
-          body: body,
+          topic: topic,
           type: type,
+          body: body,
           event_time: event_time
-        )
+        ).publish
       end
-
-      private
-
-        attr_reader :topic_prefix
     end
   end
 end
