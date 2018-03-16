@@ -12,7 +12,7 @@ namespace :streamy do
       Hutch::Config[:error_acknowledgements] << Streamy::RabbitMq::Acknowledgements::AbortOnAllFailures.new
 
       cli = Hutch::CLI.new
-      cli.run(ARGV)
+      cli.run([])
     end
   end
 end
