@@ -3,7 +3,7 @@ require "hutch"
 module Streamy
   module Hutch
     module Acknowledgements
-      class ResqueOnAllFailures < ::Hutch::Acknowledgements::Base
+      class RequeueOnAllFailures < ::Hutch::Acknowledgements::Base
         include ::Hutch::Logging
 
         def handle(delivery_info, properties, broker, ex)

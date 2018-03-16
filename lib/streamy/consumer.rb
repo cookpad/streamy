@@ -17,7 +17,7 @@ module Streamy
       ::Hutch::Config.set(
         :error_acknowledgements,
         [
-          Hutch::Acknowledgements::ResqueOnAllFailures.new,
+          Hutch::Acknowledgements::RequeueOnAllFailures.new,
           Hutch::Acknowledgements::AbortOnAllFailures.new
         ]
       )

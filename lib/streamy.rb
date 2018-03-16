@@ -22,7 +22,7 @@ module Streamy
   require "streamy/message_buses/rabbit_message_bus"
 
   # Hutch Acknowledgements
-  require "streamy/hutch/acknowledgements/reque_on_all_failures"
+  require "streamy/hutch/acknowledgements/requeue_on_all_failures"
   require "streamy/hutch/acknowledgements/abort_on_all_failures"
 
   # Rake task
