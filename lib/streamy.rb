@@ -21,7 +21,7 @@ module Streamy
   require "streamy/message_buses/test_message_bus"
   require "streamy/message_buses/rabbit_message_bus"
 
-  # Hutch Acknowledgements
+  # RabbitMQ/Hutch Acknowledgements
   require "streamy/rabbit_mq/acknowledgements/requeue_on_all_failures"
   require "streamy/rabbit_mq/acknowledgements/abort_on_all_failures"
 
