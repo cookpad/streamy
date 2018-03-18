@@ -20,6 +20,7 @@ module Streamy
   require "streamy/errors/type_not_found_error"
 
   # Message Buses
+  require "streamy/message_buses/message_bus"
   require "streamy/message_buses/test_message_bus"
   require "streamy/message_buses/rabbit_message_bus"
   require "streamy/message_buses/rabbit_message_bus/message"

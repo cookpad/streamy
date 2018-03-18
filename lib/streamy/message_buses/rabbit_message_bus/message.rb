@@ -10,8 +10,6 @@ module Streamy
       def publish
         Hutch.connect
         Hutch.publish(routing_key, params)
-      rescue => e
-        raise PublicationFailedError.new(e, params)
       end
 
       private

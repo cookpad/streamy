@@ -5,7 +5,7 @@ module Streamy
     end
 
     def publish
-      message_bus.deliver(
+      message_bus.safe_deliver(
         key: key,
         topic: topic,
         type: type,

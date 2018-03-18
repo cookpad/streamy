@@ -1,6 +1,6 @@
 module Streamy
   module MessageBuses
-    class TestMessageBus
+    class TestMessageBus < MessageBus
       cattr_accessor :deliveries do
         []
       end
