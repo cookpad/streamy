@@ -4,6 +4,7 @@ module Streamy
   # External
   # TODO: Move into classes that use them
   require "active_support"
+  require "active_support/core_ext/string"
 
   require "streamy/version"
   require "streamy/consumer"
