@@ -6,8 +6,9 @@ module Streamy
       class AbortOnAllFailures < Hutch::Acknowledgements::Base
         include Hutch::Logging
 
-        def handle(*)
-          logger.debug "[x] abort consumer"
+        def handle(delivery_info, properties, broker, ex)
+          logger.error ex
+          logger.error "[x] aborting consumer"
 
           exit
         end
