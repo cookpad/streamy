@@ -55,9 +55,16 @@ Events::ReceivedPayment.publish
 Configure the consumer:
 
 ```yaml
-# config/rabbit_mq.yml
-enable_http_api_use: false
-uri: amqp://...
+# config/secrets.yml
+production:
+  rabbit_mq_uri: amqp://...
+```
+
+For built-in deduplication of events:
+
+```ruby
+# config/streamy.rb
+Streamy.cache = Rails.cache
 ```
 
 Add consumer(s):
