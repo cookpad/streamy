@@ -4,6 +4,7 @@ module Streamy
   # External
   # TODO: Move into classes that use them
   require "active_support"
+  require "active_support/core_ext/string"
 
   require "streamy/version"
   require "streamy/consumer"
@@ -31,7 +32,7 @@ module Streamy
   require "streamy/railtie" if defined?(Rails)
 
   class << self
-    attr_accessor :message_bus, :logger
+    attr_accessor :message_bus, :logger, :cache
   end
 
   self.logger = SimpleLogger.new
