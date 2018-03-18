@@ -5,12 +5,30 @@ module Streamy
     end
 
     def run
-      event_handler.new(attributes).process
+      ignoring_duplicates do
+        event_handler.new(attributes).process
+      end
     end
 
     private
 
       attr_reader :message
+
+      def ignoring_duplicates(&block)
+        return yield if cache.nil?
+
+        cache.fetch("streamy/events/#{key}") do
+          yield
+        end
+      end
+
+      def cache
+        Streamy.cache
+      end
+
+      def key
+        message[:key]
+      end
 
       def event_handler
         handler_class_name.safe_constantize || raise(handler_not_found_error)

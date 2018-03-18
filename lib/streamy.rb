@@ -32,7 +32,7 @@ module Streamy
   require "streamy/railtie" if defined?(Rails)
 
   class << self
-    attr_accessor :message_bus, :logger
+    attr_accessor :message_bus, :logger, :cache
   end
 
   self.logger = SimpleLogger.new
