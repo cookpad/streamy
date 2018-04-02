@@ -1,5 +1,7 @@
 # Streamy
 
+[![Build Status](https://travis-ci.org/cookpad/streamy.svg?branch=master)](https://travis-ci.org/cookpad/streamy)
+
 ## Installation
 
 Add this line to your application's Gemfile:
