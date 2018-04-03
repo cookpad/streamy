@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["jens@balvig.com"]
 
   spec.summary       = %q{Basic toolset for hooking into event stream}
-  spec.description   = %q{Basic toolset for hooking into event stream}
+  spec.description   = %q{Library for enabling asynchronous inter-service communication}
   spec.homepage      = "https://github.com/cookpad/streamy"
   spec.license       = "MIT"
 
@@ -33,10 +33,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.14"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "minitest", "~> 5.0"
-  spec.add_development_dependency "mocha"
-  spec.add_development_dependency "pry"
+  spec.add_development_dependency "mocha", "~> 1.4"
+  spec.add_development_dependency "pry", "~> 0.11"
 
-  spec.add_dependency "activesupport", ">= 4.0.0"
-  spec.add_dependency "hutch"
-  spec.add_dependency "webmock"
+  spec.add_dependency "activesupport", "~> 5.1"
+  spec.add_dependency "hutch", "~> 0.25"
+  spec.add_dependency "webmock", "~> 3.3"
 end
