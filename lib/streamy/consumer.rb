@@ -4,7 +4,7 @@ module Streamy
   module Consumer
     def self.included(base)
       base.include Hutch::Consumer
-      base.consume "#{Streamy::DEFAULT_TOPIC_PREFIX}.#"
+      base.consume "#{Streamy.default_topic_prefix}.#"
     end
 
     def process(message)
