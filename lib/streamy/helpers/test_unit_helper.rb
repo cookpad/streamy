@@ -1,12 +1,13 @@
 require "webmock/minitest"
 
 class ActiveSupport::TestCase
-  # TODO: Bit rough, needs better debug output
   def assert_published_event(attributes = {})
-    matching_event = Streamy.message_bus.deliveries.find do |delivery|
+    deliveries = Streamy.message_bus.deliveries
+
+    matching_event = deliveries.find do |delivery|
       hash_including(attributes) == delivery.deep_stringify_keys
     end
-    assert matching_event
+    assert matching_event, "Didn't find event: \n\n #{attributes} \n\n in: #{deliveries.inspect}"
   end
 end
 
