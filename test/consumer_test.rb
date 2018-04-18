@@ -3,6 +3,7 @@ require "active_support/cache/memory_store"
 
 class DummyConsumer
   include Streamy::Consumer
+  consume "global.#"
 end
 
 module EventHandlers

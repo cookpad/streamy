@@ -75,6 +75,9 @@ Add consumer(s):
 # app/consumers/event_consumer.rb
 class EventConsumer
   include Streamy::Consumer
+
+  # Specify a topic to consume
+  consume "global.#"
 end
 ```
 
