@@ -1,6 +1,4 @@
 module Streamy
-  DEFAULT_TOPIC_PREFIX = "global"
-
   # External
   # TODO: Move into classes that use them
   require "active_support"
@@ -33,8 +31,9 @@ module Streamy
   require "streamy/railtie" if defined?(Rails)
 
   class << self
-    attr_accessor :message_bus, :logger, :cache
+    attr_accessor :message_bus, :logger, :cache, :default_topic_prefix
   end
 
   self.logger = SimpleLogger.new
+  self.default_topic_prefix = "global"
 end

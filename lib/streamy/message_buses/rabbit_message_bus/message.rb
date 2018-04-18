@@ -17,7 +17,7 @@ module Streamy
         attr_reader :params
 
         def routing_key
-          "#{Streamy::DEFAULT_TOPIC_PREFIX}.#{topic}.#{type}"
+          "#{Streamy.default_topic_prefix}.#{topic}.#{type}"
         end
 
         def topic
