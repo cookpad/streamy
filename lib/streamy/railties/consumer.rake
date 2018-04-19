@@ -6,6 +6,7 @@ namespace :streamy do
         raise "Missing `rabbitmq_uri` for '#{Rails.env}' environment, set this value in `config/secrets.yml`"
       end
 
+      Hutch::Config[:log_level] = Rails.configuration.log_level
       Hutch::Config[:uri] = Rails.application.secrets.rabbitmq_uri
       Hutch::Config[:enable_http_api_use] = false
       Hutch::Config[:error_acknowledgements] << Streamy::RabbitMq::Acknowledgements::RequeueOnAllFailures.new
