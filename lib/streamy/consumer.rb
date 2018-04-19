@@ -8,13 +8,23 @@ module Streamy
     end
 
     module ClassMethods
-      def pause_consumer!
-        Hutch.consumers.delete self
+      def replay(routing_key)
+        # Set up keys / queues
+        replay_routing_key_prefix = "replay.#{get_queue_name}"
+        replay_routing_key = "#{replay_routing_key_prefix}.#{routing_key}"
+        paused_queue = get_queue_name
+        replay_queue = "#{paused_queue}_replay"
 
+        # Configure hutch
+        consume replay_routing_key
+        queue_name replay_queue
+
+        # Manually create "paused queue"
         Hutch::Config.setup_procs << Proc.new do
-          Hutch.logger.info("setting up paused queue: #{get_queue_name}")
-          queue = Hutch.broker.queue(get_queue_name, get_arguments)
-          Hutch.broker.bind_queue(queue, routing_keys)
+          Hutch.logger.info("setting up paused queue: #{paused_queue}")
+          queue = Hutch.broker.queue(paused_queue, get_arguments)
+          Hutch.broker.bind_queue(queue, [routing_key])
+          Hutch.logger.info("replay events using ROUTING_KEY_PREFIX=#{replay_routing_key_prefix}")
         end
       end
     end
