@@ -24,7 +24,6 @@ module Streamy
           Hutch.logger.info("setting up paused queue: #{paused_queue}")
           queue = Hutch.broker.queue(paused_queue, get_arguments)
           Hutch.broker.bind_queue(queue, [routing_key])
-          Hutch.logger.info("replay events using ROUTING_KEY_PREFIX=#{replay_routing_key_prefix}")
         end
       end
     end
