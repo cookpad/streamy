@@ -17,7 +17,7 @@ module Streamy
         attr_reader :params
 
         def routing_key
-          "#{Streamy.routing_prefix}.#{topic}.#{type}"
+          "#{Streamy.routing_key_prefix}.#{topic}.#{type}"
         end
 
         def topic
