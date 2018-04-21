@@ -54,12 +54,13 @@ Events::ReceivedPayment.publish
 
 ### Consuming events
 
-Configure the consumer:
+Configure the worker:
 
-```yaml
-# config/secrets.yml
-production:
-  rabbit_mq_uri: amqp://...
+```ruby
+# config/streamy.rb
+Streamy.worker = Streamy::Workers::RabbitWorker.new(
+  uri: "amqp://..."
+)
 ```
 
 For built-in deduplication of events:
@@ -96,7 +97,7 @@ end
 Start consuming:
 
 ```bash
-bin/rake streamy:consumer:run
+bin/rake streamy:worker:run
 ```
 
 ### Replaying events
