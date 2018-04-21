@@ -1,8 +1,8 @@
 require "hutch"
 
 module Streamy
-  module RabbitMq
-    module Acknowledgements
+  module Workers
+    module Rabbit
       class AbortOnAllFailures < Hutch::Acknowledgements::Base
         include Hutch::Logging
 
