@@ -30,9 +30,8 @@ module Streamy
   require "streamy/railtie" if defined?(Rails)
 
   class << self
-    attr_accessor :message_bus, :worker, :logger, :cache, :routing_key_prefix
+    attr_accessor :message_bus, :worker, :logger, :cache
   end
 
   self.logger = SimpleLogger.new
-  self.routing_key_prefix = "global"
 end
