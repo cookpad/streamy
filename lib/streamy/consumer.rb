@@ -9,11 +9,16 @@ module Streamy
 
     module ClassMethods
       def replay(routing_key)
-        # Set up keys / queues
-        replay_routing_key_prefix = "replay.#{get_queue_name}"
-        replay_routing_key = "#{replay_routing_key_prefix}.#{routing_key}"
+        # Clear current queue as it will be set again further down --;
+        @queue_name = nil
+
+        # Set up queue names
         paused_queue = get_queue_name
         replay_queue = "#{paused_queue}_replay"
+
+        # Set up routing key names
+        replay_routing_key_prefix = "replay.#{paused_queue}"
+        replay_routing_key = "#{replay_routing_key_prefix}.#{routing_key}"
 
         # Configure hutch
         consume replay_routing_key
