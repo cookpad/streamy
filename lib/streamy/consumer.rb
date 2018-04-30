@@ -8,6 +8,10 @@ module Streamy
     end
 
     module ClassMethods
+      def start_from(timestamp = nil)
+        @start_from ||= timestamp
+      end
+
       def replay(routing_key)
         # Clear current queue as it will be set again further down --;
         @queue_name = nil
@@ -34,7 +38,21 @@ module Streamy
     end
 
     def process(message)
-      MessageProcessor.new(message).run
+      if eligible_for_processing?(message)
+        MessageProcessor.new(message).run
+      else
+        logger.warn "Skipping #{message}"
+      end
     end
+
+    private
+
+      def eligible_for_processing?(message)
+        if self.class.start_from.present?
+          message[:event_time].to_time >= self.class.start_from
+        else
+          true
+        end
+      end
   end
 end

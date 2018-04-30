@@ -29,7 +29,7 @@ Create an event:
 module Events
   class ReceivedPayment < Streamy::Event
     def topic
-       "payments"
+       "payments.transactions"
     end
 
     def body
@@ -78,7 +78,7 @@ class EventConsumer
   include Streamy::Consumer
 
   # Specify a topic to consume
-  consume "global.#"
+  consume "payments.#"
 end
 ```
 
@@ -100,10 +100,37 @@ Start consuming:
 bin/rake streamy:worker:run
 ```
 
-### Replaying events
+### Consuming replayed events
 
-- Use global-events to replay events on a replay queue
-- Once caught up, switch to main (paused) queue
+Use `replay` instead of `consume`:
+
+```ruby
+class EventConsumer
+  include Streamy::Consumer
+
+  replay "payments.#"
+end
+```
+
+This will create two queues:
+
+```ruby
+event_consumer # binds to `payments.#`, accumulates realtime events but doesn't process
+event_consumer_replay # binds to `replay.event_consumer.payments.#`, processes replay events
+```
+
+Once caught up, switch back to `consume` and optionally specify a
+`start_from` timestamp to filter out any realtime events that may
+have already been replayed:
+
+```ruby
+class EventConsumer
+  include Streamy::Consumer
+
+  start_from 1525058571 # last event in replay queue
+  consume "payments.#"
+end
+```
 
 ## License
 
