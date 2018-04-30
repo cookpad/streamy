@@ -29,15 +29,15 @@ module Streamy
       end
 
       def topic
-        raise "topic not implemented on event"
+        raise "topic must be implemented on #{self.class}"
       end
 
       def body
-        raise "body not implemented on event"
+        raise "body must be implemented on #{self.class}"
       end
 
       def event_time
-        raise "event_time not implemented on event"
+        raise "event_time must be implemented on #{self.class}"
       end
   end
 end
