@@ -3,7 +3,7 @@ require "hutch"
 module Streamy
   module MessageBuses
     class RabbitMessageBus < MessageBus
-      def initialize(uri:, routing_key_prefix: "global")
+      def initialize(uri:, routing_key_prefix: nil)
         Hutch::Config.set(:uri, uri)
         Hutch::Config.set(:enable_http_api_use, false)
         @routing_key_prefix = routing_key_prefix
@@ -23,7 +23,6 @@ module Streamy
       private
 
         attr_reader :routing_key_prefix
-
     end
   end
 end

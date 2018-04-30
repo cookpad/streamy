@@ -6,7 +6,7 @@ module Streamy
       bus = MessageBuses::RabbitMessageBus.new(uri: "valid_uri")
 
       Hutch.expects(:connect)
-      Hutch.expects(:publish).with("global.topic.type", key: "key", topic: "topic", type: "type", body: "body", event_time: "2018")
+      Hutch.expects(:publish).with("topic.type", key: "key", topic: "topic", type: "type", body: "body", event_time: "2018")
 
       bus.deliver(key: "key", topic: "topic", type: "type", body: "body", event_time: "2018")
     end
