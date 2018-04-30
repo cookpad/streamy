@@ -3,7 +3,7 @@ require "hutch"
 module Streamy
   module MessageBuses
     class RabbitMessageBus::Message
-      def initialize(routing_key_prefix:, **params)
+      def initialize(routing_key_prefix: nil, **params)
         @routing_key_prefix = routing_key_prefix
         @params = params
       end
@@ -18,7 +18,7 @@ module Streamy
         attr_reader :params, :routing_key_prefix
 
         def routing_key
-          "#{routing_key_prefix}.#{topic}.#{type}"
+          [routing_key_prefix, topic, type].compact.join(".")
         end
 
         def topic
