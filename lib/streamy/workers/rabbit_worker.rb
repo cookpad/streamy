@@ -14,6 +14,7 @@ module Streamy
       end
 
       def run
+        Rails.logger = Hutch.logger
         Hutch::CLI.new.run([])
       end
     end
