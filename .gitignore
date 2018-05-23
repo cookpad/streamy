@@ -9,3 +9,6 @@
 /tmp/
 /kcl/
 *.gem
+
+# Ignore RuboCop cached file
+/.rubocop-*
