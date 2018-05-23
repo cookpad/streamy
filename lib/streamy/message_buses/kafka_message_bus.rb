@@ -1,5 +1,3 @@
-require "kafka"
-
 module Streamy
   module MessageBuses
     class KafkaMessageBus < MessageBus
