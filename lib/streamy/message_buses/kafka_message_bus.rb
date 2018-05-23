@@ -3,8 +3,8 @@ require "kafka"
 module Streamy
   module MessageBuses
     class KafkaMessageBus < MessageBus
-      def initialize(seed_brokers: ["127.0.0.1:9092"], client_id: :default_app_name)
-        @kafka ||= Kafka.new(seed_brokers, client_id: client_id.to_s)
+      def initialize(kafka: Kafka.new(["127.0.0.1:9092"], client_id: "default_app_name"))
+        @kafka ||= kafka
       end
 
       def deliver(key:, topic:, type:, body:, event_time:)
