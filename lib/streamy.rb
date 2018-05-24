@@ -22,6 +22,7 @@ module Streamy
   require "streamy/message_buses/test_message_bus"
   require "streamy/message_buses/rabbit_message_bus"
   require "streamy/message_buses/rabbit_message_bus/message"
+  require "streamy/message_buses/kafka_message_bus"
 
   # Workers
   require "streamy/workers/rabbit_worker"
