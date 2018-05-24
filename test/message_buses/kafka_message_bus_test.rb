@@ -19,7 +19,7 @@ module Streamy
       bus = MessageBuses::KafkaMessageBus.new(kafka: fake_kafka)
       bus.deliver(key: "key", topic: "topic", type: "type", body: "body", event_time: "2018")
 
-      assert_equal fake_kafka.messages, "key" => ["topic", { type: "type", body: "body", event_time: "2018" }]
+      assert_equal fake_kafka.messages, "key" => ["topic", { type: "type", body: "body", event_time: "2018" }.to_json]
     end
   end
 end
