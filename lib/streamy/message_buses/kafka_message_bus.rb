@@ -12,7 +12,7 @@ module Streamy
           body: body,
           event_time: event_time
         }
-        kafka.deliver_message(payload, topic: topic)
+        kafka.deliver_message(payload.to_json, topic: topic)
       end
 
       private
