@@ -7,12 +7,11 @@ module Streamy
 
       def deliver(key:, topic:, type:, body:, event_time:)
         payload = {
-          key: key,
           type: type,
           body: body,
           event_time: event_time
         }
-        kafka.deliver_message(payload, topic: topic)
+        kafka.deliver_message(payload, key: key, topic: topic)
       end
 
       private
