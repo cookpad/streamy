@@ -14,6 +14,11 @@ end
 
 module Streamy
   class KafkaMessageBusTest < Minitest::Test
+    def test_initialize_with_config
+      Kafka.expects(:new).with(seed_brokers: ["127.0.0.1:9092"], client_id: "test")
+      MessageBuses::KafkaMessageBus.new(config: { seed_brokers: ["127.0.0.1:9092"], client_id: "test" })
+    end
+
     def test_deliver
       fake_kafka = FakeKafka.new
       bus = MessageBuses::KafkaMessageBus.new(kafka: fake_kafka)
