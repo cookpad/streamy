@@ -1,8 +1,10 @@
+require "kafka"
+
 module Streamy
   module MessageBuses
     class KafkaMessageBus < MessageBus
-      def initialize(kafka:)
-        @kafka = kafka
+      def initialize(config)
+        @kafka = Kafka.new(config)
       end
 
       def deliver(key:, topic:, type:, body:, event_time:)
