@@ -5,7 +5,7 @@ module Streamy
   require "active_support/core_ext/string"
 
   require "streamy/version"
-  require "streamy/consumer"
+  require "streamy/consumers/rabbit_consumer"
   require "streamy/event"
   require "streamy/event_handler"
   require "streamy/message_processor"
