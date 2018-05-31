@@ -5,12 +5,15 @@ module Streamy
   require "active_support/core_ext/string"
 
   require "streamy/version"
-  require "streamy/consumers/rabbit_consumer"
   require "streamy/event"
   require "streamy/event_handler"
   require "streamy/message_processor"
   require "streamy/profiler"
   require "streamy/simple_logger"
+
+  # Consumers
+  require "streamy/consumers/rabbit_consumer"
+  require "streamy/consumers/kafka_consumer"
 
   # Errors
   require "streamy/errors/event_handler_not_found_error"
@@ -26,6 +29,7 @@ module Streamy
 
   # Workers
   require "streamy/workers/rabbit_worker"
+  require "streamy/workers/kafka_worker"
 
   # Rake task
   require "streamy/railtie" if defined?(Rails)
