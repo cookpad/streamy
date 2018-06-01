@@ -8,15 +8,15 @@ module Streamy
 
       delegate :subscribe, :each_message, :stop, to: :kafka_consumer
 
-      def shutdown
-        puts "Shutting down..."
-        stop
-      end
-
       def process(kafka_message)
         json = JSON.parse(kafka_message.value).deep_symbolize_keys
 
         MessageProcessor.new(message(json, kafka_message)).run
+      end
+
+      def shutdown
+        puts "Shutting down..."
+        stop
       end
 
       private
