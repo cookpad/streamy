@@ -13,6 +13,19 @@ module Streamy
         stop
       end
 
+      def process(kafka_message)
+        json = JSON.parse(kafka_message.value).deep_symbolize_keys
+
+        message = {
+          key: kafka_message.key,
+          body: json,
+          type: json[:type],
+          event_time: json[:event_time]
+        }
+
+        MessageProcessor.new(message).run
+      end
+
       private
 
         attr_reader :topic, :kafka

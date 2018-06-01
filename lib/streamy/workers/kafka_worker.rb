@@ -22,14 +22,7 @@ module Streamy
         attr_reader :kafka
 
         def consumer(topic)
-          # e.g. when topic is "application-name.recipes", this will look for RecipesConsumer
-          klass = klass_name(topic).constantize
-          klass.new(kafka: kafka, topic: topic)
-        end
-
-        def klass_name(topic)
-          consumer_name = topic.split(".").last + "_consumer"
-          consumer_name.camelize
+          Consumers::KafkaConsumer.new(kafka: kafka, topic: topic)
         end
     end
   end
