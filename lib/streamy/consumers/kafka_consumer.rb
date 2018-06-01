@@ -16,14 +16,7 @@ module Streamy
       def process(kafka_message)
         json = JSON.parse(kafka_message.value).deep_symbolize_keys
 
-        message = {
-          key: kafka_message.key,
-          body: json,
-          type: json[:type],
-          event_time: json[:event_time]
-        }
-
-        MessageProcessor.new(message).run
+        MessageProcessor.new(message(json, kafka_message)).run
       end
 
       private
@@ -31,11 +24,16 @@ module Streamy
         attr_reader :topic, :kafka
 
         def kafka_consumer
-          @_kafka_consumer ||= kafka.consumer(group_id: consumer_group_name)
+          @_kafka_consumer ||= kafka.consumer(group_id: "#{topic}_consumer")
         end
 
-        def consumer_group_name
-          "#{topic}_consumer"
+        def message(json, kafka_message)
+          {
+            key: kafka_message.key,
+            body: json,
+            type: json[:type],
+            event_time: json[:event_time]
+          }
         end
     end
   end
