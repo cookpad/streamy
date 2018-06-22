@@ -10,7 +10,8 @@ module Streamy
         topic: topic,
         type: type,
         body: body,
-        event_time: event_time
+        event_time: event_time,
+        priority: priority,
       )
     end
 
@@ -38,6 +39,10 @@ module Streamy
 
       def event_time
         raise "event_time must be implemented on #{self.class}"
+      end
+
+      def priority
+        :standard
       end
   end
 end

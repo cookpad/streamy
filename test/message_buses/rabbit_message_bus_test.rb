@@ -8,7 +8,7 @@ module Streamy
       Hutch.expects(:connect)
       Hutch.expects(:publish).with("topic.type", key: "key", topic: "topic", type: "type", body: "body", event_time: "2018")
 
-      bus.deliver(key: "key", topic: "topic", type: "type", body: "body", event_time: "2018")
+      bus.deliver(key: "key", topic: "topic", type: "type", body: "body", event_time: "2018", priority: nil)
     end
 
     def test_deliver_with_custom_routing_prefix
@@ -17,7 +17,7 @@ module Streamy
       Hutch.expects(:connect)
       Hutch.expects(:publish).with("replay.global.topic.type", key: "key", topic: "topic", type: "type", body: "body", event_time: "2018")
 
-      bus.deliver(key: "key", topic: "topic", type: "type", body: "body", event_time: "2018")
+      bus.deliver(key: "key", topic: "topic", type: "type", body: "body", event_time: "2018", priority: nil)
     end
   end
 end

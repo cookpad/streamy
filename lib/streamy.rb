@@ -32,6 +32,10 @@ module Streamy
 
   class << self
     attr_accessor :message_bus, :worker, :logger, :cache
+
+    def shutdown
+      message_bus.shutdown if message_bus.respond_to? :shutdown
+    end
   end
 
   self.logger = SimpleLogger.new
