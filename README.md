@@ -66,9 +66,7 @@ Events::ReceivedPayment.publish
 
 #### Event Priority
 
-When using the Kafka message bus you can choose a priority for your events.
-
-This is done by overiding the `priority` method on your event.
+When using the Kafka message bus you can choose a priority for your events. This is done by overiding the `priority` method on your event.
 
 The 4 avalible priorities are:
 
@@ -76,6 +74,26 @@ The 4 avalible priorities are:
 * `:standard` - The event will be sent to Kafka by a background thread, but the thread is signaled to send any buffered events as soon as possible. The call to publish is non blocking, and should not throw errors, unless the buffer is full.
 * `:essential` - The event will be sent to Kafka imediately. The call to publish is blocking, and may throw errors.
 * `:manual` - The event will be queued to send to Kafka, but no events are sent until `Streamy.deliver_events` is called. This allows manual control of event batching, when creating many events, e.g. in batch jobs. The call to `Streamy.deliver_events` is blocking and may throw errors.
+
+#### Shutdown
+
+When using Kafka, if any `:low` or `:standard` priority events are published you should call `Streamy.shutdown` before your process exits to avoid loosing any events.
+
+If you are using puma, you should add this to your `puma.rb`
+
+```
+on_worker_shutdown do
+  Streamy.shutdown
+end
+```
+
+Or with unicorn:
+
+```
+after_fork do
+  at_exit { Streamy.shutdown }
+end
+```
 
 ### Consuming events
 
