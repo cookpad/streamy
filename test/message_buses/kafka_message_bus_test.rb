@@ -11,9 +11,8 @@ module Streamy
       kafka.stubs(:async_producer).returns(async_producer)
       @sync_producer = mock('sync_producer')
       kafka.stubs(:producer).returns(sync_producer)
-      Kafka.stub :new, @kafka do
-        @bus = MessageBuses::KafkaMessageBus.new({})
-      end
+      Kafka.stubs(:new).returns(kafka)
+      @bus = MessageBuses::KafkaMessageBus.new(@config || {})
     end
 
     def example_delivery(priority)
@@ -81,7 +80,7 @@ module Streamy
       example_delivery(:standard)
     end
 
-    def test_config
+    def test_config_defaults
       stub_producers
 
       kafka.expects(:producer).with(
@@ -108,6 +107,76 @@ module Streamy
       ).returns(async_producer)
 
       example_delivery(:standard)
+    end
+
+    def test_config_overides
+      @config = {
+         max_queue_size:      1,
+         delivery_threshold:  1,
+         delivery_interval:   1,
+         required_acks:       1,
+         ack_timeout:         1,
+         max_retries:         1,
+         retry_backoff:       1,
+         max_buffer_size:     1,
+         max_buffer_bytesize: 1,
+      }
+
+      setup
+
+      stub_producers
+
+      kafka.expects(:producer).with(
+         required_acks:       1,
+         ack_timeout:         1,
+         max_retries:         1,
+         retry_backoff:       1,
+         max_buffer_size:     1,
+         max_buffer_bytesize: 1,
+      ).returns(sync_producer)
+
+      example_delivery(:essential)
+
+      kafka.expects(:async_producer).with(
+         max_queue_size:      1,
+         delivery_threshold:  1,
+         delivery_interval:   1,
+         required_acks:       1,
+         ack_timeout:         1,
+         max_retries:         1,
+         retry_backoff:       1,
+         max_buffer_size:     1,
+         max_buffer_bytesize: 1,
+      ).returns(async_producer)
+
+      example_delivery(:standard)
+    end
+
+    def test_client_config
+      producer_config = {
+         max_queue_size:      2,
+         delivery_threshold:  2,
+         delivery_interval:   2,
+         required_acks:       2,
+         ack_timeout:         2,
+         max_retries:         2,
+         retry_backoff:       2,
+         max_buffer_size:     2,
+         max_buffer_bytesize: 2,
+      }
+
+      client_config = {
+        client_id: "test",
+        seed_brokers: "test-broker:9092",
+        sasl_plain_username: "tester",
+        sasl_plain_password: "blue",
+        ssl_ca_certs_from_system: true,
+      }
+
+      config = client_config.merge(producer_config)
+
+      Kafka.expects(:new).with(client_config)
+      MessageBuses::KafkaMessageBus.new(config)
     end
 
     def test_shutdown

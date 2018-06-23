@@ -4,7 +4,9 @@ module Streamy
   module MessageBuses
     class KafkaMessageBus < MessageBus
       def initialize(config)
-        @kafka = Kafka.new(config)
+        @async_config = config.slice(*async_config.keys)
+        @producer_config = config.slice(*producer_config.keys)
+        @kafka = Kafka.new(config.except(*(async_config.keys + producer_config.keys)))
       end
 
       def deliver(key:, topic:, type:, body:, event_time:,priority:)
@@ -33,20 +35,23 @@ module Streamy
         end
 
         def async_producer
-          @producer ||= kafka.async_producer(
-            max_queue_size:      1000,
-            delivery_threshold:  100,
-            delivery_interval:   2,
-            **config
-          )
+          @producer ||= kafka.async_producer(**async_config, **producer_config)
         end
 
         def sync_producer
           # One synchronous producer per-thread to avoid problems with concurrent deliveries.
-          Thread.current[:streamy_kafka_sync_producer] ||= kafka.producer(**config)
+          Thread.current[:streamy_kafka_sync_producer] ||= kafka.producer(**producer_config)
         end
 
-        def config
+        def async_config
+          {
+            max_queue_size:      1000,
+            delivery_threshold:  100,
+            delivery_interval:   2,
+          }.merge(@async_config || {})
+        end
+
+        def producer_config
           {
             required_acks:       -1, # all replicas
             ack_timeout:         5,
@@ -54,7 +59,7 @@ module Streamy
             retry_backoff:       1,
             max_buffer_size:     1000,
             max_buffer_bytesize: 10_000_000,
-          }
+          }.merge(@producer_config || {})
         end
     end
   end
