@@ -1,4 +1,5 @@
 require "test_helper"
+require "streamy/message_buses/kafka_message_bus"
 
 module Streamy
   class KafkaMessageBusTest < Minitest::Test

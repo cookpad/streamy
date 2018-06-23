@@ -1,4 +1,5 @@
 require "test_helper"
+require "streamy/message_buses/rabbit_message_bus"
 
 module Streamy
   class RabbitMessageBusTest < Minitest::Test

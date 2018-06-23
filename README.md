@@ -18,8 +18,20 @@ gem 'streamy'
 Add this to config/initializer/streamy.rb
 
 ```ruby
+require "streamy/message_buses/rabbit_message_bus"
 Streamy.message_bus = Streamy::MessageBuses::RabbitMessageBus.new(
   uri: "amqp://..."
+)
+```
+
+or if using Kafka
+
+```ruby
+require "streamy/message_buses/kafka_message_bus"
+Streamy.message_bus = Streamy::MessageBuses::KafkaMessageBus.new(
+    client_id: "streamy",
+    seed_brokers: "broker.remote:9092",
+    ssl_ca_certs_from_system: true,
 )
 ```
 

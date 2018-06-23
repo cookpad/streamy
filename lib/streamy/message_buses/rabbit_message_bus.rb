@@ -1,4 +1,5 @@
 require "hutch"
+require "streamy/message_buses/rabbit_message_bus/message"
 
 module Streamy
   module MessageBuses
