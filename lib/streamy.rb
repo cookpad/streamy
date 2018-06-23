@@ -33,6 +33,10 @@ module Streamy
     def shutdown
       message_bus.shutdown if message_bus.respond_to? :shutdown
     end
+
+    def deliver_events
+      message_bus.deliver_events if message_bus.respond_to? :deliver_events
+    end
   end
 
   self.logger = SimpleLogger.new

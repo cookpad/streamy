@@ -68,6 +68,14 @@ module Streamy
       example_delivery(:essential)
     end
 
+    def test_manual_priority_deliver
+      sync_producer.expects(:produce).with(*expected_event)
+      example_delivery(:manual)
+
+      sync_producer.expects(:deliver_messages)
+      bus.deliver_events
+    end
+
     def test_all_priority_delivery
       sync_producer.expects(:produce).with(*expected_event)
       sync_producer.expects(:deliver_messages)
@@ -79,6 +87,13 @@ module Streamy
       async_producer.expects(:produce).with(*expected_event)
       async_producer.expects(:deliver_messages)
       example_delivery(:standard)
+
+      sync_producer.expects(:produce).with(*expected_event)
+      sync_producer.expects(:deliver_messages)
+      async_producer.expects(:deliver_messages)
+
+      example_delivery(:manual)
+      bus.deliver_events
     end
 
     def test_config_defaults

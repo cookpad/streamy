@@ -64,6 +64,19 @@ Publish it:
 Events::ReceivedPayment.publish
 ```
 
+#### Event Priority
+
+When using the Kafka message bus you can choose a priority for your events.
+
+This is done by overiding the `priority` method on your event.
+
+The 4 avalible priorities are:
+
+* `:low` - The event will be sent to Kafka by a background thread, events are buffered until a condition is satisfied. Calling publish on a low priority event is non blocking, and no errors should be thrown, unelss the buffer is full. The rules for sending `:low` priority messages are set with the `delivery_threshold` and `delivery_interval` config parameters.
+* `:standard` - The event will be sent to Kafka by a background thread, but the thread is signaled to send any buffered events as soon as possible. The call to publish is non blocking, and should not throw errors, unless the buffer is full.
+* `:essential` - The event will be sent to Kafka imediately. The call to publish is blocking, and may throw errors.
+* `:manual` - The event will be queued to send to Kafka, but no events are sent until `Streamy.deliver_events` is called. This allows manual control of event batching, when creating many events, e.g. in batch jobs. The call to `Streamy.deliver_events` is blocking and may throw errors.
+
 ### Consuming events
 
 Configure the worker:
