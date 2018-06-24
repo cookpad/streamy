@@ -6,7 +6,7 @@ module Streamy
       end
 
       def deliver(params = {})
-        self.deliveries << params
+        deliveries << params
       end
     end
   end

@@ -4,16 +4,19 @@ module Streamy
   class EventTest < Minitest::Test
     class EventWithoutTopic < Event
       def event_time; end
+
       def body; end
     end
 
     class EventWithoutEventTime < Event
       def topic; end
+
       def body; end
     end
 
     class EventWithoutBody < Event
       def topic; end
+
       def event_time; end
     end
 

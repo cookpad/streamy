@@ -3,17 +3,20 @@ require "streamy/message_buses/kafka_message_bus"
 
 module Streamy
   class KafkaMessageBusTest < Minitest::Test
-    def setup
-      # Needed to teardown properly
-      Thread.current[:streamy_kafka_sync_producer] = nil
+    attr_reader :bus, :kafka, :async_producer, :sync_producer
 
-      @kafka = mock('kafka')
-      @async_producer = mock('async_producer')
+    def setup # rubocop:disable Metrics/AbcSize
+      @kafka = mock("kafka")
+      @async_producer = mock("async_producer")
       kafka.stubs(:async_producer).returns(async_producer)
-      @sync_producer = mock('sync_producer')
+      @sync_producer = mock("sync_producer")
       kafka.stubs(:producer).returns(sync_producer)
       Kafka.stubs(:new).returns(kafka)
       @bus = MessageBuses::KafkaMessageBus.new(@config || {})
+    end
+
+    def teardown
+      Thread.current[:streamy_kafka_sync_producer] = nil
     end
 
     def example_delivery(priority)
@@ -23,7 +26,7 @@ module Streamy
         topic: "charcuterie",
         event_time: "2018",
         body: { meat: "pork", herbs: "sage" },
-        priority: priority,
+        priority: priority
       )
     end
 
@@ -33,12 +36,12 @@ module Streamy
           type: "sausage",
           body: {
             meat: "pork",
-            herbs: "sage",
+            herbs: "sage"
           },
-          event_time: "2018",
+          event_time: "2018"
         }.to_json,
         key: "prk-sg-001",
-        topic: "charcuterie",
+        topic: "charcuterie"
       ]
     end
 
@@ -48,8 +51,6 @@ module Streamy
       async_producer.stubs(:produce)
       async_producer.stubs(:deliver_messages)
     end
-
-    attr_reader :bus, :kafka, :async_producer, :sync_producer
 
     def test_standard_priority_deliver
       async_producer.expects(:produce).with(*expected_event)
@@ -76,7 +77,7 @@ module Streamy
       bus.deliver_events
     end
 
-    def test_all_priority_delivery
+    def test_all_priority_delivery # rubocop:disable Metrics/AbcSize
       sync_producer.expects(:produce).with(*expected_event)
       sync_producer.expects(:deliver_messages)
       example_delivery(:essential)
@@ -89,10 +90,10 @@ module Streamy
       example_delivery(:standard)
 
       sync_producer.expects(:produce).with(*expected_event)
+      example_delivery(:manual)
+
       sync_producer.expects(:deliver_messages)
       async_producer.expects(:deliver_messages)
-
-      example_delivery(:manual)
       bus.deliver_events
     end
 
@@ -100,26 +101,26 @@ module Streamy
       stub_producers
 
       kafka.expects(:producer).with(
-         required_acks:       -1,
-         ack_timeout:         5,
-         max_retries:         30,
-         retry_backoff:       2,
-         max_buffer_size:     1000,
-         max_buffer_bytesize: 10_000_000,
+        required_acks:       -1,
+        ack_timeout:         5,
+        max_retries:         30,
+        retry_backoff:       2,
+        max_buffer_size:     1000,
+        max_buffer_bytesize: 10_000_000
       ).returns(sync_producer)
 
       example_delivery(:essential)
 
       kafka.expects(:async_producer).with(
-         max_queue_size:      1000,
-         delivery_threshold:  25,
-         delivery_interval:   5,
-         required_acks:       -1,
-         ack_timeout:         5,
-         max_retries:         30,
-         retry_backoff:       2,
-         max_buffer_size:     1000,
-         max_buffer_bytesize: 10_000_000,
+        max_queue_size:      1000,
+        delivery_threshold:  25,
+        delivery_interval:   5,
+        required_acks:       -1,
+        ack_timeout:         5,
+        max_retries:         30,
+        retry_backoff:       2,
+        max_buffer_size:     1000,
+        max_buffer_bytesize: 10_000_000
       ).returns(async_producer)
 
       example_delivery(:standard)
@@ -127,15 +128,15 @@ module Streamy
 
     def test_config_overides
       @config = {
-         max_queue_size:      1,
-         delivery_threshold:  1,
-         delivery_interval:   1,
-         required_acks:       1,
-         ack_timeout:         1,
-         max_retries:         1,
-         retry_backoff:       1,
-         max_buffer_size:     1,
-         max_buffer_bytesize: 1,
+        max_queue_size:      1,
+        delivery_threshold:  1,
+        delivery_interval:   1,
+        required_acks:       1,
+        ack_timeout:         1,
+        max_retries:         1,
+        retry_backoff:       1,
+        max_buffer_size:     1,
+        max_buffer_bytesize: 1
       }
 
       setup
@@ -143,26 +144,26 @@ module Streamy
       stub_producers
 
       kafka.expects(:producer).with(
-         required_acks:       1,
-         ack_timeout:         1,
-         max_retries:         1,
-         retry_backoff:       1,
-         max_buffer_size:     1,
-         max_buffer_bytesize: 1,
+        required_acks:       1,
+        ack_timeout:         1,
+        max_retries:         1,
+        retry_backoff:       1,
+        max_buffer_size:     1,
+        max_buffer_bytesize: 1
       ).returns(sync_producer)
 
       example_delivery(:essential)
 
       kafka.expects(:async_producer).with(
-         max_queue_size:      1,
-         delivery_threshold:  1,
-         delivery_interval:   1,
-         required_acks:       1,
-         ack_timeout:         1,
-         max_retries:         1,
-         retry_backoff:       1,
-         max_buffer_size:     1,
-         max_buffer_bytesize: 1,
+        max_queue_size:      1,
+        delivery_threshold:  1,
+        delivery_interval:   1,
+        required_acks:       1,
+        ack_timeout:         1,
+        max_retries:         1,
+        retry_backoff:       1,
+        max_buffer_size:     1,
+        max_buffer_bytesize: 1
       ).returns(async_producer)
 
       example_delivery(:standard)
@@ -170,15 +171,15 @@ module Streamy
 
     def test_client_config
       producer_config = {
-         max_queue_size:      2,
-         delivery_threshold:  2,
-         delivery_interval:   2,
-         required_acks:       2,
-         ack_timeout:         2,
-         max_retries:         2,
-         retry_backoff:       2,
-         max_buffer_size:     2,
-         max_buffer_bytesize: 2,
+        max_queue_size:      2,
+        delivery_threshold:  2,
+        delivery_interval:   2,
+        required_acks:       2,
+        ack_timeout:         2,
+        max_retries:         2,
+        retry_backoff:       2,
+        max_buffer_size:     2,
+        max_buffer_bytesize: 2
       }
 
       client_config = {
@@ -186,7 +187,7 @@ module Streamy
         seed_brokers: "test-broker:9092",
         sasl_plain_username: "tester",
         sasl_plain_password: "blue",
-        ssl_ca_certs_from_system: true,
+        ssl_ca_certs_from_system: true
       }
 
       config = client_config.merge(producer_config)

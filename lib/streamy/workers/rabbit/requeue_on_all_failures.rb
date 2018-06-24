@@ -6,7 +6,7 @@ module Streamy
       class RequeueOnAllFailures < Hutch::Acknowledgements::Base
         include Hutch::Logging
 
-        def handle(delivery_info, properties, broker, ex)
+        def handle(delivery_info, properties, broker, exception)
           broker.requeue(delivery_info.delivery_tag)
           logger.debug "[*] requeued message(#{properties.message_id || '-'})"
 

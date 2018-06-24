@@ -2,7 +2,7 @@ require "test_helper"
 
 class StreamyTest < Minitest::Test
   def setup
-    @message_bus = mock('message_bus')
+    @message_bus = mock("message_bus")
     Streamy.message_bus = @message_bus
   end
 

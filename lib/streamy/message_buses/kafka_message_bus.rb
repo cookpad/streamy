@@ -9,7 +9,7 @@ module Streamy
         @kafka = Kafka.new(config.except(*(async_config.keys + producer_config.keys)))
       end
 
-      def deliver(key:, topic:, type:, body:, event_time:,priority:)
+      def deliver(key:, topic:, type:, body:, event_time:, priority:)
         payload = {
           type: type,
           body: body,
@@ -17,7 +17,7 @@ module Streamy
         }.to_json
 
         producer(priority).produce(payload, key: key, topic: topic)
-        producer(priority).deliver_messages unless [:low, :manual].include? priority
+        producer(priority).deliver_messages unless %i(low manual).include? priority
       end
 
       def deliver_events
@@ -68,7 +68,7 @@ module Streamy
           {
             max_queue_size:      1000,
             delivery_threshold:  25,
-            delivery_interval:   5,
+            delivery_interval:   5
           }.merge(@async_config || {})
         end
 
@@ -79,7 +79,7 @@ module Streamy
             max_retries:         30,
             retry_backoff:       2,
             max_buffer_size:     1000,
-            max_buffer_bytesize: 10_000_000,
+            max_buffer_bytesize: 10_000_000
           }.merge(@producer_config || {})
         end
     end

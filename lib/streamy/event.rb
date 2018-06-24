@@ -11,7 +11,7 @@ module Streamy
         type: type,
         body: body,
         event_time: event_time,
-        priority: priority,
+        priority: priority
       )
     end
 
