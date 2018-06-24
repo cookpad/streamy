@@ -67,8 +67,8 @@ module Streamy
         def async_config
           {
             max_queue_size:      1000,
-            delivery_threshold:  100,
-            delivery_interval:   2,
+            delivery_threshold:  25,
+            delivery_interval:   5,
           }.merge(@async_config || {})
         end
 
@@ -76,8 +76,8 @@ module Streamy
           {
             required_acks:       -1, # all replicas
             ack_timeout:         5,
-            max_retries:         2,
-            retry_backoff:       1,
+            max_retries:         30,
+            retry_backoff:       2,
             max_buffer_size:     1000,
             max_buffer_bytesize: 10_000_000,
           }.merge(@producer_config || {})

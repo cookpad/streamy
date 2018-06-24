@@ -102,8 +102,8 @@ module Streamy
       kafka.expects(:producer).with(
          required_acks:       -1,
          ack_timeout:         5,
-         max_retries:         2,
-         retry_backoff:       1,
+         max_retries:         30,
+         retry_backoff:       2,
          max_buffer_size:     1000,
          max_buffer_bytesize: 10_000_000,
       ).returns(sync_producer)
@@ -112,12 +112,12 @@ module Streamy
 
       kafka.expects(:async_producer).with(
          max_queue_size:      1000,
-         delivery_threshold:  100,
-         delivery_interval:   2,
+         delivery_threshold:  25,
+         delivery_interval:   5,
          required_acks:       -1,
          ack_timeout:         5,
-         max_retries:         2,
-         retry_backoff:       1,
+         max_retries:         30,
+         retry_backoff:       2,
          max_buffer_size:     1000,
          max_buffer_bytesize: 10_000_000,
       ).returns(async_producer)
