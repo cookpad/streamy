@@ -31,11 +31,11 @@ module Streamy
     attr_accessor :message_bus, :worker, :logger, :cache
 
     def shutdown
-      message_bus.shutdown if message_bus.respond_to? :shutdown
+      message_bus.try(:shutdown)
     end
 
     def deliver_events
-      message_bus.deliver_events if message_bus.respond_to? :deliver_events
+      message_bus.try(:deliver_events)
     end
   end
 

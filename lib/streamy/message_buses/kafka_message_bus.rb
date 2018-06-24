@@ -46,11 +46,11 @@ module Streamy
         end
 
         def async_producer
-          @producer ||= kafka.async_producer(**async_config, **producer_config)
+          @_async_producer ||= kafka.async_producer(**async_config, **producer_config)
         end
 
         def async_producer?
-          !@producer.nil?
+          @_async_producer.present?
         end
 
         def sync_producer
