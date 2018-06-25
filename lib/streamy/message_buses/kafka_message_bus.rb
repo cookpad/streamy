@@ -15,18 +15,25 @@ module Streamy
           event_time: event_time
         }.to_json
 
-        producer(priority).produce(payload, key: key, topic: topic)
-        producer(priority).deliver_messages unless %i(low manual).include? priority
-      end
-
-      def deliver_events
-        async_producer.deliver_messages if async_producer?
-        sync_producers.map(&:deliver_messages)
+        producer(priority).tap do |p|
+          p.produce(payload, key: key, topic: topic)
+          case priority
+          when :essential, :standard
+            p.deliver_messages
+          when :batched
+            if producer_config[:max_buffer_size] == p.buffer_size
+              logger.info "Delivering #{p.buffer_size} batched events now"
+              p.deliver_messages
+            end
+          end
+        end
       end
 
       def shutdown
+        logger.info "Initiating graceful shutdown of Kafka Producers 🤞"
         async_producer.shutdown if async_producer?
         sync_producers.map(&:shutdown)
+        logger.info "Kafka producers shutdown successfully👌"
       end
 
       private
@@ -50,7 +57,7 @@ module Streamy
 
         def producer(priority)
           case priority
-          when :essential, :manual
+          when :essential, :batched
             return sync_producer
           when :standard, :low
             async_producer
@@ -88,6 +95,10 @@ module Streamy
 
         def kafka_config
           config.except(*async_config.keys)
+        end
+
+        def logger
+          ::Streamy.logger
         end
     end
   end

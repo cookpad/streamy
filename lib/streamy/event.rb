@@ -2,7 +2,7 @@ require "active_support/core_ext/class/attribute"
 
 module Streamy
   class Event
-    ALLOWED_PRIORITIES = %I[low standard essential manual].freeze
+    ALLOWED_PRIORITIES = %I[low standard essential batched].freeze
     class_attribute :default_priority
 
     def self.priority(level)

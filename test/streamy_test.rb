@@ -14,13 +14,4 @@ class StreamyTest < Minitest::Test
   def test_shutdown_unsupported_message_bus
     Streamy.shutdown
   end
-
-  def test_deliver_events
-    @message_bus.expects(:deliver_events)
-    Streamy.deliver_events
-  end
-
-  def test_deliver_events_unsupported_message_bus
-    Streamy.deliver_events
-  end
 end

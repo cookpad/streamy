@@ -73,27 +73,11 @@ The 4 available priorities are:
 * `:low` - The event will be sent to Kafka by a background thread, events are buffered until `delivery_threshold` messages are waiting or until `delivery_interval` seconds have passed since the last delivery. Calling publish on a low priority event is non blocking, and no errors should be thrown, unless the buffer is full.
 * `:standard` - The event will be sent to Kafka by a background thread, but the thread is signaled to send any buffered events as soon as possible. The call to publish is non blocking, and should not throw errors, unless the buffer is full.
 * `:essential` - The event will be sent to Kafka immediately. The call to publish is blocking, and may throw errors.
-* `:manual` - The event will be queued to send to Kafka, but no events are sent until `Streamy.deliver_events` is called. This allows manual control of event batching, when creating many events, e.g. in batch jobs. The call to `Streamy.deliver_events` is blocking and may throw errors.
+* `:batched` - The event will be queued to send to Kafka, but no events are sent until `max_buffer_size` is reached. This allows efficient event batching, when creating many events, e.g. in batch jobs. When a batch of events is being delivered the call to publish will block, and may throw errors.
 
 #### Shutdown
 
-When using Kafka, if any `:low` or `:standard` priority events are published you should call `Streamy.shutdown` before your process exits to avoid losing any events.
-
-If you are using puma, you should add this to your `puma.rb`
-
-```
-on_worker_shutdown do
-  Streamy.shutdown
-end
-```
-
-Or with unicorn:
-
-```
-after_fork do
-  at_exit { Streamy.shutdown }
-end
-```
+When using Kafka, to ensure that all `:low` `:batched` or `:standard` priority events are published `Streamy.shutdown` should be called before your process exits to avoid losing any events.  Streamy automatically adds an `at_exit` hook to initiate this, but if you are doing something unusual you might need to be aware of this.
 
 ### Consuming events
 

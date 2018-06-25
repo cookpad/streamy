@@ -69,12 +69,19 @@ module Streamy
       example_delivery(:essential)
     end
 
-    def test_manual_priority_deliver
+    def test_batched_priority_deliver # rubocop:disable Metrics/AbcSize
+      sync_producer.stubs(:buffer_size).returns(998)
       sync_producer.expects(:produce).with(*expected_event)
-      example_delivery(:manual)
+      example_delivery(:batched)
 
+      sync_producer.stubs(:buffer_size).returns(999)
+      sync_producer.expects(:produce).with(*expected_event)
+      example_delivery(:batched)
+
+      sync_producer.stubs(:buffer_size).returns(1000)
+      sync_producer.expects(:produce).with(*expected_event)
       sync_producer.expects(:deliver_messages)
-      bus.deliver_events
+      example_delivery(:batched)
     end
 
     def test_all_priority_delivery # rubocop:disable Metrics/AbcSize
@@ -89,12 +96,10 @@ module Streamy
       async_producer.expects(:deliver_messages)
       example_delivery(:standard)
 
+      sync_producer.stubs(:buffer_size).returns(1000)
       sync_producer.expects(:produce).with(*expected_event)
-      example_delivery(:manual)
-
       sync_producer.expects(:deliver_messages)
-      async_producer.expects(:deliver_messages)
-      bus.deliver_events
+      example_delivery(:batched)
     end
 
     def test_config_defaults

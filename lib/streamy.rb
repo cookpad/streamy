@@ -33,11 +33,9 @@ module Streamy
     def shutdown
       message_bus.try(:shutdown)
     end
-
-    def deliver_events
-      message_bus.try(:deliver_events)
-    end
   end
 
   self.logger = SimpleLogger.new
 end
+
+at_exit { Streamy.shutdown }
