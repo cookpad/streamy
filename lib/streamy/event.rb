@@ -1,8 +1,20 @@
+require "active_support/core_ext/class/attribute"
+
 module Streamy
   class Event
+    ALLOWED_PRIORITIES = %I[low standard essential manual].freeze
+    class_attribute :default_priority
+
+    def self.priority(level)
+      raise "unknown priority: #{level}" unless ALLOWED_PRIORITIES.include? level
+      self.default_priority = level
+    end
+
     def self.publish(*args)
       new(*args).publish
     end
+
+    priority :standard
 
     def publish
       message_bus.safe_deliver(
@@ -16,6 +28,10 @@ module Streamy
     end
 
     private
+
+      def priority
+        default_priority
+      end
 
       def message_bus
         Streamy.message_bus
@@ -39,10 +55,6 @@ module Streamy
 
       def event_time
         raise "event_time must be implemented on #{self.class}"
-      end
-
-      def priority
-        :standard
       end
   end
 end
