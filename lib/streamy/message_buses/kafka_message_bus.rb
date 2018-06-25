@@ -4,9 +4,8 @@ module Streamy
   module MessageBuses
     class KafkaMessageBus < MessageBus
       def initialize(config)
-        @async_config = config.slice(*async_config.keys)
-        @producer_config = config.slice(*producer_config.keys)
-        @kafka = Kafka.new(config.except(*(async_config.keys + producer_config.keys)))
+        @config = config
+        @kafka = Kafka.new(kafka_config)
       end
 
       def deliver(key:, topic:, type:, body:, event_time:, priority:)
@@ -32,7 +31,22 @@ module Streamy
 
       private
 
-        attr_reader :kafka
+        attr_reader :kafka, :config
+
+        DEFAULT_PRODUCER_CONFIG = {
+          required_acks:       -1, # all replicas
+          ack_timeout:         5,
+          max_retries:         30,
+          retry_backoff:       2,
+          max_buffer_size:     1000,
+          max_buffer_bytesize: 10_000_000
+        }.freeze
+
+        DEFAULT_ASYNC_CONFIG = {
+          max_queue_size:      1000,
+          delivery_threshold:  25,
+          delivery_interval:   5
+        }.freeze
 
         def producer(priority)
           case priority
@@ -46,7 +60,7 @@ module Streamy
         end
 
         def async_producer
-          @_async_producer ||= kafka.async_producer(**async_config, **producer_config)
+          @_async_producer ||= kafka.async_producer(**async_config)
         end
 
         def async_producer?
@@ -65,22 +79,15 @@ module Streamy
         end
 
         def async_config
-          {
-            max_queue_size:      1000,
-            delivery_threshold:  25,
-            delivery_interval:   5
-          }.merge(@async_config || {})
+          config.slice(*DEFAULT_ASYNC_CONFIG.keys).with_defaults(DEFAULT_ASYNC_CONFIG).merge(producer_config)
         end
 
         def producer_config
-          {
-            required_acks:       -1, # all replicas
-            ack_timeout:         5,
-            max_retries:         30,
-            retry_backoff:       2,
-            max_buffer_size:     1000,
-            max_buffer_bytesize: 10_000_000
-          }.merge(@producer_config || {})
+          config.slice(*DEFAULT_PRODUCER_CONFIG.keys).with_defaults(DEFAULT_PRODUCER_CONFIG)
+        end
+
+        def kafka_config
+          config.except(*async_config.keys)
         end
     end
   end
