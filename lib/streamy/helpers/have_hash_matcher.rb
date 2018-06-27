@@ -53,4 +53,3 @@ RSpec::Matchers.define :have_hash do |expected|
       end
     end
 end
-

@@ -1,0 +1,14 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/cookpad/streamy
+    docker:
+      - image: circleci/ruby:2.5
+    steps:
+      - checkout
+      - run:
+          name: Bundle install
+          command: 'bundle check || bundle install'
+      - run:
+          name: Test
+          command: bundle exec rake

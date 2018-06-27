@@ -20,9 +20,6 @@ module Streamy
   # Message Buses
   require "streamy/message_buses/message_bus"
   require "streamy/message_buses/test_message_bus"
-  require "streamy/message_buses/rabbit_message_bus"
-  require "streamy/message_buses/rabbit_message_bus/message"
-  require "streamy/message_buses/kafka_message_bus"
 
   # Workers
   require "streamy/workers/rabbit_worker"
@@ -32,7 +29,13 @@ module Streamy
 
   class << self
     attr_accessor :message_bus, :worker, :logger, :cache
+
+    def shutdown
+      message_bus.try(:shutdown)
+    end
   end
 
   self.logger = SimpleLogger.new
 end
+
+at_exit { Streamy.shutdown }

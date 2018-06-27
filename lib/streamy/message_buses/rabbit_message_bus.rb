@@ -1,4 +1,5 @@
 require "hutch"
+require "streamy/message_buses/rabbit_message_bus/message"
 
 module Streamy
   module MessageBuses
@@ -9,7 +10,7 @@ module Streamy
         @routing_key_prefix = routing_key_prefix
       end
 
-      def deliver(key:, topic:, type:, body:, event_time:)
+      def deliver(key:, topic:, type:, body:, event_time:, priority:)
         Message.new(
           key: key,
           topic: topic,

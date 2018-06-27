@@ -5,4 +5,3 @@ module Streamy
     end
   end
 end
-
