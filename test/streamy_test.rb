@@ -6,6 +6,10 @@ class StreamyTest < Minitest::Test
     Streamy.message_bus = @message_bus
   end
 
+  def teardown
+    Streamy.message_bus = nil
+  end
+
   def test_shutdown
     @message_bus.expects(:shutdown)
     Streamy.shutdown
