@@ -192,7 +192,8 @@ module Streamy
         seed_brokers: "test-broker:9092",
         sasl_plain_username: "tester",
         sasl_plain_password: "blue",
-        ssl_ca_certs_from_system: true
+        ssl_ca_certs_from_system: true,
+        logger: Streamy.logger
       }
 
       config = client_config.merge(producer_config)
