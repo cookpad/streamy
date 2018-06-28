@@ -55,6 +55,10 @@ module Streamy
           delivery_interval:   5
         }.freeze
 
+        DEFAULT_KAFKA_CONFIG = {
+          logger: Streamy.logger
+        }.freeze
+
         def producer(priority)
           case priority
           when :essential, :batched
@@ -94,7 +98,7 @@ module Streamy
         end
 
         def kafka_config
-          config.except(*async_config.keys)
+          config.except(*async_config.keys).with_defaults(DEFAULT_KAFKA_CONFIG)
         end
 
         def logger
