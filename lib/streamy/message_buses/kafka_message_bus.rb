@@ -30,10 +30,8 @@ module Streamy
       end
 
       def shutdown
-        logger.info "Initiating graceful shutdown of Kafka Producers 🤞"
         async_producer.shutdown if async_producer?
         sync_producers.map(&:shutdown)
-        logger.info "Kafka producers shutdown successfully👌"
       end
 
       private
