@@ -5,11 +5,6 @@ class DummyConsumer
   include Streamy::Consumer
 end
 
-class FilteringDummyConsumer
-  include Streamy::Consumer
-  start_from 1525058571
-end
-
 module EventHandlers
   class DummyEvent < Streamy::EventHandler
     cattr_accessor :times_called
@@ -52,14 +47,6 @@ module Streamy
       DummyConsumer.new.process(message)
 
       assert_equal 2, EventHandlers::DummyEvent.times_called
-    end
-
-    def test_ignoring_messages_from_before_start_from
-      message = { key: "1234", event_time: "2018-04-30 03:22:50 UTC", type: "dummy_event" }
-
-      FilteringDummyConsumer.new.process(message)
-
-      assert_equal 0, EventHandlers::DummyEvent.times_called
     end
   end
 end

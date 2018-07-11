@@ -1,4 +1,6 @@
 require "kafka"
+require "active_support/core_ext/hash/indifferent_access"
+require "active_support/json"
 
 module Streamy
   module MessageBuses
