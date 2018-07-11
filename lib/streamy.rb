@@ -21,9 +21,6 @@ module Streamy
   require "streamy/message_buses/message_bus"
   require "streamy/message_buses/test_message_bus"
 
-  # Workers
-  require "streamy/workers/rabbit_worker"
-
   # Rake task
   require "streamy/railtie" if defined?(Rails)
 

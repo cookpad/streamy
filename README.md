@@ -7,7 +7,7 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'streamy'
+gem "streamy"
 ```
 
 
@@ -18,20 +18,11 @@ gem 'streamy'
 Add this to config/initializer/streamy.rb
 
 ```ruby
-require "streamy/message_buses/rabbit_message_bus"
-Streamy.message_bus = Streamy::MessageBuses::RabbitMessageBus.new(
-  uri: "amqp://..."
-)
-```
-
-or if using Kafka
-
-```ruby
 require "streamy/message_buses/kafka_message_bus"
 Streamy.message_bus = Streamy::MessageBuses::KafkaMessageBus.new(
-    client_id: "streamy",
-    seed_brokers: "broker.remote:9092",
-    ssl_ca_certs_from_system: true,
+  client_id: "streamy",
+  seed_brokers: "broker.remote:9092",
+  ssl_ca_certs_from_system: true
 )
 ```
 
@@ -66,9 +57,7 @@ Events::ReceivedPayment.publish
 
 #### Event Priority
 
-When using the Kafka message bus you can choose a priority for your events. This is done by overriding the `priority` method on your event.
-
-The 4 available priorities are:
+You can choose a priority for your events. This is done by overriding the `priority` method on your event:
 
 * `:low` - The event will be sent to Kafka by a background thread, events are buffered until `delivery_threshold` messages are waiting or until `delivery_interval` seconds have passed since the last delivery. Calling publish on a low priority event is non blocking, and no errors should be thrown, unless the buffer is full.
 * `:standard` - The event will be sent to Kafka by a background thread, but the thread is signaled to send any buffered events as soon as possible. The call to publish is non blocking, and should not throw errors, unless the buffer is full.
@@ -77,7 +66,13 @@ The 4 available priorities are:
 
 #### Shutdown
 
-When using Kafka, to ensure that all `:low` `:batched` or `:standard` priority events are published `Streamy.shutdown` should be called before your process exits to avoid losing any events.  Streamy automatically adds an `at_exit` hook to initiate this, but if you are doing something unusual you might need to be aware of this.
+To ensure that all `:low` `:batched` or `:standard` priority events are published `Streamy.shutdown` should be called before your process exits to avoid losing any events.
+Streamy automatically adds an `at_exit` hook to initiate this, but if you are doing something unusual you might need to be aware of this.
+
+---
+
+Below is WIP as we finish up switching to Kafka:
+
 
 ### Consuming events
 
