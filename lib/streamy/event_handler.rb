@@ -1,23 +1,29 @@
 module Streamy
   class EventHandler
-    def initialize(attributes)
-      @attributes = attributes
+    def self.run(*args)
+      new(*args).run
     end
 
-    def process
+    def initialize(params)
+      @params = params.with_indifferent_access
+    end
+
+    def run
       raise "Not implemented"
     end
+    alias :process :run
 
     private
 
-      attr_reader :attributes
+      attr_reader :params
+      alias :attributes :params
 
       def event_time
-        attributes[:event_time]
+        params[:event_time]
       end
 
       def body
-        attributes[:body]
+        OpenStruct.new(params[:body])
       end
   end
 end
