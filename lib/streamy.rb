@@ -21,9 +21,6 @@ module Streamy
   require "streamy/message_buses/message_bus"
   require "streamy/message_buses/test_message_bus"
 
-  # Rake task
-  require "streamy/railtie" if defined?(Rails)
-
   class << self
     attr_accessor :message_bus, :worker, :logger, :cache
 
