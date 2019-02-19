@@ -41,4 +41,6 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
 
   spec.add_dependency "activesupport", "~> 5.2"
   spec.add_dependency "webmock", "~> 3.3"
+  spec.add_dependency "avro-turf"
+  spec.add_dependency "avro-patches"
 end

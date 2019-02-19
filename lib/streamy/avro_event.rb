@@ -1,7 +1,8 @@
 require "active_support/core_ext/class/attribute"
+require "avro_turf/messaging"
 
 module Streamy
-  class Event
+  class AvroEvent
     ALLOWED_PRIORITIES = %I[low standard essential batched].freeze
     class_attribute :default_priority
 
@@ -28,11 +29,15 @@ module Streamy
     private
 
       def payload
+        avro.encode(attributes.stringify_keys, schema_name: type)
+      end
+
+      def attributes
         {
           type: type,
-          body: body,
+          body: body.stringify_keys,
           event_time: event_time
-        }.to_json
+        }
       end
 
       def priority
@@ -61,6 +66,10 @@ module Streamy
 
       def event_time
         raise "event_time must be implemented on #{self.class}"
+      end
+
+      def avro
+        AvroTurf::Messaging.new(registry_url: ENV["SCHEMA_REGISTRY_URLs"])
       end
   end
 end
