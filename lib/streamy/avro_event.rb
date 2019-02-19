@@ -36,7 +36,7 @@ module Streamy
         {
           type: type,
           body: body,
-          event_time: event_time.to_s
+          event_time: event_time
         }
       end
 
@@ -69,7 +69,6 @@ module Streamy
       end
 
       def avro
-        byebug
         AvroTurf::Messaging.new(registry_url: ENV["SCHEMA_REGISTRY_URL"])
       end
   end
