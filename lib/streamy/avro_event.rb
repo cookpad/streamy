@@ -35,8 +35,8 @@ module Streamy
       def attributes
         {
           type: type,
-          body: body.stringify_keys,
-          event_time: event_time
+          body: body,
+          event_time: event_time.to_s
         }
       end
 
@@ -69,7 +69,8 @@ module Streamy
       end
 
       def avro
-        AvroTurf::Messaging.new(registry_url: ENV["SCHEMA_REGISTRY_URLs"])
+        byebug
+        AvroTurf::Messaging.new(registry_url: ENV["SCHEMA_REGISTRY_URL"])
       end
   end
 end

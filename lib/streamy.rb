@@ -7,6 +7,7 @@ module Streamy
   require "streamy/version"
   require "streamy/consumer"
   require "streamy/event"
+  require "streamy/avro_event"
   require "streamy/event_handler"
   require "streamy/message_processor"
   require "streamy/profiler"
