@@ -21,13 +21,19 @@ module Streamy
 
     def example_delivery(priority)
       bus.deliver(
+        payload: payload,
         key: "prk-sg-001",
-        type: "sausage",
         topic: "charcuterie",
-        event_time: "2018",
-        body: { meat: "pork", herbs: "sage" },
         priority: priority
       )
+    end
+
+    def payload
+      {
+        type: "sausage",
+        body: { meat: "pork", herbs: "sage" },
+        event_time: "2018"
+      }.to_json
     end
 
     def expected_event
