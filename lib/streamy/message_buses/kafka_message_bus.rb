@@ -10,13 +10,7 @@ module Streamy
         @kafka = Kafka.new(kafka_config)
       end
 
-      def deliver(key:, topic:, type:, body:, event_time:, priority:)
-        payload = {
-          type: type,
-          body: body,
-          event_time: event_time
-        }.to_json
-
+      def deliver(key:, topic:, payload:, priority:)
         producer(priority).tap do |p|
           p.produce(payload, key: key, topic: topic)
           case priority

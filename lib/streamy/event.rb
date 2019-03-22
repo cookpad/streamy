@@ -18,11 +18,9 @@ module Streamy
 
     def publish
       message_bus.safe_deliver(
+        payload: payload,
         key: key,
         topic: topic,
-        type: type,
-        body: body,
-        event_time: event_time,
         priority: priority
       )
     end
