@@ -32,6 +32,7 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.14"
+  spec.add_development_dependency "byebug"
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "minitest-focus"
   spec.add_development_dependency "mocha", "~> 1.4"

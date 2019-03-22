@@ -1,44 +1,44 @@
 require "test_helper"
 
 module Streamy
-  class EventTest < Minitest::Test
-    class EventWithoutTopic < Event
+  class JsonEventTest < Minitest::Test
+    class EventWithoutTopic < JsonEvent
       def event_time; end
 
       def body; end
     end
 
-    class EventWithoutEventTime < Event
+    class EventWithoutEventTime < JsonEvent
       def topic; end
 
       def body; end
     end
 
-    class EventWithoutBody < Event
+    class EventWithoutBody < JsonEvent
       def topic; end
 
       def event_time; end
     end
 
     def test_helpful_error_message_on_missing_topic
-      assert_runtime_error "topic must be implemented on Streamy::EventTest::EventWithoutTopic" do
+      assert_runtime_error "topic must be implemented on Streamy::JsonEventTest::EventWithoutTopic" do
         EventWithoutTopic.publish
       end
     end
 
     def test_helpful_error_message_on_missing_event_time
-      assert_runtime_error "event_time must be implemented on Streamy::EventTest::EventWithoutEventTime" do
+      assert_runtime_error "event_time must be implemented on Streamy::JsonEventTest::EventWithoutEventTime" do
         EventWithoutEventTime.publish
       end
     end
 
     def test_helpful_error_message_on_missing_body
-      assert_runtime_error "body must be implemented on Streamy::EventTest::EventWithoutBody" do
+      assert_runtime_error "body must be implemented on Streamy::JsonEventTest::EventWithoutBody" do
         EventWithoutBody.publish
       end
     end
 
-    class TestEvent < Event
+    class TestEvent < JsonEvent
       def topic
         :bacon
       end
