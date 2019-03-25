@@ -62,9 +62,11 @@ module Streamy
         TestEvent.new,
         key: "IAMUUID",
         topic: :bacon,
-        type: "test_event",
-        body: { smoked: "true", streaky: "false" },
-        event_time: "nowish"
+        payload: {
+          type: "test_event",
+          body: { smoked: "true", streaky: "false" },
+          event_time: "nowish"
+        }.to_json
       )
     end
 
