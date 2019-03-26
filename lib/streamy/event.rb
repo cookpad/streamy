@@ -7,6 +7,7 @@ module Streamy
 
     def self.priority(level)
       raise "unknown priority: #{level}" unless ALLOWED_PRIORITIES.include? level
+
       self.default_priority = level
     end
 
@@ -18,10 +19,10 @@ module Streamy
 
     def publish
       message_bus.safe_deliver(
-        payload: payload,
         key: key,
         topic: topic,
-        priority: priority
+        priority: priority,
+        payload: payload
       )
     end
 
