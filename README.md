@@ -79,7 +79,7 @@ ENV["SCHEMA_REGISTRY_URL"] = "http://registry.example.com"
 ENV["SCHEMAS_PATH"] = "app/schemas"
 ```
 
-**Default schemas path is "app/schemas"**
+*Default schemas path is "app/schemas"*
 
 Create an event:
 

@@ -1,0 +1,34 @@
+{
+   "type": "record",
+   "name": "incorrect_attribute_event",
+   "fields": [
+     {
+       "name": "type",
+       "type": "string"
+     },
+     {
+       "name": "event_time",
+       "type": ["null", "string"],
+       "default": null
+     },
+     {
+       "name": "body",
+       "type": {
+         "type": "record",
+         "name": "body",
+         "fields": [
+           {
+             "name": "smoked",
+             "type": ["null", "string"],
+             "default": null
+           },
+           {
+             "name": "streaky",
+             "type": ["null", "string"],
+             "default": null
+           }
+         ]
+       }
+     }
+   ]
+}

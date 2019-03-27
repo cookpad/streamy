@@ -46,6 +46,43 @@ module Streamy
       end
     end
 
+    class IncorrectAttributeEvent < AvroEvent
+      def topic
+        :bacon
+      end
+
+      def body
+        {
+          smoked: "true",
+          streaky: 100
+        }
+      end
+
+      def event_time
+        "nowish"
+      end
+    end
+
+    def test_helpful_error_message_on_incorrect_attribute_type
+      assert_raises Avro::IO::AvroTypeError do
+        IncorrectAttributeEvent.publish
+      end
+    end
+
+    class EventWithNoSchema < AvroEvent
+      def topic; end
+
+      def body; end
+
+      def event_time; end
+    end
+
+    def test_helpful_error_message_on_event_with_no_schema
+      assert_raises AvroTurf::SchemaNotFoundError do
+        EventWithNoSchema.publish
+      end
+    end
+
     class TestEvent < AvroEvent
       def topic
         :bacon
