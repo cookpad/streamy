@@ -79,7 +79,7 @@ ENV["SCHEMA_REGISTRY_URL"] = "http://registry.example.com"
 ENV["SCHEMAS_PATH"] = "app/schemas"
 ```
 
-Default schemas path is "app/schemas"
+**Default schemas path is "app/schemas"**
 
 Create an event:
 
@@ -151,7 +151,7 @@ Events::ReceivedPayment.publish
 
 ### Consuming events
 
-We use [karafka](https://github.com/karafka/karafka) to handle the bulk of the consumer logic. You can also use [karafka/avro](https://github.com/karafka/avro) to consume Avro based events
+We use [karafka](https://github.com/karafka/karafka) to handle the bulk of the consumer logic. You can also use [karafka/avro](https://github.com/karafka/avro) to consume Avro encoded events
 
 Configure karafka consumer:
 
