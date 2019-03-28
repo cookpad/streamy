@@ -18,8 +18,8 @@ module Streamy
 
       def avro
         AvroTurf::Messaging.new(
-          avro_schema_registry_url: Streamy.configuration.avro_schema_registry_url,
-          avro_schemas_path: Streamy.configuration.avro_schemas_path
+          registry_url: Streamy.configuration.avro_schema_registry_url,
+          schemas_path: Streamy.configuration.avro_schemas_path
         )
       end
   end
