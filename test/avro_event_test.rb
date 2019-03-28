@@ -5,10 +5,10 @@ require "webmock/minitest"
 module Streamy
   class AvroEventTest < Minitest::Test
     def setup
-      Streamy.configuration.registry_url = "http://registry.example.com"
-      Streamy.configuration.schemas_path = "test/support/schemas"
+      Streamy.configuration.avro_schema_registry_url = "http://registry.example.com"
+      Streamy.configuration.avro_schemas_path = "test/support/schemas"
       FakeConfluentSchemaRegistryServer.clear
-      stub_request(:any, /^#{Streamy.configuration.registry_url}/).to_rack(FakeConfluentSchemaRegistryServer)
+      stub_request(:any, /^#{Streamy.configuration.avro_schema_registry_url}/).to_rack(FakeConfluentSchemaRegistryServer)
     end
 
     class EventWithoutTopic < AvroEvent

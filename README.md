@@ -15,7 +15,7 @@ gem "streamy"
 
 ### Broadcasting events
 
-Streamy includes support for two different types of event encoding (JSON and [Avro](https://avro.apache.org/docs/current/spec.html))
+Streamy includes support for two different types of event encoding (JSON and [Avro](https://avro.apache.org/docs/current/spec.html)).
 
 #### Events with JSON encoding
 
@@ -72,8 +72,8 @@ Streamy.message_bus = Streamy::MessageBuses::KafkaMessageBus.new(
 )
 
 Streamy.configure do |config|
-  config.registry_url = "http://registry.example.com",
-  config.schemas_path = "app/schemas"
+  config.avro_schema_registry_url = "http://registry.example.com",
+  config.avro_schemas_path = "app/schemas"
 end  
 ```
 
@@ -149,7 +149,7 @@ Events::ReceivedPayment.publish
 
 ### Consuming events
 
-We use [karafka](https://github.com/karafka/karafka) to handle the bulk of the consumer logic. You can also use [karafka/avro](https://github.com/karafka/avro) to consume Avro encoded events
+We use [karafka](https://github.com/karafka/karafka) to handle the bulk of the consumer logic. You can also use [karafka/avro](https://github.com/karafka/avro) to consume Avro encoded events.
 
 Configure karafka consumer:
 

@@ -1,10 +1,10 @@
 module Streamy
   class Configuration
-    attr_accessor :registry_url, :schemas_path
+    attr_accessor :avro_schema_registry_url, :avro_schemas_path
 
     def initialize
-      @registry_url = nil
-      @schemas_path = nil
+      @avro_schema_registry_url = nil
+      @avro_schemas_path = nil
     end
   end
 end
