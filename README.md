@@ -78,6 +78,7 @@ end
 ```
 
 *Default schemas path is "app/schemas"*
+*Schema Registry Url is required for encoding with Avro*
 
 Create an event:
 
