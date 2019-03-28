@@ -5,6 +5,7 @@ module Streamy
   require "active_support/core_ext/string"
 
   require "streamy/version"
+  require "streamy/configuration"
   require "streamy/consumer"
   require "streamy/event"
   require "streamy/json_event"
@@ -33,6 +34,14 @@ module Streamy
     def shutdown
       message_bus.try(:shutdown)
     end
+  end
+
+  def self.configuration
+    @configuration ||= Configuration.new
+  end
+
+  def self.configure
+    yield(configuration)
   end
 
   self.logger = SimpleLogger.new

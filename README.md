@@ -68,15 +68,13 @@ require "streamy/message_buses/kafka_message_bus"
 Streamy.message_bus = Streamy::MessageBuses::KafkaMessageBus.new(
   client_id: "streamy",
   seed_brokers: "broker.remote:9092",
-  ssl_ca_certs_from_system: true
+  ssl_ca_certs_from_system: true,
 )
-```
 
-Add environment variables for schema path and schema registry url:
-
-```ruby
-ENV["SCHEMA_REGISTRY_URL"] = "http://registry.example.com"
-ENV["SCHEMAS_PATH"] = "app/schemas"
+Streamy.configure do |config|
+  config.registry_url = "http://registry.example.com",
+  config.schemas_path = "app/schemas"
+end  
 ```
 
 *Default schemas path is "app/schemas"*
