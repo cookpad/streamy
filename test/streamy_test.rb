@@ -1,17 +1,8 @@
 require "test_helper"
 
 class StreamyTest < Minitest::Test
-  def setup
-    @message_bus = mock("message_bus")
-    Streamy.message_bus = @message_bus
-  end
-
-  def teardown
-    Streamy.message_bus = nil
-  end
-
   def test_shutdown
-    @message_bus.expects(:shutdown)
+    Streamy.message_bus.expects(:shutdown)
     Streamy.shutdown
   end
 
