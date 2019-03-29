@@ -1,3 +1,4 @@
+require "streamy/kafka_configuration"
 require "kafka"
 require "active_support/core_ext/hash/indifferent_access"
 require "active_support/json"
@@ -6,8 +7,8 @@ module Streamy
   module MessageBuses
     class KafkaMessageBus < MessageBus
       def initialize(config)
-        @config = config
-        @kafka = Kafka.new(kafka_config)
+        @config = KafkaConfiguration.new(config)
+        @kafka = Kafka.new(@config.kafka)
       end
 
       def deliver(key:, topic:, type:, body:, event_time:, priority:)
@@ -23,7 +24,7 @@ module Streamy
           when :essential, :standard
             p.deliver_messages
           when :batched
-            if producer_config[:max_buffer_size] == p.buffer_size
+            if config.producer[:max_buffer_size] == p.buffer_size
               logger.info "Delivering #{p.buffer_size} batched events now"
               p.deliver_messages
             end
@@ -40,25 +41,6 @@ module Streamy
 
         attr_reader :kafka, :config
 
-        DEFAULT_PRODUCER_CONFIG = {
-          required_acks:       -1, # all replicas
-          ack_timeout:         5,
-          max_retries:         30,
-          retry_backoff:       2,
-          max_buffer_size:     1000,
-          max_buffer_bytesize: 10_000_000
-        }.freeze
-
-        DEFAULT_ASYNC_CONFIG = {
-          max_queue_size:      1000,
-          delivery_threshold:  25,
-          delivery_interval:   5
-        }.freeze
-
-        DEFAULT_KAFKA_CONFIG = {
-          logger: Streamy.logger
-        }.freeze
-
         def producer(priority)
           case priority
           when :essential, :batched
@@ -71,7 +53,7 @@ module Streamy
         end
 
         def async_producer
-          @_async_producer ||= kafka.async_producer(**async_config)
+          @_async_producer ||= kafka.async_producer(**config.async)
         end
 
         def async_producer?
@@ -80,25 +62,13 @@ module Streamy
 
         def sync_producer
           # One synchronous producer per-thread to avoid problems with concurrent deliveries.
-          Thread.current[:streamy_kafka_sync_producer] ||= kafka.producer(**producer_config)
+          Thread.current[:streamy_kafka_sync_producer] ||= kafka.producer(**config.producer)
         end
 
         def sync_producers
           Thread.list.map do |thread|
             thread[:streamy_kafka_sync_producer]
           end.compact
-        end
-
-        def async_config
-          config.slice(*DEFAULT_ASYNC_CONFIG.keys).with_defaults(DEFAULT_ASYNC_CONFIG).merge(producer_config)
-        end
-
-        def producer_config
-          config.slice(*DEFAULT_PRODUCER_CONFIG.keys).with_defaults(DEFAULT_PRODUCER_CONFIG)
-        end
-
-        def kafka_config
-          config.except(*async_config.keys).with_defaults(DEFAULT_KAFKA_CONFIG)
         end
 
         def logger
