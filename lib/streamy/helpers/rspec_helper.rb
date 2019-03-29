@@ -3,13 +3,15 @@ require "streamy/helpers/have_hash_matcher"
 module Streamy
   module Helpers
     module RspecHelper
-      def expect_event(topic: kind_of(String), key: kind_of(String), body: kind_of(Hash), type:, event_time: nil)
+      def expect_event(topic: kind_of(String), key: kind_of(String), payload: kind_of(Hash))
         expect(Streamy.message_bus.deliveries).to have_hash(
           topic: topic,
           key: key,
-          type: type,
-          body: body,
-          event_time: event_time || kind_of(Time)
+          payload: {
+            type: type,
+            body: body,
+            event_time: event_time || kind_of(Time)
+          }
         )
       end
       alias expect_published_event expect_event
