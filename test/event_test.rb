@@ -4,20 +4,38 @@ module Streamy
   class EventTest < Minitest::Test
     class EventWithoutTopic < Event
       def event_time; end
-
       def body; end
     end
 
     class EventWithoutEventTime < Event
       def topic; end
-
       def body; end
     end
 
     class EventWithoutBody < Event
       def topic; end
-
       def event_time; end
+    end
+
+    class TestEvent < Event
+      def topic
+        :bacon
+      end
+
+      def body
+        {
+          smoked: "true",
+          streaky: "false"
+        }
+      end
+
+      def event_time
+        "nowish"
+      end
+    end
+
+    class OveriddenPriority < TestEvent
+      priority :low
     end
 
     def test_helpful_error_message_on_missing_topic
@@ -38,28 +56,12 @@ module Streamy
       end
     end
 
-    class TestEvent < Event
-      def topic
-        :bacon
-      end
-
-      def body
-        {
-          smoked: "true",
-          streaky: "false"
-        }
-      end
-
-      def event_time
-        "nowish"
-      end
-    end
-
     def test_publish
       SecureRandom.stubs(:uuid).returns("IAMUUID")
 
+      TestEvent.new.publish
+
       assert_published_event(
-        TestEvent.new,
         key: "IAMUUID",
         topic: :bacon,
         type: "test_event",
@@ -69,38 +71,15 @@ module Streamy
     end
 
     def test_default_priority
-      assert_published_event(TestEvent.new, priority: :standard)
-    end
+      TestEvent.new.publish
 
-    class OveriddenPriority < TestEvent
-      priority :low
+      assert_published_event(priority: :standard)
     end
 
     def test_overidden_priority
-      assert_published_event(OveriddenPriority.new, priority: :low)
+      OveriddenPriority.new.publish
+
+      assert_published_event(priority: :low)
     end
-
-    private
-
-      def assert_published_event(event, assertions)
-        bus = mock("message_bus")
-        Streamy.stubs(:message_bus).returns(bus)
-
-        bus.expects(:safe_deliver).with do |params|
-          assertions.each do |key, value|
-            assert_equal value, params[key]
-          end
-        end
-
-        event.publish
-      end
-
-      def assert_runtime_error(message, &block)
-        error = assert_raises RuntimeError do
-          yield
-        end
-
-        assert_equal message, error.message
-      end
   end
 end

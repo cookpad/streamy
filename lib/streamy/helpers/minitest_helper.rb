@@ -1,5 +1,5 @@
 require "streamy/helpers/assert_event"
 
-class ActiveSupport::TestCase
+class Minitest::Test
   include Streamy::AssertEvent
 end
