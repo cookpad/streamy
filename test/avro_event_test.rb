@@ -13,19 +13,60 @@ module Streamy
 
     class EventWithoutTopic < AvroEvent
       def event_time; end
-
       def body; end
     end
 
     class EventWithoutEventTime < AvroEvent
       def topic; end
-
       def body; end
     end
 
     class EventWithoutBody < AvroEvent
       def topic; end
+      def event_time; end
+    end
 
+    class IncorrectAttributeEvent < AvroEvent
+      def topic
+        :bacon
+      end
+
+      def body
+        {
+          smoked: "true",
+          streaky: 100
+        }
+      end
+
+      def event_time
+        "nowish"
+      end
+    end
+
+    class TestEvent < AvroEvent
+      def topic
+        :bacon
+      end
+
+      def body
+        {
+          smoked: "true",
+          streaky: "false"
+        }
+      end
+
+      def event_time
+        "nowish"
+      end
+    end
+
+    class OveriddenPriority < TestEvent
+      priority :low
+    end
+
+    class EventWithNoSchema < AvroEvent
+      def topic; end
+      def body; end
       def event_time; end
     end
 
@@ -47,35 +88,10 @@ module Streamy
       end
     end
 
-    class IncorrectAttributeEvent < AvroEvent
-      def topic
-        :bacon
-      end
-
-      def body
-        {
-          smoked: "true",
-          streaky: 100
-        }
-      end
-
-      def event_time
-        "nowish"
-      end
-    end
-
     def test_helpful_error_message_on_incorrect_attribute_type
       assert_raises Avro::IO::AvroTypeError do
         IncorrectAttributeEvent.publish
       end
-    end
-
-    class EventWithNoSchema < AvroEvent
-      def topic; end
-
-      def body; end
-
-      def event_time; end
     end
 
     def test_helpful_error_message_on_event_with_no_schema
@@ -84,28 +100,12 @@ module Streamy
       end
     end
 
-    class TestEvent < AvroEvent
-      def topic
-        :bacon
-      end
-
-      def body
-        {
-          smoked: "true",
-          streaky: "false"
-        }
-      end
-
-      def event_time
-        "nowish"
-      end
-    end
-
     def test_publish
       SecureRandom.stubs(:uuid).returns("IAMUUID")
 
+      TestEvent.publish
+
       assert_published_event(
-        TestEvent.new,
         key: "IAMUUID",
         topic: :bacon,
         payload: "\u0000\u0000\u0000\u0000\u0000\u0014test_event\u0002\fnowish\u0002\btrue\u0002\nfalse"
@@ -113,38 +113,15 @@ module Streamy
     end
 
     def test_default_priority
-      assert_published_event(TestEvent.new, priority: :standard)
-    end
+      TestEvent.publish
 
-    class OveriddenPriority < TestEvent
-      priority :low
+      assert_published_event(priority: :standard)
     end
 
     def test_overidden_priority
-      assert_published_event(OveriddenPriority.new, priority: :low)
+      OveriddenPriority.publish
+
+      assert_published_event(priority: :low)
     end
-
-    private
-
-      def assert_published_event(event, assertions)
-        bus = mock("message_bus")
-        Streamy.stubs(:message_bus).returns(bus)
-
-        bus.expects(:safe_deliver).with do |params|
-          assertions.each do |key, value|
-            assert_equal value, params[key]
-          end
-        end
-
-        event.publish
-      end
-
-      def assert_runtime_error(message, &block)
-        error = assert_raises RuntimeError do
-          yield
-        end
-
-        assert_equal message, error.message
-      end
   end
 end

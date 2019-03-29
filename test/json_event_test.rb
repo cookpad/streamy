@@ -59,7 +59,7 @@ module Streamy
     def test_publish
       SecureRandom.stubs(:uuid).returns("IAMUUID")
 
-      TestEvent.new.publish
+      TestEvent.publish
 
       assert_published_event(
         key: "IAMUUID",
@@ -73,13 +73,13 @@ module Streamy
     end
 
     def test_default_priority
-      TestEvent.new.publish
+      TestEvent.publish
 
       assert_published_event(priority: :standard)
     end
 
     def test_overidden_priority
-      OveriddenPriority.new.publish
+      OveriddenPriority.publish
 
       assert_published_event(priority: :low)
     end
