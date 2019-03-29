@@ -6,14 +6,6 @@ module Streamy
       avro.encode(payload_attributes.deep_stringify_keys, schema_name: type)
     end
 
-    def payload_attributes
-      {
-        type: type,
-        body: body,
-        event_time: event_time
-      }
-    end
-
     private
 
       def avro

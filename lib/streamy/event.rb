@@ -56,8 +56,16 @@ module Streamy
         raise "event_time must be implemented on #{self.class}"
       end
 
+      def payload_attributes
+        {
+          type: type,
+          body: body,
+          event_time: event_time
+        }
+      end
+
       def payload
-        raise NotImplementedError
+        payload_attributes
       end
   end
 end
