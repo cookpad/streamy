@@ -10,7 +10,7 @@ module Streamy
         )
 
         payload_hash = JSON.parse(Streamy.message_bus.deliveries.last[:payload]).deep_symbolize_keys
-        expect(body).to eq(payload_hash[:body]) if body
+        expect(payload_hash[:body]).to match(body) if body
         expect(type).to eq(payload_hash[:type])
         expect(event_time).to eq(payload_hash[:event_time]) if event_time
       end
