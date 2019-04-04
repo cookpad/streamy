@@ -6,7 +6,7 @@ module Streamy
   class AvroEventTest < Minitest::Test
     def setup
       Streamy.configuration.avro_schema_registry_url = "http://registry.example.com"
-      Streamy.configuration.avro_schemas_path = "test/support/schemas"
+      Streamy.configuration.avro_schemas_path = "test/fixtures/schemas"
       FakeConfluentSchemaRegistryServer.clear
       stub_request(:any, /^#{Streamy.configuration.avro_schema_registry_url}/).to_rack(FakeConfluentSchemaRegistryServer)
     end
