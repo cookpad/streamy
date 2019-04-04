@@ -19,8 +19,9 @@ module Streamy
 
       def hashify_messages(message_bus_deliveries)
         message_bus_deliveries.map do |message|
-          message[:payload] = JSON.parse(message[:payload]).deep_symbolize_keys
-          message
+          message_hash = message.dup
+          message_hash[:payload] = JSON.parse(message_hash[:payload]).deep_symbolize_keys
+          message_hash
         end
       end
 
