@@ -15,6 +15,10 @@ gem "streamy"
 
 ### Broadcasting events
 
+Streamy includes support for two different types of event encoding (JSON and [Avro](https://avro.apache.org/docs/current/spec.html)).
+
+#### Events with JSON encoding
+
 Add this to config/initializer/streamy.rb
 
 ```ruby
@@ -30,7 +34,7 @@ Create an event:
 
 ```ruby
 module Events
-  class ReceivedPayment < Streamy::Event
+  class ReceivedPayment < Streamy::JsonEvent
     def topic
        "payments.transactions"
     end
@@ -55,11 +59,98 @@ Publish it:
 Events::ReceivedPayment.publish
 ```
 
+#### Events with Avro encoding
+
+Add this to config/initializer/streamy.rb
+
+```ruby
+require "streamy/message_buses/kafka_message_bus"
+Streamy.message_bus = Streamy::MessageBuses::KafkaMessageBus.new(
+  client_id: "streamy",
+  seed_brokers: "broker.remote:9092",
+  ssl_ca_certs_from_system: true,
+)
+
+Streamy.configure do |config|
+  config.avro_schema_registry_url = "http://registry.example.com",
+  config.avro_schemas_path = "app/schemas"
+end  
+```
+
+*Default schemas path is "app/schemas"*
+*Schema Registry Url is required for encoding with Avro*
+
+Create an event:
+
+```ruby
+module Events
+  class ReceivedPayment < Streamy::AvroEvent
+    def topic
+       "payments.transactions"
+    end
+
+    def body
+      {
+        amount: 200
+      }
+    end
+
+    def event_time
+      Time.now
+    end
+  end
+end
+```
+
+Create Avro schema (`received_payment.asvc`) for event in schema path above:
+
+```json
+{
+   "type": "record",
+   "name": "received_payment",
+   "fields": [
+     {
+       "name": "type",
+       "type": "string"
+     },
+     {
+       "name": "event_time",
+       "type": {
+         "type": "long",
+         "logicalType": "timestamp-micros"
+        }
+     },
+     {
+       "name": "body",
+       "type": {
+         "type": "record",
+         "name": "body",
+         "fields": [
+           {
+             "name": "amount",
+             "type": ["null", "int"],
+             "default": null
+           }
+         ]
+       }
+     }
+   ]
+}
+
+```
+
+Publish event:
+
+
+```ruby
+Events::ReceivedPayment.publish
+```
+
 ---
 
 ### Consuming events
 
-We use [karafka](https://github.com/karafka/karafka) to handle the bulk of the consumer logic.
+We use [karafka](https://github.com/karafka/karafka) to handle the bulk of the consumer logic. You can also use [karafka/avro](https://github.com/karafka/avro) to consume Avro encoded events.
 
 Configure karafka consumer:
 

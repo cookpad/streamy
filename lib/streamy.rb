@@ -5,8 +5,11 @@ module Streamy
   require "active_support/core_ext/string"
 
   require "streamy/version"
+  require "streamy/configuration"
   require "streamy/consumer"
   require "streamy/event"
+  require "streamy/json_event"
+  require "streamy/avro_event"
   require "streamy/event_handler"
   require "streamy/message_processor"
   require "streamy/profiler"
@@ -21,12 +24,24 @@ module Streamy
   require "streamy/message_buses/message_bus"
   require "streamy/message_buses/test_message_bus"
 
+  # Avro
+  # require patches for avro to allow for logical types in schemas
+  require "avro_patches"
+
   class << self
     attr_accessor :message_bus, :worker, :logger, :cache
 
     def shutdown
       message_bus.try(:shutdown)
     end
+  end
+
+  def self.configuration
+    @configuration ||= Configuration.new
+  end
+
+  def self.configure
+    yield(configuration)
   end
 
   self.logger = SimpleLogger.new

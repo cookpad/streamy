@@ -2,6 +2,16 @@ require "test_helper"
 
 module Streamy
   class EventTest < Minitest::Test
+    class ValidEvent < Event
+      def topic; end
+      def body; end
+      def event_time; end
+    end
+
+    class OveriddenPriority < ValidEvent
+      priority :low
+    end
+
     class EventWithoutTopic < Event
       def event_time; end
       def body; end
@@ -15,27 +25,6 @@ module Streamy
     class EventWithoutBody < Event
       def topic; end
       def event_time; end
-    end
-
-    class TestEvent < Event
-      def topic
-        :bacon
-      end
-
-      def body
-        {
-          smoked: "true",
-          streaky: "false"
-        }
-      end
-
-      def event_time
-        "nowish"
-      end
-    end
-
-    class OveriddenPriority < TestEvent
-      priority :low
     end
 
     def test_helpful_error_message_on_missing_topic
@@ -56,28 +45,14 @@ module Streamy
       end
     end
 
-    def test_publish
-      SecureRandom.stubs(:uuid).returns("IAMUUID")
-
-      TestEvent.new.publish
-
-      assert_published_event(
-        key: "IAMUUID",
-        topic: :bacon,
-        type: "test_event",
-        body: { smoked: "true", streaky: "false" },
-        event_time: "nowish"
-      )
-    end
-
     def test_default_priority
-      TestEvent.new.publish
+      ValidEvent.publish
 
       assert_published_event(priority: :standard)
     end
 
     def test_overidden_priority
-      OveriddenPriority.new.publish
+      OveriddenPriority.publish
 
       assert_published_event(priority: :low)
     end

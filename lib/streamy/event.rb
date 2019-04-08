@@ -7,6 +7,7 @@ module Streamy
 
     def self.priority(level)
       raise "unknown priority: #{level}" unless ALLOWED_PRIORITIES.include? level
+
       self.default_priority = level
     end
 
@@ -20,10 +21,8 @@ module Streamy
       message_bus.safe_deliver(
         key: key,
         topic: topic,
-        type: type,
-        body: body,
-        event_time: event_time,
-        priority: priority
+        priority: priority,
+        payload: payload
       )
     end
 
@@ -55,6 +54,18 @@ module Streamy
 
       def event_time
         raise "event_time must be implemented on #{self.class}"
+      end
+
+      def payload_attributes
+        {
+          type: type,
+          body: body,
+          event_time: event_time
+        }
+      end
+
+      def payload
+        payload_attributes
       end
   end
 end

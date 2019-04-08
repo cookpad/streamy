@@ -7,7 +7,7 @@ module Streamy
         raise PublicationFailedError.new(e, *args)
       end
 
-      def deliver(key:, topic:, type:, body:, event_time:, priority:)
+      def deliver(key:, topic:, payload:, priority:)
         raise "not implemented"
       end
     end
