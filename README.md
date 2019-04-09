@@ -201,6 +201,42 @@ You can choose a priority for your events. This is done by overriding the `prior
 To ensure that all `:low` `:batched` or `:standard` priority events are published `Streamy.shutdown` should be called before your process exits to avoid losing any events.
 Streamy automatically adds an `at_exit` hook to initiate this, but if you are doing something unusual you might need to be aware of this.
 
+## Testing
+
+Streamy provides a few helpers to make testing a breeze:
+
+### RSpec
+
+```ruby
+it "does publish an received payment" do
+  ReceivedPayment.publish
+
+  expect_event(
+    type: "received_payment",
+    topic: "payments.transactions",
+    body: {
+      amount: 200
+    }
+  )
+end
+```
+
+### Minitest and TestUnit
+
+```ruby
+def test_publish_received_payment
+  ReceivedPayment.publish
+
+  assert_event(
+    type: "received_payment",
+    topic: "payments.transactions",
+    body: {
+      amount: 200
+    }
+  )
+end
+```
+
 ---
 
 
