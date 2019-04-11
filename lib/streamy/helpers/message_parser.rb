@@ -12,7 +12,7 @@ module Streamy
       end
 
       def parse_message(message_payload, encoding_type)
-        if encoding_type == "avro"
+        if encoding_type == :avro
           avro.decode(message_payload).deep_symbolize_keys
         else
           JSON.parse(message_payload).deep_symbolize_keys
