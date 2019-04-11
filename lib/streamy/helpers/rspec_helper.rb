@@ -1,12 +1,16 @@
 require "streamy/helpers/have_hash_matcher"
+require "streamy/helpers/message_parser"
 
 module Streamy
   module Helpers
     module RspecHelper
-      def expect_event(topic: kind_of(String), key: kind_of(String), body: kind_of(Hash), type:, event_time: kind_of(String))
-        deliveries = hashify_messages(Streamy.message_bus.deliveries)
+      include Streamy::Helpers::MessageParser
+
+      def expect_event(topic: kind_of(String), priority: kind_of(Symbol), key: kind_of(String), body: kind_of(Hash), type:, event_time: kind_of(String), encoding: :json)
+        deliveries = hashify_messages(Streamy.message_bus.deliveries, encoding)
 
         expect(deliveries).to have_hash(
+          priority: priority,
           topic: topic,
           key: key,
           payload: {
@@ -17,15 +21,12 @@ module Streamy
         )
       end
 
-      def hashify_messages(message_bus_deliveries)
-        message_bus_deliveries.map do |message|
-          message_hash = message.dup
-          message_hash[:payload] = JSON.parse(message_hash[:payload]).deep_symbolize_keys
-          message_hash
-        end
+      def expect_avro_event(**options)
+        expect_event(**options, encoding: :avro)
       end
 
       alias expect_published_event expect_event
+      alias expect_published_avro_event expect_avro_event
 
       Streamy.message_bus = MessageBuses::TestMessageBus.new
 
