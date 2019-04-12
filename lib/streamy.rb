@@ -24,10 +24,6 @@ module Streamy
   require "streamy/message_buses/message_bus"
   require "streamy/message_buses/test_message_bus"
 
-  # Avro
-  # require patches for avro to allow for logical types in schemas
-  require "avro_patches"
-
   class << self
     attr_accessor :message_bus, :worker, :logger, :cache
 

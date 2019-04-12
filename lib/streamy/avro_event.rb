@@ -1,3 +1,6 @@
+# Avro
+# require patches for avro to allow for logical types in schemas
+require "avro_patches"
 require "avro_turf/messaging"
 
 module Streamy
