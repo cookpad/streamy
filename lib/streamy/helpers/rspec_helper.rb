@@ -22,7 +22,7 @@ module Streamy
       end
 
       def expect_avro_event(**options)
-        expect_event(**options, encoding: :avro)
+        expect_event(**options, event_time: kind_of(Time), encoding: :avro)
       end
 
       alias expect_published_event expect_event
