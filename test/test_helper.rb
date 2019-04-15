@@ -12,3 +12,5 @@ def assert_runtime_error(message, &block)
 
   assert_equal message, error.message
 end
+
+Streamy.logger = Logger.new("test.log")
