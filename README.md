@@ -196,6 +196,16 @@ You can choose a priority for your events. This is done by overriding the `prior
 * `:essential` - The event will be sent to Kafka immediately. The call to publish is blocking, and may throw errors.
 * `:batched` - The event will be queued to send to Kafka, but no events are sent until `max_buffer_size` is reached. This allows efficient event batching, when creating many events, e.g. in batch jobs. When a batch of events is being delivered the call to publish will block, and may throw errors.
 
+It is also possible to manually trigger sending batched events by calling publish in a block. When exiting the block, all published events get sent to the message bus.
+
+```ruby
+ReceivedPaymentEvent.deliver do |event|
+  received_payments.each do |received_payment|
+    event.publish(received_payment)
+  end
+end
+```
+
 ### Shutdown
 
 To ensure that all `:low` `:batched` or `:standard` priority events are published `Streamy.shutdown` should be called before your process exits to avoid losing any events.

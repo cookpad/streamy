@@ -6,6 +6,8 @@ require "active_support/json"
 module Streamy
   module MessageBuses
     class KafkaMessageBus < MessageBus
+      delegate :deliver_messages, to: :sync_producer, prefix: true
+
       def initialize(config)
         @config = KafkaConfiguration.new(config)
         @kafka = Kafka.new(@config.kafka)
