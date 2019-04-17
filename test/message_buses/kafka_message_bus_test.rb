@@ -91,11 +91,12 @@ module Streamy
     end
 
     def test_manually_deliver_batched_messages
+      sync_producer.stubs(:buffer_size).returns(0)
       sync_producer.expects(:produce).with(*expected_event)
       example_delivery(:batched)
 
-      sync_producer.expects(:syncronized_deliver_messages)
-      bus.syncronized_deliver_messages
+      sync_producer.expects(:deliver_messages)
+      bus.sync_producer_deliver_messages
     end
 
     def test_all_priority_delivery # rubocop:disable Metrics/AbcSize
