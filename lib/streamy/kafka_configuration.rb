@@ -5,14 +5,14 @@ module Streamy
       ack_timeout:         5,
       max_retries:         30,
       retry_backoff:       2,
-      max_buffer_size:     1000,
+      max_buffer_size:     10000,
       max_buffer_bytesize: 10_000_000
     }.freeze
 
     DEFAULT_ASYNC_CONFIG = {
-      max_queue_size:      1000,
-      delivery_threshold:  25,
-      delivery_interval:   5
+      max_queue_size:      5000,
+      delivery_threshold:  500,
+      delivery_interval:   10
     }.freeze
 
     DEFAULT_KAFKA_CONFIG = {
