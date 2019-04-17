@@ -199,9 +199,9 @@ You can choose a priority for your events. This is done by overriding the `prior
 It is also possible to manually trigger sending batched events by calling publish in a block. When exiting the block, all published events get send to the message bus.
 
 ```ruby
-ReceivedPayment.deliver do |producer|
+ReceivedPayment.deliver do |event|
   2.times do |i|
-    producer.publish(i)
+    event.publish(i)
   end
 end
 ```
