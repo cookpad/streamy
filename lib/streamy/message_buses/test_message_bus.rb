@@ -2,7 +2,6 @@ module Streamy
   module MessageBuses
     class TestMessageBus < MessageBus
       attr_accessor :deliveries
-      attr_reader :buffer_size
 
       def initialize(config: { max_buffer_size: 10 })
         @config = config
@@ -13,30 +12,42 @@ module Streamy
 
       def deliver(params = {})
         if params[:priority] == :batched
-          batched_deliver(params)
+          batch_messages [params]
+          sync_producer_deliver_messages if buffer_full?
         else
-          @deliveries << params
+          deliver_messages [params]
         end
       end
 
-      def syncronized_deliver_messages
-        @deliveries += batched
-        @batched = []
-        deliveries
+      def sync_producer_deliver_messages
+        deliver_messages batched
+        flush_batch
       end
 
       private
 
-        attr_reader :config, :batched
+        attr_reader :config, :buffer_size, :batched
 
-        def batched_deliver(params = {})
-          @batched << params
+        def deliver_messages(event)
+          @deliveries += event
+        end
+
+        def batch_messages(event)
+          increase_buffer
+          @batched += event
+        end
+
+        def increase_buffer
           @buffer_size += 1
-          deliver_messages if buffer_full?
+        end
+
+        def flush_batch
+          @buffer_size = 0
+          @batched = []
         end
 
         def buffer_full?
-          config[:max_buffer_size] == buffer_size
+          max_buffer_size == buffer_size
         end
 
         def max_buffer_size
