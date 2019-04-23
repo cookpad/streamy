@@ -6,7 +6,6 @@ require "active_support/json"
 module Streamy
   module MessageBuses
     class KafkaMessageBus < MessageBus
-      delegate :deliver_messages, to: :sync_producer, prefix: true
 
       def initialize(config)
         @config = KafkaConfiguration.new(config)
@@ -14,6 +13,8 @@ module Streamy
       end
 
       def deliver(key:, topic:, payload:, priority:)
+        priority = :batched if bulk_delivery
+
         producer(priority).tap do |p|
           p.produce(payload, key: key, topic: topic)
           case priority
@@ -33,9 +34,17 @@ module Streamy
         sync_producers.map(&:shutdown)
       end
 
+      def bulk_deliver
+        @bulk_delivery = true
+        yield
+      ensure
+        sync_producer.deliver_messages
+        @bulk_delivery = false
+      end
+
       private
 
-        attr_reader :kafka, :config
+        attr_reader :kafka, :config, :bulk_delivery
 
         def producer(priority)
           case priority

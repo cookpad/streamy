@@ -40,6 +40,10 @@ module Streamy
     yield(configuration)
   end
 
+  def self.bulk_deliver(&block)
+    message_bus.bulk_deliver &block
+  end
+
   self.logger = SimpleLogger.new
 end
 

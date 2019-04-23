@@ -26,12 +26,6 @@ module Streamy
       )
     end
 
-    def self.deliver
-      priority :batched
-      yield(self)
-      Streamy.message_bus.sync_producer_deliver_messages
-    end
-
     private
 
       def priority

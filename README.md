@@ -199,10 +199,9 @@ You can choose a priority for your events. This is done by overriding the `prior
 It is also possible to manually trigger sending batched events by calling publish in a block. When exiting the block, all published events get sent to the message bus.
 
 ```ruby
-ReceivedPaymentEvent.deliver do |event|
-  received_payments.each do |received_payment|
-    event.publish(received_payment)
-  end
+Streamy.bulk_deliver do
+  Events::ReceivedPayment.publish
+  Events::ReceivedPayment.publish
 end
 ```
 

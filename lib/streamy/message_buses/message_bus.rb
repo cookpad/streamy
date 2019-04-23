@@ -10,6 +10,10 @@ module Streamy
       def deliver(key:, topic:, payload:, priority:)
         raise "not implemented"
       end
+
+      def bulk_deliver
+        raise "not implemented"
+      end
     end
   end
 end
