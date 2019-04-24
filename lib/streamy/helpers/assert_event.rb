@@ -1,9 +1,12 @@
+require "streamy/helpers/message_parser"
 require "webmock/minitest"
 
 module Streamy
   module AssertEvent
+    include Streamy::Helpers::MessageParser
+
     def assert_event(attributes = {})
-      deliveries = Streamy.message_bus.deliveries
+      deliveries = hashify_messages(Streamy.message_bus.deliveries)
 
       matching_event = deliveries.find do |delivery|
         hash_including(attributes) == delivery.deep_stringify_keys

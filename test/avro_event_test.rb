@@ -47,7 +47,9 @@ module Streamy
 
     class EventWithNoSchema < AvroEvent
       def topic; end
+
       def body; end
+
       def event_time; end
     end
 
@@ -59,7 +61,14 @@ module Streamy
       assert_published_event(
         key: "IAMUUID",
         topic: :bacon,
-        payload: "\u0000\u0000\u0000\u0000\u0000\u0014test_event\u0002\fnowish\u0002\btrue\u0002\nfalse"
+        payload: {
+          type: "test_event",
+          event_time: "nowish",
+          body: {
+            smoked: "true",
+            streaky: "false"
+          }
+        }
       )
     end
 

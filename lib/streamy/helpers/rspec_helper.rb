@@ -6,8 +6,8 @@ module Streamy
     module RspecHelper
       include Streamy::Helpers::MessageParser
 
-      def expect_event(topic: kind_of(String), priority: kind_of(Symbol), key: kind_of(String), body: kind_of(Hash), type:, event_time: kind_of(String), encoding: :json)
-        deliveries = hashify_messages(Streamy.message_bus.deliveries, encoding)
+      def expect_event(topic: kind_of(String), priority: kind_of(Symbol), key: kind_of(String), body: kind_of(Hash), type:, event_time: kind_of(String))
+        deliveries = hashify_messages(Streamy.message_bus.deliveries)
 
         expect(deliveries).to have_hash(
           priority: priority,
@@ -22,7 +22,7 @@ module Streamy
       end
 
       def expect_avro_event(**options)
-        expect_event(**options, event_time: kind_of(Time), encoding: :avro)
+        expect_event(**options, event_time: kind_of(Time))
       end
 
       alias expect_published_event expect_event
