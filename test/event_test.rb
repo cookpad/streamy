@@ -78,13 +78,10 @@ module Streamy
     end
 
     def test_deliver_batched_events_in_block
-      Streamy.message_bus = Streamy::MessageBuses::TestMessageBus.new
-
       ValidEventWithParams.deliver do |event|
         2.times do |i|
           event.publish(i)
         end
-        assert_empty(Streamy.message_bus.deliveries)
       end
 
       assert_published_event(
