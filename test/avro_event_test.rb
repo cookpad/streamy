@@ -11,6 +11,10 @@ module Streamy
       stub_request(:any, /^#{Streamy.configuration.avro_schema_registry_url}/).to_rack(FakeConfluentSchemaRegistryServer)
     end
 
+    def teardown
+      Streamy.message_bus.deliveries.clear
+    end
+
     class TestEvent < AvroEvent
       def topic
         :bacon
@@ -47,9 +51,7 @@ module Streamy
 
     class EventWithNoSchema < AvroEvent
       def topic; end
-
       def body; end
-
       def event_time; end
     end
 

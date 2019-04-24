@@ -2,6 +2,10 @@ require "test_helper"
 
 module Streamy
   class JsonEventTest < Minitest::Test
+    def teardown
+      Streamy.message_bus.deliveries.clear
+    end
+
     class TestEvent < JsonEvent
       def topic
         :bacon
