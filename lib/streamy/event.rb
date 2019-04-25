@@ -23,7 +23,7 @@ module Streamy
         topic: topic,
         priority: priority,
         payload: payload,
-        encoding_format: encoding_format
+        headers: headers
       )
     end
 
@@ -77,6 +77,12 @@ module Streamy
 
       def payload
         payload_attributes
+      end
+
+      def headers
+        {
+          encoding_format: encoding_format
+        }
       end
   end
 end

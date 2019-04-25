@@ -13,9 +13,9 @@ module Streamy
         @kafka = Kafka.new(@config.kafka)
       end
 
-      def deliver(key:, topic:, payload:, priority:, encoding_format:)
+      def deliver(key:, topic:, payload:, priority:, headers:)
         producer(priority).tap do |p|
-          p.produce(payload, key: key, topic: topic, encoding_format: encoding_format)
+          p.produce(payload, key: key, topic: topic, headers: headers)
           case priority
           when :essential, :standard
             p.deliver_messages
