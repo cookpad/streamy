@@ -6,15 +6,19 @@ module Streamy
       def hashify_messages(message_bus_deliveries)
         message_bus_deliveries.map do |message|
           message_hash = message.dup
-          message_hash[:payload] = parse_message(message_hash[:payload])
+          message_hash[:payload] = parse_message(message_hash[:payload], message_hash[:encoding_format])
           message_hash
         end
       end
 
-      def parse_message(message_payload)
-        JSON.parse(message_payload).deep_symbolize_keys
-      rescue JSON::ParserError
-        avro.decode(message_payload).deep_symbolize_keys
+      def parse_message(message_payload, encoding_format)
+        if encoding_format == :avro
+          avro.decode(message_payload).deep_symbolize_keys
+        elsif encoding_format == :json
+          JSON.parse(message_payload).deep_symbolize_keys
+        else
+          raise "Encoding format unknown, unable to parse message payload"
+        end
       end
 
       def avro

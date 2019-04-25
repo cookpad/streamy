@@ -22,7 +22,8 @@ module Streamy
         key: key,
         topic: topic,
         priority: priority,
-        payload: payload
+        payload: payload,
+        encoding_format: encoding_format
       )
     end
 
@@ -60,6 +61,10 @@ module Streamy
 
       def event_time
         raise "event_time must be implemented on #{self.class}"
+      end
+
+      def encoding_format
+        raise "encoding_format must be implemented on the abstract encoding class"
       end
 
       def payload_attributes

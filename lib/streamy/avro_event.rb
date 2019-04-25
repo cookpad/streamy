@@ -9,6 +9,10 @@ module Streamy
       avro.encode(payload_attributes.deep_stringify_keys, schema_name: type)
     end
 
+    def encoding_format
+      "avro".freeze
+    end
+
     private
 
       def avro

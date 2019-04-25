@@ -24,7 +24,8 @@ module Streamy
         payload: payload,
         key: "prk-sg-001",
         topic: "charcuterie",
-        priority: priority
+        priority: priority,
+        encoding_format: "json"
       )
     end
 
@@ -47,7 +48,8 @@ module Streamy
           event_time: "2018"
         }.to_json,
         key: "prk-sg-001",
-        topic: "charcuterie"
+        topic: "charcuterie",
+        encoding_format: "json"
       ]
     end
 
