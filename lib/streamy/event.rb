@@ -64,7 +64,7 @@ module Streamy
       end
 
       def encoding_format
-        raise "encoding_format must be implemented on the abstract encoding class"
+        raise "encoding_format must be implemented on the encoding class"
       end
 
       def payload_attributes

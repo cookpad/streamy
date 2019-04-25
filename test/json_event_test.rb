@@ -55,6 +55,7 @@ module Streamy
       assert_published_event(
         key: "IAMUUID",
         topic: :bacon,
+        encoding_format: "json",
         payload: {
           type: "test_event",
           body: { smoked: "true", streaky: "false" },

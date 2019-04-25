@@ -63,6 +63,7 @@ module Streamy
       assert_published_event(
         key: "IAMUUID",
         topic: :bacon,
+        encoding_format: "avro",
         payload: {
           type: "test_event",
           event_time: "nowish",
