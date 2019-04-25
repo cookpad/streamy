@@ -12,9 +12,10 @@ module Streamy
       end
 
       def parse_message(message_payload, encoding_format)
-        if encoding_format == "avro"
+        case encoding_format
+        when "avro"
           avro.decode(message_payload).deep_symbolize_keys
-        elsif encoding_format == "json"
+        when "json"
           JSON.parse(message_payload).deep_symbolize_keys
         else
           raise "Encoding format unknown, unable to parse message payload"

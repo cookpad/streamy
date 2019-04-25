@@ -5,16 +5,25 @@ module Streamy
     class EventWithoutTopic < Event
       def event_time; end
       def body; end
+      def encoding_format; end
     end
 
     class EventWithoutEventTime < Event
       def topic; end
       def body; end
+      def encoding_format; end
     end
 
     class EventWithoutBody < Event
       def topic; end
       def event_time; end
+      def encoding_format; end
+    end
+
+    class EventWithoutEncodingFormat < Event
+      def topic; end
+      def event_time; end
+      def body; end
     end
 
     def test_helpful_error_message_on_missing_topic
@@ -32,6 +41,12 @@ module Streamy
     def test_helpful_error_message_on_missing_body
       assert_runtime_error "body must be implemented on Streamy::EventTest::EventWithoutBody" do
         EventWithoutBody.publish
+      end
+    end
+
+    def test_helpful_error_message_on_missing_encoding_format
+      assert_runtime_error "encoding_format must be implemented on the encoding class" do
+        EventWithoutEncodingFormat.publish
       end
     end
   end
