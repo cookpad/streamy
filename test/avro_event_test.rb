@@ -72,7 +72,7 @@ module Streamy
           }
         },
         headers: {
-          encoding_format: "avro"
+          "EncodingFormat": "avro"
         }
       )
     end

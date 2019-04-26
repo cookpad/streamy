@@ -61,7 +61,7 @@ module Streamy
           event_time: "nowish"
         },
         headers: {
-          encoding_format: "json"
+          "EncodingFormat": "json"
         }
       )
     end

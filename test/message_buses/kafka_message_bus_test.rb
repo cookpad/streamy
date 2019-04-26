@@ -26,8 +26,8 @@ module Streamy
         topic: "charcuterie",
         priority: priority,
         headers: {
-          encoding_format: "json"
-        }
+          "EncodingFormat": "json"
+        }.stringify_keys
       )
     end
 
@@ -52,8 +52,8 @@ module Streamy
         key: "prk-sg-001",
         topic: "charcuterie",
         headers: {
-          encoding_format: "json"
-        }
+          "EncodingFormat": "json"
+        }.stringify_keys
       ]
     end
 

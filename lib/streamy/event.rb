@@ -81,7 +81,7 @@ module Streamy
 
       def headers
         {
-          encoding_format: encoding_format
+          "EncodingFormat": encoding_format
         }
       end
   end
