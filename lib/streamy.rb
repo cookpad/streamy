@@ -24,6 +24,9 @@ module Streamy
   require "streamy/message_buses/message_bus"
   require "streamy/message_buses/test_message_bus"
 
+  require "avro_patches"
+  require "avro_turf/messaging"
+
   class << self
     attr_accessor :message_bus, :worker, :logger, :cache
 
@@ -38,6 +41,14 @@ module Streamy
 
   def self.configure
     yield(configuration)
+  end
+
+  def self.avro_messaging
+    @_avro_messaging ||= AvroTurf::Messaging.new(
+      registry_url: Streamy.configuration.avro_schema_registry_url,
+      schemas_path: Streamy.configuration.avro_schemas_path,
+      logger: ::Streamy.logger
+    )
   end
 
   self.logger = SimpleLogger.new
