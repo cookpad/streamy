@@ -16,6 +16,7 @@
        "type": {
          "type": "record",
          "name": "body",
+         "namespace": "incorrect_attribute_event",
          "fields": [
            {
              "name": "smoked",

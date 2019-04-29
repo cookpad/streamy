@@ -16,6 +16,7 @@
        "type": {
          "type": "record",
          "name": "body",
+         "namespace": "test_event",
          "fields": [
            {
              "name": "smoked",
