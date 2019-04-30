@@ -28,7 +28,7 @@ module Streamy
   require "avro_turf/messaging"
 
   class << self
-    attr_accessor :message_bus, :worker, :logger, :cache
+    attr_accessor :message_bus, :worker, :logger, :cache, :avro_messaging
 
     def shutdown
       message_bus.try(:shutdown)
@@ -43,13 +43,11 @@ module Streamy
     yield(configuration)
   end
 
-  def self.avro_messaging
-    @_avro_messaging ||= AvroTurf::Messaging.new(
-      registry_url: Streamy.configuration.avro_schema_registry_url,
-      schemas_path: Streamy.configuration.avro_schemas_path,
-      logger: ::Streamy.logger
-    )
-  end
+  self.avro_messaging = AvroTurf::Messaging.new(
+    registry_url: Streamy.configuration.avro_schema_registry_url,
+    schemas_path: Streamy.configuration.avro_schemas_path,
+    logger: ::Streamy.logger
+  )
 
   self.logger = SimpleLogger.new
 end
