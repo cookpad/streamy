@@ -6,6 +6,8 @@ module Streamy
       end
 
       def deliver(params = {})
+        params[:serializer].encode(params[:payload])
+
         deliveries << params
       end
 

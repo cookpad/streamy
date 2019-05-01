@@ -68,15 +68,17 @@ module Streamy
     end
 
     def test_helpful_error_message_on_incorrect_attribute_type
-      assert_raises Avro::IO::AvroTypeError do
+      exception = assert_raises Streamy::PublicationFailedError do
         IncorrectAttributeEvent.publish
       end
+      assert_match("Avro::IO::AvroTypeError", exception.message)
     end
 
     def test_helpful_error_message_on_event_with_no_schema
-      assert_raises AvroTurf::SchemaNotFoundError do
+      exception = assert_raises Streamy::PublicationFailedError do
         EventWithNoSchema.publish
       end
+      assert_match("AvroTurf::SchemaNotFoundError", exception.message)
     end
   end
 end
