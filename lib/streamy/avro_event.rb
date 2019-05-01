@@ -1,7 +1,7 @@
 module Streamy
   class AvroEvent < Event
     def publish
-      validate_schema
+      validate_schema if Rails.env.test?
 
       super
     end
