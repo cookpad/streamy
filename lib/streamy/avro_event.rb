@@ -1,7 +1,19 @@
 module Streamy
   class AvroEvent < Event
-    def payload
-      Streamy.avro_messaging.encode(payload_attributes.deep_stringify_keys, schema_name: type)
+    def publish
+      validate_schema
+
+      super
     end
+
+    def serializer
+      Serializers::AvroSerializer.new
+    end
+
+    private
+
+      def validate_schema
+        serializer.encode(payload)
+      end
   end
 end

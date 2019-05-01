@@ -22,7 +22,8 @@ module Streamy
         key: key,
         topic: topic,
         priority: priority,
-        payload: payload
+        payload: payload,
+        serializer: serializer
       )
     end
 
@@ -62,16 +63,12 @@ module Streamy
         raise "event_time must be implemented on #{self.class}"
       end
 
-      def payload_attributes
+      def payload
         {
           type: type,
           body: body,
           event_time: event_time
         }
-      end
-
-      def payload
-        payload_attributes
       end
   end
 end

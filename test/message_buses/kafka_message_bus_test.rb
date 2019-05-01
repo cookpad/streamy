@@ -24,7 +24,8 @@ module Streamy
         payload: payload,
         key: "prk-sg-001",
         topic: "charcuterie",
-        priority: priority
+        priority: priority,
+        serializer: Serializers::JsonSerializer.new
       )
     end
 
@@ -33,7 +34,7 @@ module Streamy
         type: "sausage",
         body: { meat: "pork", herbs: "sage" },
         event_time: "2018"
-      }.to_json
+      }
     end
 
     def expected_event

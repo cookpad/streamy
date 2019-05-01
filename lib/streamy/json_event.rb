@@ -1,7 +1,7 @@
 module Streamy
   class JsonEvent < Event
-    def payload
-      payload_attributes.to_json
+    def serializer
+      Serializers::JsonSerializer.new
     end
   end
 end

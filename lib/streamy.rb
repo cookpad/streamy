@@ -15,6 +15,10 @@ module Streamy
   require "streamy/profiler"
   require "streamy/simple_logger"
 
+  # Serializers
+  require "streamy/serializers/avro_serializer"
+  require "streamy/serializers/json_serializer"
+
   # Errors
   require "streamy/errors/event_handler_not_found_error"
   require "streamy/errors/publication_failed_error"

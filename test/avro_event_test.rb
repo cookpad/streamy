@@ -59,7 +59,11 @@ module Streamy
       assert_published_event(
         key: "IAMUUID",
         topic: :bacon,
-        payload: "\u0000\u0000\u0000\u0000\u0000\u0014test_event\u0002\fnowish\u0002\btrue\u0002\nfalse"
+        payload: {
+          type: "test_event",
+          body: { smoked: "true", streaky: "false" },
+          event_time: "nowish"
+        }
       )
     end
 

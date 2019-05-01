@@ -31,7 +31,7 @@ module Streamy
           type: "test_event",
           body: { smoked: "true", streaky: "false" },
           event_time: "nowish"
-        }.to_json
+        }
       )
     end
   end
