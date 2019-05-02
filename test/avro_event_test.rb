@@ -59,20 +59,26 @@ module Streamy
       assert_published_event(
         key: "IAMUUID",
         topic: :bacon,
-        payload: "\u0000\u0000\u0000\u0000\u0000\u0014test_event\u0002\fnowish\u0002\btrue\u0002\nfalse"
+        payload: {
+          type: "test_event",
+          body: { smoked: "true", streaky: "false" },
+          event_time: "nowish"
+        }
       )
     end
 
     def test_helpful_error_message_on_incorrect_attribute_type
-      assert_raises Avro::IO::AvroTypeError do
+      exception = assert_raises Streamy::PublicationFailedError do
         IncorrectAttributeEvent.publish
       end
+      assert_match("Avro::IO::AvroTypeError", exception.message)
     end
 
     def test_helpful_error_message_on_event_with_no_schema
-      assert_raises AvroTurf::SchemaNotFoundError do
+      exception = assert_raises Streamy::PublicationFailedError do
         EventWithNoSchema.publish
       end
+      assert_match("AvroTurf::SchemaNotFoundError", exception.message)
     end
   end
 end

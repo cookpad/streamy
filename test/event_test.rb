@@ -2,13 +2,13 @@ require "test_helper"
 
 module Streamy
   class EventTest < Minitest::Test
-    class ValidEvent < Event
+    class ValidEvent < JsonEvent
       def topic; end
       def body; end
       def event_time; end
     end
 
-    class ValidEventWithParams < Event
+    class ValidEventWithParams < JsonEvent
       def initialize(i)
         @i = i
       end
@@ -32,17 +32,17 @@ module Streamy
       priority :low
     end
 
-    class EventWithoutTopic < Event
+    class EventWithoutTopic < JsonEvent
       def event_time; end
       def body; end
     end
 
-    class EventWithoutEventTime < Event
+    class EventWithoutEventTime < JsonEvent
       def topic; end
       def body; end
     end
 
-    class EventWithoutBody < Event
+    class EventWithoutBody < JsonEvent
       def topic; end
       def event_time; end
     end
@@ -87,18 +87,18 @@ module Streamy
       assert_published_event(
         topic: "valid_event_with_params_topic",
         payload: {
-            type: "valid_event_with_params", 
-            body: { i: 0 }, 
-            event_time: "now"
-          }
+          type: "valid_event_with_params",
+          body: { i: 0 },
+          event_time: "now"
+        }
       )
       assert_published_event(
         topic: "valid_event_with_params_topic",
         payload: {
-            type: "valid_event_with_params", 
-            body: { i: 1 }, 
-            event_time: "now"
-          }
+          type: "valid_event_with_params",
+          body: { i: 1 },
+          event_time: "now"
+        }
       )
     end
   end
