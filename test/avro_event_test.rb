@@ -53,18 +53,14 @@ module Streamy
 
     def test_publish
       SecureRandom.stubs(:uuid).returns("IAMUUID")
-
-      TestEvent.publish
-
-      assert_published_event(
+      Streamy.message_bus.expects(:deliver).with(
         key: "IAMUUID",
         topic: :bacon,
-        payload: {
-          type: "test_event",
-          body: { smoked: "true", streaky: "false" },
-          event_time: "nowish"
-        }
+        priority: :standard,
+        payload: "\u0000\u0000\u0000\u0000\u0000\u0014test_event\u0002\fnowish\u0002\btrue\u0002\nfalse"
       )
+
+      TestEvent.publish
     end
 
     def test_helpful_error_message_on_incorrect_attribute_type

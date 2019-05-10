@@ -1,9 +1,10 @@
 require "webmock/minitest"
+require "streamy/test_dispatcher"
 
 module Streamy
   module AssertEvent
     def assert_event(attributes = {})
-      deliveries = Streamy.message_bus.deliveries
+      deliveries = TestDispatcher.events
 
       matching_event = deliveries.find do |delivery|
         hash_including(attributes) == delivery.deep_stringify_keys
@@ -12,6 +13,6 @@ module Streamy
     end
     alias assert_published_event assert_event
   end
-end
 
-Streamy.message_bus = Streamy::MessageBuses::TestMessageBus.new
+  Dispatcher = TestDispatcher
+end

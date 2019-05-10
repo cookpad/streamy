@@ -2,7 +2,7 @@ require "test_helper"
 
 module Streamy
   class EventTest < Minitest::Test
-    class ValidEvent < JsonEvent
+    class ValidEvent < Event
       def topic; end
       def body; end
       def event_time; end
@@ -12,17 +12,17 @@ module Streamy
       priority :low
     end
 
-    class EventWithoutTopic < JsonEvent
+    class EventWithoutTopic < Event
       def event_time; end
       def body; end
     end
 
-    class EventWithoutEventTime < JsonEvent
+    class EventWithoutEventTime < Event
       def topic; end
       def body; end
     end
 
-    class EventWithoutBody < JsonEvent
+    class EventWithoutBody < Event
       def topic; end
       def event_time; end
     end
@@ -55,6 +55,16 @@ module Streamy
       OveriddenPriority.publish
 
       assert_published_event(priority: :low)
+    end
+
+    def test_wrapping_message_bus_errors
+      Streamy.message_bus.stubs(:deliver).raises("ConnectionError")
+
+      error = assert_raises(PublicationFailedError) do
+        ValidEvent.publish
+      end
+
+      assert_match(/ConnectionError/, error.message)
     end
   end
 end

@@ -24,7 +24,6 @@ module Streamy
 
   # Message Buses
   require "streamy/message_buses/message_bus"
-  require "streamy/message_buses/test_message_bus"
 
   class << self
     attr_accessor :message_bus, :logger
@@ -33,6 +32,8 @@ module Streamy
       message_bus.try(:shutdown)
     end
   end
+
+  self.message_bus = MessageBuses::MessageBus.new
 
   def self.configuration
     @configuration ||= Configuration.new

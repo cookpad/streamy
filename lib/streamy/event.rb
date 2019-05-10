@@ -1,4 +1,5 @@
 require "active_support/core_ext/class/attribute"
+require "streamy/dispatcher"
 
 module Streamy
   class Event
@@ -18,13 +19,20 @@ module Streamy
     priority :standard
 
     def publish
-      message_bus.safe_deliver(
+      Dispatcher.new(self).dispatch
+    end
+
+    def to_message
+      to_params.merge(payload: encoded_payload)
+    end
+
+    def to_params
+      {
         key: key,
         topic: topic,
         priority: priority,
-        payload: payload,
-        serializer: serializer
-      )
+        payload: payload
+      }
     end
 
     private
@@ -33,8 +41,8 @@ module Streamy
         default_priority
       end
 
-      def message_bus
-        Streamy.message_bus
+      def encoded_payload
+        payload
       end
 
       def key

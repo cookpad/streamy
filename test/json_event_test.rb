@@ -21,18 +21,18 @@ module Streamy
 
     def test_publish
       SecureRandom.stubs(:uuid).returns("IAMUUID")
-
-      TestEvent.publish
-
-      assert_published_event(
+      Streamy.message_bus.expects(:deliver).with(
         key: "IAMUUID",
         topic: :bacon,
+        priority: :standard,
         payload: {
           type: "test_event",
           body: { smoked: "true", streaky: "false" },
           event_time: "nowish"
-        }
+        }.to_json
       )
+
+      TestEvent.publish
     end
   end
 end

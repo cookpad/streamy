@@ -2,8 +2,8 @@ module Streamy
   class AvroEvent < Event
     require "streamy/serializers/avro_serializer"
 
-    def serializer
-      Serializers::AvroSerializer.new
+    def encoded_payload
+      Serializers::AvroSerializer.encode(payload)
     end
   end
 end

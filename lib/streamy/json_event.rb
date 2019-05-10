@@ -2,8 +2,8 @@ module Streamy
   class JsonEvent < Event
     require "streamy/serializers/json_serializer"
 
-    def serializer
-      Serializers::JsonSerializer.new
+    def encoded_payload
+      Serializers::JsonSerializer.encode(payload)
     end
   end
 end
