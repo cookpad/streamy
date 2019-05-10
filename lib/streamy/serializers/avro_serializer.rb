@@ -1,8 +1,23 @@
 module Streamy
   module Serializers
     class AvroSerializer
-      def encode(payload_attributes)
-        Streamy.avro_messaging.encode(payload_attributes.deep_stringify_keys, schema_name: payload_attributes[:type])
+      require "avro_patches"
+      require "avro_turf/messaging"
+
+      def self.messaging
+        @_messaging ||= connect_avro
+      end
+
+      def self.connect_avro
+        AvroTurf::Messaging.new(
+          registry_url: Streamy.configuration.avro_schema_registry_url,
+          schemas_path: Streamy.configuration.avro_schemas_path,
+          logger: ::Streamy.logger
+        )
+      end
+
+      def encode(payload)
+        self.class.messaging.encode(payload.deep_stringify_keys, schema_name: payload[:type])
       end
     end
   end
