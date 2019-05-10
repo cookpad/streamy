@@ -1,8 +1,8 @@
 module Streamy
   module Serializers
     class JsonSerializer
-      def encode(payload_attributes)
-        payload_attributes.to_json
+      def encode(payload)
+        payload.to_json
       end
     end
   end
