@@ -7,9 +7,7 @@ module Streamy
       include Streamy::Helpers::MessageParser
 
       def expect_event(topic: kind_of(String), priority: kind_of(Symbol), key: kind_of(String), body: kind_of(Hash), type:, event_time: nil)
-        deliveries = Streamy.message_bus.deliveries
-
-        expect(deliveries).to have_hash(
+        expect(streamy_deliveries).to have_hash(
           priority: priority,
           topic: topic,
           key: key,
@@ -21,7 +19,17 @@ module Streamy
         )
       end
 
-      alias expect_published_event expect_event
+      def expect_no_event(type)
+        expect(streamy_deliveries).not_to include(a_hash_including(type: type.to_s))
+      end
+
+      def expect_events
+        expect(streamy_deliveries).not_to be_empty
+      end
+
+      def streamy_deliveries
+        Streamy.message_bus.deliveries
+      end
 
       Streamy.message_bus = MessageBuses::TestMessageBus.new
 
