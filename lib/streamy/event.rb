@@ -19,7 +19,7 @@ module Streamy
     priority :standard
 
     def publish
-      Dispatcher.new(self).dispatch
+      Streamy.dispatcher.new(self).dispatch
     end
 
     def to_message

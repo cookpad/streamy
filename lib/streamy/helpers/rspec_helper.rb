@@ -29,7 +29,7 @@ module Streamy
         TestDispatcher.events
       end
 
-      Streamy::Dispatcher = TestDispatcher
+      Streamy.dispatcher = TestDispatcher
 
       RSpec.configure do |config|
         config.include Streamy::Helpers::RspecHelper

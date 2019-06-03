@@ -14,5 +14,5 @@ module Streamy
     alias assert_published_event assert_event
   end
 
-  Dispatcher = TestDispatcher
+  Streamy.dispatcher = TestDispatcher
 end
