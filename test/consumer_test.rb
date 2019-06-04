@@ -27,8 +27,7 @@ module Streamy
       end
     end
 
-    def test_processing_message_twices
-      Streamy.cache = nil
+    def test_processing_message_twice
       message = { key: "1234", type: "dummy_event" }
 
       DummyConsumer.new.process(message)

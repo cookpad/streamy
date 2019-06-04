@@ -27,7 +27,7 @@ module Streamy
   require "streamy/message_buses/test_message_bus"
 
   class << self
-    attr_accessor :message_bus, :worker, :logger, :cache
+    attr_accessor :message_bus, :logger
 
     def shutdown
       message_bus.try(:shutdown)
