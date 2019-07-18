@@ -8,26 +8,6 @@ module Streamy
       def event_time; end
     end
 
-    class ValidEventWithParams < JsonEvent
-      def initialize(i)
-        @i = i
-      end
-
-      def body
-        {
-          i: @i
-        }
-      end
-
-      def event_time
-        -"now"
-      end
-
-      def topic
-        -"valid_event_with_params_topic"
-      end
-    end
-
     class OveriddenPriority < ValidEvent
       priority :low
     end
@@ -75,31 +55,6 @@ module Streamy
       OveriddenPriority.publish
 
       assert_published_event(priority: :low)
-    end
-
-    def test_deliver_batched_events_in_block
-      ValidEventWithParams.deliver do |event|
-        2.times do |i|
-          event.publish(i)
-        end
-      end
-
-      assert_published_event(
-        topic: "valid_event_with_params_topic",
-        payload: {
-          type: "valid_event_with_params",
-          body: { i: 0 },
-          event_time: "now"
-        }
-      )
-      assert_published_event(
-        topic: "valid_event_with_params_topic",
-        payload: {
-          type: "valid_event_with_params",
-          body: { i: 1 },
-          event_time: "now"
-        }
-      )
     end
   end
 end
