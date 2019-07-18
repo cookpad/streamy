@@ -10,8 +10,6 @@ module Streamy
 
         deliveries << params
       end
-
-      def sync_producer_deliver_messages; end
     end
   end
 end

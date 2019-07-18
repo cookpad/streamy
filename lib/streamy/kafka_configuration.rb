@@ -1,18 +1,18 @@
 module Streamy
   class KafkaConfiguration < SimpleDelegator
     DEFAULT_PRODUCER_CONFIG = {
-      required_acks:       -1, # all replicas
-      ack_timeout:         5,
-      max_retries:         30,
-      retry_backoff:       2,
-      max_buffer_size:     10_000,
+      required_acks: -1, # all replicas
+      ack_timeout: 5,
+      max_retries: 30,
+      retry_backoff: 2,
+      max_buffer_size: 10_000,
       max_buffer_bytesize: 10_000_000
     }.freeze
 
     DEFAULT_ASYNC_CONFIG = {
-      max_queue_size:      5_000,
-      delivery_threshold:  100,
-      delivery_interval:   10
+      max_queue_size: 5_000,
+      delivery_threshold: 100,
+      delivery_interval: 10
     }.freeze
 
     DEFAULT_KAFKA_CONFIG = {
