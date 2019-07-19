@@ -244,7 +244,34 @@ def test_publish_received_payment
   )
 end
 ```
+### Stubbing Kafka requests
 
+If you are using the `:essential` and `:batched` priorities for your events you will need to stub requests to your `test` Kafka service as these priorities require an acknowledgement from Kafka that it has received the sent message.
+
+For example using Webmock and RSpec:
+
+```ruby
+RSpec.configure do |config|
+  config.before(:each) do
+    stub_request(:any, "kafka://localhost:9092")
+  end
+end
+```
+
+### Testing Avro schemas
+
+Streamy will test your Avro messages against your Avro schemas located in your host application for type errors and schema composition errors. To do this you will need to set up your schema path and registry_url in your specs, and stub any requests to  `FakeConfluentSchemaRegistryServer`. Again for example with Webmock and RSpec:
+
+```ruby
+RSpec.configure do |config|
+  config.before(:each) do
+    require "avro_turf/test/fake_confluent_schema_registry_server"
+    Streamy.configuration.avro_schema_registry_url = "http://registry.example.com"
+    Streamy.configuration.avro_schemas_path = "app/events/schemas"
+    stub_request(:any, /^#{Streamy.configuration.avro_schema_registry_url}/).to_rack(FakeConfluentSchemaRegistryServer)
+  end
+end
+```
 ---
 
 
