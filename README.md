@@ -244,19 +244,6 @@ def test_publish_received_payment
   )
 end
 ```
-### Stubbing Kafka requests
-
-If you are using the `:essential` and `:batched` priorities for your events you will need to stub requests to your `test` Kafka service as these priorities require an acknowledgement from Kafka that it has received the sent message.
-
-For example using Webmock and RSpec:
-
-```ruby
-RSpec.configure do |config|
-  config.before(:each) do
-    stub_request(:any, "kafka://localhost:9092")
-  end
-end
-```
 
 ### Testing Avro schemas
 
