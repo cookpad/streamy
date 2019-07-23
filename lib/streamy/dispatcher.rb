@@ -6,8 +6,6 @@ module Streamy
 
     def dispatch
       Streamy.message_bus.deliver(message_params)
-    rescue StandardError => e
-      raise PublicationFailedError.new(e, event_params)
     end
 
     private

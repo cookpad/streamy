@@ -4,9 +4,13 @@ module Streamy
       []
     end
 
+    cattr_accessor :messages do
+      []
+    end
+
     def dispatch
-      super
       events << event_params
+      messages << message_params
     end
   end
 end

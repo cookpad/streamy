@@ -56,15 +56,5 @@ module Streamy
 
       assert_published_event(priority: :low)
     end
-
-    def test_wrapping_message_bus_errors
-      Streamy.message_bus.stubs(:deliver).raises("ConnectionError")
-
-      error = assert_raises(PublicationFailedError) do
-        ValidEvent.publish
-      end
-
-      assert_match(/ConnectionError/, error.message)
-    end
   end
 end

@@ -21,7 +21,10 @@ module Streamy
 
     def test_publish
       SecureRandom.stubs(:uuid).returns("IAMUUID")
-      Streamy.message_bus.expects(:deliver).with(
+
+      TestEvent.publish
+
+      assert_delivered_message(
         key: "IAMUUID",
         topic: :bacon,
         priority: :standard,
@@ -31,8 +34,6 @@ module Streamy
           event_time: "nowish"
         }.to_json
       )
-
-      TestEvent.publish
     end
   end
 end

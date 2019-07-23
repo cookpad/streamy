@@ -4,12 +4,12 @@ require "streamy/test_dispatcher"
 module Streamy
   module AssertEvent
     def assert_event(attributes = {})
-      deliveries = TestDispatcher.events
+      events = TestDispatcher.events
 
-      matching_event = deliveries.find do |delivery|
-        hash_including(attributes) == delivery.deep_stringify_keys
+      matching_event = events.find do |event|
+        hash_including(attributes) == event.deep_stringify_keys
       end
-      assert matching_event, "Didn't find event: \n\n #{attributes} \n\n in: #{deliveries.inspect}"
+      assert matching_event, "Didn't find event: \n\n #{attributes} \n\n in: #{events.inspect}"
     end
     alias assert_published_event assert_event
   end

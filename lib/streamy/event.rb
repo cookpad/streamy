@@ -20,6 +20,8 @@ module Streamy
 
     def publish
       Streamy.dispatcher.new(self).dispatch
+    rescue StandardError => e
+      raise PublicationFailedError.new(e, self)
     end
 
     def to_message

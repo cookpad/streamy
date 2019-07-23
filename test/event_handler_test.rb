@@ -1,4 +1,5 @@
 require "test_helper"
+
 module Streamy
   class DummyHandler < Streamy::EventHandler
     def run
