@@ -24,14 +24,15 @@ module Streamy
 
       TestEvent.publish
 
-      assert_published_event(
+      assert_delivered_message(
         key: "IAMUUID",
         topic: :bacon,
+        priority: :standard,
         payload: {
           type: "test_event",
           body: { smoked: "true", streaky: "false" },
           event_time: "nowish"
-        }
+        }.to_json
       )
     end
   end

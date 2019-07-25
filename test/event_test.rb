@@ -2,7 +2,7 @@ require "test_helper"
 
 module Streamy
   class EventTest < Minitest::Test
-    class ValidEvent < JsonEvent
+    class ValidEvent < Event
       def topic; end
       def body; end
       def event_time; end
@@ -12,17 +12,17 @@ module Streamy
       priority :low
     end
 
-    class EventWithoutTopic < JsonEvent
+    class EventWithoutTopic < Event
       def event_time; end
       def body; end
     end
 
-    class EventWithoutEventTime < JsonEvent
+    class EventWithoutEventTime < Event
       def topic; end
       def body; end
     end
 
-    class EventWithoutBody < JsonEvent
+    class EventWithoutBody < Event
       def topic; end
       def event_time; end
     end

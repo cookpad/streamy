@@ -16,8 +16,8 @@ module Streamy
         )
       end
 
-      def encode(payload)
-        self.class.messaging.encode(payload.deep_stringify_keys, schema_name: payload[:type])
+      def self.encode(payload)
+        messaging.encode(payload.deep_stringify_keys, schema_name: payload[:type])
       end
     end
   end

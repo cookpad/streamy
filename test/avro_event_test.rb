@@ -56,14 +56,11 @@ module Streamy
 
       TestEvent.publish
 
-      assert_published_event(
+      assert_delivered_message(
         key: "IAMUUID",
         topic: :bacon,
-        payload: {
-          type: "test_event",
-          body: { smoked: "true", streaky: "false" },
-          event_time: "nowish"
-        }
+        priority: :standard,
+        payload: "\u0000\u0000\u0000\u0000\u0000\u0014test_event\u0002\fnowish\u0002\btrue\u0002\nfalse"
       )
     end
 
