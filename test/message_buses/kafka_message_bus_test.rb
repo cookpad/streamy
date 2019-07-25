@@ -117,7 +117,8 @@ module Streamy
         max_retries: 30,
         retry_backoff: 2,
         max_buffer_size: 10_000,
-        max_buffer_bytesize: 10_000_000
+        max_buffer_bytesize: 10_000_000,
+        batched_message_limit: 1_000
       ).returns(sync_producer)
 
       example_delivery(:essential)
@@ -131,7 +132,8 @@ module Streamy
         max_retries: 30,
         retry_backoff: 2,
         max_buffer_size: 10_000,
-        max_buffer_bytesize: 10_000_000
+        max_buffer_bytesize: 10_000_000,
+        batched_message_limit: 1_000
       ).returns(async_producer)
 
       example_delivery(:standard)
@@ -147,7 +149,8 @@ module Streamy
         max_retries: 1,
         retry_backoff: 1,
         max_buffer_size: 1,
-        max_buffer_bytesize: 1
+        max_buffer_bytesize: 1,
+        batched_message_limit: 1
       }
 
       setup
@@ -160,7 +163,8 @@ module Streamy
         max_retries: 1,
         retry_backoff: 1,
         max_buffer_size: 1,
-        max_buffer_bytesize: 1
+        max_buffer_bytesize: 1,
+        batched_message_limit: 1
       ).returns(sync_producer)
 
       example_delivery(:essential)
@@ -174,7 +178,8 @@ module Streamy
         max_retries: 1,
         retry_backoff: 1,
         max_buffer_size: 1,
-        max_buffer_bytesize: 1
+        max_buffer_bytesize: 1,
+        batched_message_limit: 1
       ).returns(async_producer)
 
       example_delivery(:standard)
@@ -190,7 +195,8 @@ module Streamy
         max_retries: 2,
         retry_backoff: 2,
         max_buffer_size: 2,
-        max_buffer_bytesize: 2
+        max_buffer_bytesize: 2,
+        batched_message_limit: 2
       }
 
       client_config = {

@@ -20,7 +20,7 @@ module Streamy
           when :essential, :standard
             p.deliver_messages
           when :batched
-            if p.buffer_size == batched_message_size
+            if p.buffer_size >= config.producer[:batched_message_limit]
               logger.info "Delivering #{p.buffer_size} batched events now"
               p.deliver_messages
             end
@@ -69,10 +69,6 @@ module Streamy
 
         def logger
           ::Streamy.logger
-        end
-
-        def batched_message_size
-          Streamy.configuration.producer_batched_message_limit
         end
     end
   end

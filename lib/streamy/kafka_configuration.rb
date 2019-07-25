@@ -6,7 +6,8 @@ module Streamy
       max_retries: 30,
       retry_backoff: 2,
       max_buffer_size: 10_000,
-      max_buffer_bytesize: 10_000_000
+      max_buffer_bytesize: 10_000_000,
+      batched_message_limit: 1_000
     }.freeze
 
     DEFAULT_ASYNC_CONFIG = {
