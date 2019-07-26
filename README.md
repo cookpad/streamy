@@ -194,16 +194,9 @@ You can choose a priority for your events. This is done by overriding the `prior
 * `:low` - The event will be sent to Kafka by a background thread, events are buffered until `delivery_threshold` messages are waiting or until `delivery_interval` seconds have passed since the last delivery. Calling publish on a low priority event is non blocking, and no errors should be thrown, unless the buffer is full.
 * `:standard` (default) - The event will be sent to Kafka by a background thread, but the thread is signaled to send any buffered events as soon as possible. The call to publish is non blocking, and should not throw errors, unless the buffer is full.
 * `:essential` - The event will be sent to Kafka immediately. The call to publish is blocking, and may throw errors.
-* `:batched` - The event will be queued to send to Kafka using a synchronous producer, but no events are sent until `batched_message_limit` is reached or the synchronous producer in the specific thread has `deliver_messages` called by another service. This allows efficient event batching, when creating many events, e.g. in batch jobs. When a batch of events is being delivered the call to publish will block, and may throw errors.
+* `:batched` - The event will be queued to send to Kafka using a synchronous producer, but no events are sent until `batched_message_limit` is reached (which is set to `max_buffer_size - 1`), or the synchronous producer in the specific thread has `deliver_messages` called by another service. This allows efficient event batching, when creating many events, e.g. in batch jobs. When a batch of events is being delivered the call to publish will block, and may throw errors.
 
-This can be set in the config for Streamy. (The default is `1000` messages in a batch). Be aware you should set this below the default `max_buffer_size` of `10_000`, as you will get `Kafka::BufferOverflow` errors and you would not be able to send batched messages. It can be set in the Streamy initializer in your host application as below.
-
-```ruby
-  require "streamy/message_buses/kafka_message_bus"
-  Streamy.message_bus = Streamy::MessageBuses::KafkaMessageBus.new(
-    batched_message_limit: 1000
-  )
-```
+Please read the `ruby-kafka` notes here on [buffering and error handling](https://github.com/zendesk/ruby-kafka#buffering-and-error-handling)
 
 ### Shutdown
 
