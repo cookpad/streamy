@@ -3,7 +3,7 @@ require "avro_turf/messaging"
 
 module Streamy
   module Deserializers
-    class AvroSerializer < Avro
+    class AvroDeserializer < Avro
       def call(params)
         parse(params.payload)
       end

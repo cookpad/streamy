@@ -11,11 +11,15 @@ module Streamy
   require "streamy/message_processor"
   require "streamy/profiler"
   require "streamy/simple_logger"
+  require "streamy/avro"
 
   # Event types
   require "streamy/event"
   require "streamy/json_event"
   require "streamy/avro_event"
+
+  # Deserializers
+  require "streamy/deserializers/avro_deserializer"
 
   # Errors
   require "streamy/errors/event_handler_not_found_error"
