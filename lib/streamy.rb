@@ -19,6 +19,7 @@ module Streamy
   require "streamy/avro_event"
 
   # Deserializers
+  require "streamy/deserializers/avro"
   require "streamy/deserializers/avro_deserializer"
 
   # Errors
