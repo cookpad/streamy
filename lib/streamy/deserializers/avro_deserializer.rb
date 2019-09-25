@@ -3,8 +3,6 @@ module Streamy
     class AvroDeserializer
       require "avro_turf/messaging"
 
-      attr_reader :avro
-
       def initialize
         @avro = AvroTurf::Messaging.new(registry_url: Streamy.configuration.avro_schema_registry_url)
       end
@@ -12,6 +10,10 @@ module Streamy
       def call(params)
         avro.decode(params["payload"])
       end
+
+      private
+
+        attr_reader :avro
     end
   end
 end
