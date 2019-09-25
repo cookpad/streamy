@@ -183,6 +183,16 @@ class ReceivedPaymentHandler
 end
 ```
 
+Deserialization:
+
+Streamy provides an avro deserializer that is used with the schema registry as detailed above. More information on serialization can be found [here](https://github.com/karafka/karafka/wiki/Serialization)
+
+Put the following line in your karafka routes file:
+
+```ruby
+deserializer Streamy::Deserializers::AvroDeserializer.new
+```
+
 ---
 
 ## Advanced options
