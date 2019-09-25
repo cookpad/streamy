@@ -10,7 +10,7 @@ module Streamy
       end
 
       def call(params)
-        avro.decode(params.payload)
+        avro.decode(params["payload"])
       end
     end
   end
