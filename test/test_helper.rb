@@ -14,7 +14,7 @@ def assert_runtime_error(message, &block)
 end
 
 def assert_delivered_message(params)
-  assert_equal Streamy.dispatcher.messages.last, params
+  assert_equal params, Streamy.dispatcher.messages.last
 end
 
 Streamy.logger = Logger.new("test.log")

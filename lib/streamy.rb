@@ -17,6 +17,9 @@ module Streamy
   require "streamy/json_event"
   require "streamy/avro_event"
 
+  # Deserializers
+  require "streamy/deserializers/avro_deserializer"
+
   # Errors
   require "streamy/errors/event_handler_not_found_error"
   require "streamy/errors/publication_failed_error"
