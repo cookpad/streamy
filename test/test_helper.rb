@@ -17,4 +17,9 @@ def assert_delivered_message(params)
   assert_equal Streamy.dispatcher.messages.last, params
 end
 
+def assert_deserialized_message(params)
+  deserializer = Streamy::Deserializers::AvroDeserializer.new
+  assert_equal deserializer.call(Streamy.dispatcher.messages.last), params
+end
+
 Streamy.logger = Logger.new("test.log")
