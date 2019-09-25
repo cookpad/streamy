@@ -14,13 +14,7 @@ def assert_runtime_error(message, &block)
 end
 
 def assert_delivered_message(params)
-  assert_equal Streamy.dispatcher.messages.last, params
-end
-
-def assert_deserialized_message(params)
-  deserializer = Streamy::Deserializers::AvroDeserializer.new
-  message = Streamy.dispatcher.messages.last
-  assert_equal deserializer.call(message.deep_stringify_keys), params
+  assert_equal params, Streamy.dispatcher.messages.last
 end
 
 Streamy.logger = Logger.new("test.log")

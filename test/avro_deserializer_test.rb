@@ -29,17 +29,18 @@ module Streamy
     end
 
     def test_deserialized_message
-      SecureRandom.stubs(:uuid).returns("IAMUUID")
+      message = TestEvent.new.to_message.stringify_keys
+      result = Deserializers::AvroDeserializer.new.call(message)
 
-      TestEvent.publish
-
-      assert_deserialized_message(
-        "type" => "test_event",
-        "event_time" => "nowish",
-        "body" => {
-          "smoked" => "true",
-          "streaky" => "false"
-        }
+      assert_equal(
+        {
+          "type" => "test_event",
+          "event_time" => "nowish",
+          "body" => {
+            "smoked" => "true",
+            "streaky" => "false"
+          }
+        }, result
       )
     end
   end
