@@ -1,8 +1,8 @@
 module Streamy
   module Deserializers
     class Avro
-      def self.registry_url=(registry_url)
-        @registry_url = registry_url
+      def self.registry_url
+        @registry_url = Streamy.configuration.avro_schema_registry_url
       end
 
       def self.from_registry(schema_name = nil)
