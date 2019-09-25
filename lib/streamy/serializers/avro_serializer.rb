@@ -1,6 +1,6 @@
 module Streamy
   module Serializers
-    class AvroSerializer < Avro
+    class AvroSerializer
       require "avro_turf/messaging"
 
       def self.messaging
