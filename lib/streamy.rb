@@ -11,7 +11,6 @@ module Streamy
   require "streamy/message_processor"
   require "streamy/profiler"
   require "streamy/simple_logger"
-  require "streamy/avro"
 
   # Event types
   require "streamy/event"
