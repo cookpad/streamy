@@ -17,8 +17,8 @@ module Streamy
         )
       end
 
-      def expect_no_event(type)
-        expect(streamy_deliveries).not_to include(a_hash_including(type: type.to_s))
+      def expect_no_event(type: kind_of(String))
+        expect(streamy_deliveries).not_to have_hash(payload: a_hash_including(type: type.to_s))
       end
 
       def expect_events
