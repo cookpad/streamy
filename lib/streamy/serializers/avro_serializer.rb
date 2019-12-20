@@ -15,6 +15,10 @@ module Streamy
         )
       end
 
+      def self.clear_messaging_cache
+        @_messaging = connect_avro
+      end
+
       def self.encode(payload)
         messaging.encode(payload.deep_stringify_keys, schema_name: payload[:type])
       end
