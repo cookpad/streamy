@@ -17,9 +17,8 @@ module Streamy
         )
       end
 
-      def expect_no_event(type:)
-        expect(streamy_deliveries).to have_type_in_payloads
-        expect(streamy_deliveries).not_to have_hash(payload: a_hash_including(type: type.to_s))
+      def expect_no_event(type)
+        expect(streamy_deliveries).not_to include(a_hash_including(type: type.to_s))
       end
 
       def expect_events
@@ -37,14 +36,6 @@ module Streamy
 
         config.before(:each) do
           TestDispatcher.events.clear
-        end
-      end
-
-      RSpec::Matchers.define :have_type_in_payloads do |events_array|
-        match do |events_array|
-          events_array.all? do |event|
-            event[:payload].has_key?(:type)
-          end
         end
       end
     end

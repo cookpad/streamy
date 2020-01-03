@@ -231,12 +231,6 @@ it "does publish an received payment" do
     }
   )
 end
-
-it "does not publish an received payment" do
-  ReceivedPayment.publish
-
-  expect_no_event(type: "received_payment")
-end
 ```
 
 ### Minitest and TestUnit
