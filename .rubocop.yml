@@ -13,13 +13,11 @@ Metrics/LineLength:
   Exclude:
     - spec/**/*
 
-Rails:
-  Enabled: true
+Metrics/ModuleLength:
+  Exclude:
+    - spec/**/*
 
 Naming/AccessorMethodName:
-  Enabled: false
-
-Rails/ActionFilter:
   Enabled: false
 
 Style/Alias:
@@ -69,9 +67,6 @@ Style/CommentAnnotation:
   Enabled: false
 
 Metrics/CyclomaticComplexity:
-  Enabled: false
-
-Rails/Delegate:
   Enabled: false
 
 Style/Documentation:
@@ -141,7 +136,8 @@ Style/ModuleFunction:
   Enabled: false
 
 Style/NegatedIf:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: both
 
 Style/NegatedWhile:
   Enabled: false
@@ -150,9 +146,6 @@ Style/Next:
   Enabled: false
 
 Style/NilComparison:
-  Enabled: false
-
-Style/Not:
   Enabled: false
 
 Style/NumericLiterals:
@@ -171,7 +164,7 @@ Style/PerlBackrefs:
   Enabled: false
 
 Naming/PredicateName:
-  NamePrefixBlacklist:
+  ForbiddenPrefixes:
     - is_
 
 Style/Proc:
@@ -255,7 +248,7 @@ Lint/DeprecatedClassMethods:
 Lint/ElseLayout:
   Enabled: false
 
-Lint/HandleExceptions:
+Lint/SuppressedException:
   Enabled: false
 
 Lint/LiteralInInterpolation:
@@ -267,12 +260,6 @@ Lint/Loop:
 Lint/ParenthesesAsGroupedExpression:
   Enabled: false
 
-Performance/RedundantMerge:
-  Enabled: false
-
-Performance/TimesMap:
-  Enabled: false
-
 Lint/RequireParentheses:
   Enabled: false
 
@@ -280,7 +267,7 @@ Lint/UnderscorePrefixedVariableName:
   Enabled: false
 
 Lint/Void:
-  Enabled: false
+  Enabled: true
 
 Lint/UselessAssignment:
   Exclude:
@@ -306,22 +293,4 @@ Style/PercentLiteralDelimiters:
     "%x": ()
 
 Naming/MemoizedInstanceVariableName:
-  Enabled: false
-
-Rails/Output:
-  Enabled: true
-  Include:
-    - app/**/*.rb
-    - config/**/*.rb
-    - db/**/*.rb
-    - lib/**/*.rb
-    - spec/**/*.rb
-
-Rails/SkipsModelValidations:
-  Enabled: false
-
-Rails/RequestReferer:
-  EnforcedStyle: referrer
-
-Rails/DynamicFindBy:
-  Enabled: false
+  EnforcedStyleForLeadingUnderscores: required
