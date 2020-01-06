@@ -7,6 +7,7 @@ module Streamy
     def setup
       Streamy.configuration.avro_schema_registry_url = "http://registry.example.com"
       Streamy.configuration.avro_schemas_path = "test/fixtures/schemas"
+      Serializers::AvroSerializer.clear_messaging_cache
       FakeConfluentSchemaRegistryServer.clear
       stub_request(:any, /^#{Streamy.configuration.avro_schema_registry_url}/).to_rack(FakeConfluentSchemaRegistryServer)
     end
