@@ -98,7 +98,7 @@ Style/EvenOdd:
 Naming/FileName:
   Enabled: false
 
-Style/FlipFlop:
+Lint/FlipFlop:
   Enabled: false
 
 Style/FormatString:
@@ -120,7 +120,7 @@ Style/IfWithSemicolon:
   Enabled: false
 
 Layout/IndentationConsistency:
-  EnforcedStyle: rails
+  EnforcedStyle: indented_internal_methods
 
 Style/InlineComment:
   Enabled: false
