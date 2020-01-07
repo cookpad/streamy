@@ -10,3 +10,4 @@
 /kcl/
 *.gem
 test.log
+.rubocop-https*
