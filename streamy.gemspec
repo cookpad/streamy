@@ -31,7 +31,7 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 1.14"
+  spec.add_development_dependency "bundler", "~> 2.0"
   spec.add_development_dependency "capybara"
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "minitest-focus"
@@ -43,6 +43,6 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.add_development_dependency "sinatra"
 
   spec.add_dependency "activesupport", ">= 5.2"
-  spec.add_dependency "avro_turf", "~> 0.10.0"
+  spec.add_dependency "avro_turf", "~> 1.3.0"
   spec.add_dependency "webmock", "~> 3.3"
 end
