@@ -1,0 +1,36 @@
+{
+   "type": "record",
+   "name": "test_event_with_schema_namespace",
+   "namespace": "my_namespace",
+   "fields": [
+     {
+       "name": "type",
+       "type": "string"
+     },
+     {
+       "name": "event_time",
+       "type": ["null", "string"],
+       "default": null
+     },
+     {
+       "name": "body",
+       "type": {
+         "type": "record",
+         "name": "body",
+         "namespace": "test_event",
+         "fields": [
+           {
+             "name": "smoked",
+             "type": ["null", "string"],
+             "default": null
+           },
+           {
+             "name": "streaky",
+             "type": ["null", "string"],
+             "default": null
+           }
+         ]
+       }
+     }
+   ]
+}

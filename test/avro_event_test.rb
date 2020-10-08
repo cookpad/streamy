@@ -52,6 +52,12 @@ module Streamy
       def event_time; end
     end
 
+    class TestEventWithSchemaNamespace < TestEvent
+      def schema_namespace
+        "my_namespace"
+      end
+    end
+
     def test_publish
       SecureRandom.stubs(:uuid).returns("IAMUUID")
 
@@ -62,6 +68,19 @@ module Streamy
         topic: :bacon,
         priority: :standard,
         payload: "\u0000\u0000\u0000\u0000\u0000\u0014test_event\u0002\fnowish\u0002\btrue\u0002\nfalse"
+      )
+    end
+
+    def test_publish_event_with_schema_namespace
+      SecureRandom.stubs(:uuid).returns("IAMUUID")
+
+      TestEventWithSchemaNamespace.publish
+
+      assert_delivered_message(
+        key: "IAMUUID",
+        topic: :bacon,
+        priority: :standard,
+        payload: "\u0000\u0000\u0000\u0000\u0000@test_event_with_schema_namespace\u0002\fnowish\u0002\btrue\u0002\nfalse"
       )
     end
 
