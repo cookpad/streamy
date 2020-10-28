@@ -58,6 +58,16 @@ module Streamy
       end
     end
 
+    class TestEventWithSchemaNameAndCustomType < TestEvent
+      def schema_name
+        "test_event_with_schema_name_and_custom_type"
+      end
+
+      def type
+        "my_event_type"
+      end
+    end
+
     def test_publish
       SecureRandom.stubs(:uuid).returns("IAMUUID")
 
@@ -81,6 +91,19 @@ module Streamy
         topic: :bacon,
         priority: :standard,
         payload: "\u0000\u0000\u0000\u0000\u0000@test_event_with_schema_namespace\u0002\fnowish\u0002\btrue\u0002\nfalse"
+      )
+    end
+
+    def test_publish_event_with_schema_name_and_custom_type
+      SecureRandom.stubs(:uuid).returns("IAMUUID")
+
+      TestEventWithSchemaNameAndCustomType.publish
+
+      assert_delivered_message(
+        key: "IAMUUID",
+        topic: :bacon,
+        priority: :standard,
+        payload: "\u0000\u0000\u0000\u0000\u0000\u001Amy_event_type\u0002\fnowish\u0002\btrue\u0002\nfalse"
       )
     end
 
