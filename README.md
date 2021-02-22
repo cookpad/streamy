@@ -1,6 +1,6 @@
 # Streamy
 
-[![Build Status](https://circleci.com/gh/cookpad/streamy/tree/master.svg?style=svg)](https://circleci.com/gh/cookpad/streamy/tree/master)
+[![Build Status](https://circleci.com/gh/cookpad/streamy/tree/main.svg?style=svg)](https://circleci.com/gh/cookpad/streamy/tree/main)
 
 ## Installation
 
