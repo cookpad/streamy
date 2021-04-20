@@ -28,29 +28,14 @@ module Streamy
         "nowish"
       end
 
-      alias_method :raw_payload, :encoded_payload
+      def to_encoded_params
+        OpenStruct.new(to_params.merge(raw_payload: encoded_payload))
+      end
     end
 
     def test_deserialized_message
-      message = TestEvent.new.to_message.stringify_keys
+      message = TestEvent.new.to_encoded_params
       result = Deserializers::AvroDeserializer.new.call(message)
-
-      assert_equal(
-        {
-          "type" => "test_event",
-          "event_time" => "nowish",
-          "body" => {
-            "smoked" => "true",
-            "streaky" => "false"
-          }
-        }, result
-      )
-    end
-
-    def test_deserialized_message_with_custom_payload_source
-      message = TestEvent.new
-      deserializer = Deserializers::AvroDeserializer.new { |message| message.raw_payload }
-      result = deserializer.call(message)
 
       assert_equal(
         {
