@@ -29,7 +29,7 @@ module Streamy
       end
 
       def to_encoded_params
-        OpenStruct.new(to_params.merge(raw_payload: encoded_payload))
+        OpenStruct.new(raw_payload: encoded_payload)
       end
     end
 
