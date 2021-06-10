@@ -27,10 +27,14 @@ module Streamy
       def event_time
         "nowish"
       end
+
+      def to_encoded_params
+        OpenStruct.new(raw_payload: encoded_payload)
+      end
     end
 
     def test_deserialized_message
-      message = TestEvent.new.to_message.stringify_keys
+      message = TestEvent.new.to_encoded_params
       result = Deserializers::AvroDeserializer.new.call(message)
 
       assert_equal(
