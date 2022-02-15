@@ -30,7 +30,7 @@ RSpec.describe Streamy::Helpers::RspecHelper do
 
       expect {
         expect_no_event(type: "type")
-      }.to fail_including("not to have hash [:payload, a hash including {:type => \"type\"}]")
+      }.to fail_including("not to have hash {:payload=>a hash including {:type => \"type\"}}")
     end
   end
 end

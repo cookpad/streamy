@@ -10,7 +10,7 @@ module Streamy
 
       def initialize(config)
         @config = KafkaConfiguration.new(config)
-        @kafka = Kafka.new(@config.kafka)
+        @kafka = Kafka.new(**@config.kafka)
       end
 
       def deliver(key:, topic:, payload:, priority:)
