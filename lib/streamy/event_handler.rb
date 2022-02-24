@@ -2,8 +2,8 @@ require "active_support/core_ext/hash/indifferent_access"
 
 module Streamy
   class EventHandler
-    def self.run(*args)
-      new(*args).run
+    def self.run(**args)
+      new(**args).run
     end
 
     def initialize(params)

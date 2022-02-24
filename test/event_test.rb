@@ -27,6 +27,15 @@ module Streamy
       def event_time; end
     end
 
+    class EventWithRecipe < Event
+      def initialize(recipe_id:)
+      end
+
+      def topic; end
+      def body; end
+      def event_time; end
+    end
+
     def test_helpful_error_message_on_missing_topic
       assert_runtime_error "topic must be implemented on Streamy::EventTest::EventWithoutTopic" do
         EventWithoutTopic.publish
@@ -55,6 +64,12 @@ module Streamy
       OveriddenPriority.publish
 
       assert_published_event(priority: :low)
+    end
+
+    def test_publish_kwargs
+      EventWithRecipe.publish(recipe_id: 22)
+
+      assert_published_event(priority: :standard)
     end
   end
 end

@@ -12,8 +12,8 @@ module Streamy
       self.default_priority = level
     end
 
-    def self.publish(*args)
-      new(*args).publish
+    def self.publish(**args)
+      new(**args).publish
     end
 
     priority :standard
