@@ -5,7 +5,7 @@ module Streamy
     end
 
     def dispatch
-      Streamy.message_bus.deliver(message_params)
+      Streamy.message_bus.deliver(**message_params)
     end
 
     private
