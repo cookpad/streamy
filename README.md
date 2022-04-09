@@ -1,7 +1,5 @@
 # Streamy
 
-[![Build Status](https://circleci.com/gh/cookpad/streamy/tree/main.svg?style=svg)](https://circleci.com/gh/cookpad/streamy/tree/main)
-
 ## Installation
 
 Add this line to your application's Gemfile:
