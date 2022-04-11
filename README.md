@@ -1,5 +1,7 @@
 # Streamy
 
+[![CI](https://github.com/cookpad/streamy/actions/workflows/ci.yml/badge.svg)](https://github.com/cookpad/streamy/actions/workflows/ci.yml)
+
 ## Installation
 
 Add this line to your application's Gemfile:
