@@ -40,6 +40,7 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.add_development_dependency "rake", ">= 12.3.3"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "sinatra"
+  spec.add_development_dependency "utensils"
 
   spec.add_dependency "activesupport", ">= 5.2"
   spec.add_dependency "avro_turf", "~> 1.3.0"
