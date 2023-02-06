@@ -1,30 +1,43 @@
-require "streamy/kafka_configuration"
-require "kafka"
+# require "kafka"
 require "active_support/core_ext/hash/indifferent_access"
 require "active_support/json"
 
 module Streamy
   module MessageBuses
     class KafkaMessageBus < MessageBus
-      delegate :deliver_messages, to: :sync_producer, prefix: true
+      # delegate :deliver_messages, to: :sync_producer, prefix: true
 
-      def initialize(config)
-        @config = KafkaConfiguration.new(config)
-        @kafka = Kafka.new(**@config.kafka)
+      def initialize
+        # @config = KafkaConfiguration.new(config)
+        # @kafka = ::KarafkaApp.new(**@config.kafka)
+        @kafka = Karafka
+
+        # @kafka.setup do |config|
+        #   config.kafka = { 'bootstrap.servers': 'localhost:9092' }
+        # end
       end
 
       def deliver(key:, topic:, payload:, priority:)
         producer(priority).tap do |p|
-          p.produce(payload, key: key, topic: topic)
           case priority
-          when :essential, :standard
-            p.deliver_messages
-          when :batched
-            if p.buffer_size >= batched_message_limit
-              logger.info "Delivering #{p.buffer_size} batched events now"
-              p.deliver_messages
-            end
+          when :essential
+            Karafka.producer.produce_sync(payload: payload, key: key, topic: "#{topic}")
+          when :standard, :low
+            Karafka.producer.produce_async(payload: payload, key: key, topic: "#{topic}")
+          else
+            fail "Unknown priority"
           end
+
+          # p.produce(payload, key: key, topic: topic)
+          # case priority
+          # when :essential, :standard
+          #   p.deliver_messages
+          # when :batched
+          #   if p.buffer_size >= batched_message_limit
+          #     logger.info "Delivering #{p.buffer_size} batched events now"
+          #     p.deliver_messages
+          #   end
+          # end
         end
       end
 
@@ -48,6 +61,17 @@ module Streamy
           end
         end
 
+        def producer(priority)
+          case priority
+          when :essential, :batched
+            return Karafka.producer
+          when :standard, :low
+            Karafka.producer
+          else
+            fail "Unknown priority"
+          end
+        end
+
         def async_producer
           @_async_producer ||= kafka.async_producer(**config.async)
         end
@@ -58,7 +82,13 @@ module Streamy
 
         def sync_producer
           # One synchronous producer per-thread to avoid problems with concurrent deliveries.
-          Thread.current[:streamy_kafka_sync_producer] ||= kafka.producer(**config.producer)
+          Thread.current[:streamy_kafka_sync_producer] ||= build_sync_producer
+        end
+
+        def build_sync_producer
+          kafka.producer.tap do |producer|
+            producer.setup { |config| config.kafka = config }
+          end
         end
 
         def sync_producers
