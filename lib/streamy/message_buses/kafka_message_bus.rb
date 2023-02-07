@@ -1,29 +1,23 @@
 require "streamy/kafka_configuration"
-require "kafka"
 require "active_support/core_ext/hash/indifferent_access"
 require "active_support/json"
 
 module Streamy
   module MessageBuses
     class KafkaMessageBus < MessageBus
-      delegate :deliver_messages, to: :sync_producer, prefix: true
-
       def initialize(config)
         @config = KafkaConfiguration.new(config)
-        @kafka = Kafka.new(**@config.kafka)
       end
 
       def deliver(key:, topic:, payload:, priority:)
         producer(priority).tap do |p|
-          p.produce(payload, key: key, topic: topic)
           case priority
-          when :essential, :standard
-            p.deliver_messages
-          when :batched
-            if p.buffer_size >= batched_message_limit
-              logger.info "Delivering #{p.buffer_size} batched events now"
-              p.deliver_messages
-            end
+          when :essential
+            sync_producer.produce_sync(payload: payload, key: key, topic: "#{topic}")
+          when :standard, :low
+            async_producer.produce_async(payload: payload, key: key, topic: "#{topic}")
+          else
+            fail "Unknown priority"
           end
         end
       end
@@ -35,11 +29,11 @@ module Streamy
 
       private
 
-        attr_reader :kafka, :config
+        attr_reader :producer, :config
 
         def producer(priority)
           case priority
-          when :essential, :batched
+          when :essential
             return sync_producer
           when :standard, :low
             async_producer
@@ -49,7 +43,10 @@ module Streamy
         end
 
         def async_producer
-          @_async_producer ||= kafka.async_producer(**config.async)
+          @async_producer = WaterDrop::Producer.new do |producer_config|
+            # to be **config.async
+            producer_config.kafka = { 'bootstrap.servers': 'localhost:9092' }
+          end
         end
 
         def async_producer?
@@ -58,7 +55,14 @@ module Streamy
 
         def sync_producer
           # One synchronous producer per-thread to avoid problems with concurrent deliveries.
-          Thread.current[:streamy_kafka_sync_producer] ||= kafka.producer(**config.producer)
+          Thread.current[:streamy_kafka_sync_producer] ||= build_sync_producer
+        end
+
+        def build_sync_producer
+          WaterDrop::Producer.new do |producer_config|
+            # to be **config.producer
+            producer_config.kafka = { 'bootstrap.servers': 'localhost:9092' }
+          end
         end
 
         def sync_producers
@@ -69,10 +73,6 @@ module Streamy
 
         def logger
           ::Streamy.logger
-        end
-
-        def batched_message_limit
-          config.producer[:max_buffer_size] - 1
         end
     end
   end
