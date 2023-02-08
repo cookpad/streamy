@@ -90,9 +90,9 @@ module Streamy
       bus.expects(:build_producer).with(
         "bootstrap.servers": "localhost:9092",
         "request.required.acks": -1,
-        "request.timeout.ms": 5,
+        "request.timeout.ms": 5000,
         "message.send.max.retries": 30,
-        "retry.backoff.ms": 2,
+        "retry.backoff.ms": 2000,
         "queue.buffering.max.messages": 10_000,
         "queue.buffering.max.kbytes": 10_000
       ).returns(sync_producer)
@@ -100,16 +100,15 @@ module Streamy
       example_delivery(:essential)
 
       bus.expects(:build_producer).with(
-        max_queue_size: 5_000,
-        delivery_threshold: 100,
-        delivery_interval: 10,
         "bootstrap.servers": "localhost:9092",
         "request.required.acks": -1,
-        "request.timeout.ms": 5,
+        "request.timeout.ms": 5000,
         "message.send.max.retries": 30,
-        "retry.backoff.ms": 2,
+        "retry.backoff.ms": 2000,
         "queue.buffering.max.messages": 10_000,
-        "queue.buffering.max.kbytes": 10_000
+        "queue.buffering.max.kbytes": 10_000,
+        "queue.buffering.max.ms": 10_000,
+        "batch.num.messages": 100,
       ).returns(async_producer)
 
       example_delivery(:standard)
@@ -117,7 +116,7 @@ module Streamy
 
     def test_config_overrides
       @config = {
-        "request.timeout.ms": 2,
+        "request.timeout.ms": 2000,
         "socket.keepalive.enable": true
       }
 
@@ -126,9 +125,9 @@ module Streamy
       bus.expects(:build_producer).with(
         "bootstrap.servers": "localhost:9092",
         "request.required.acks": -1,
-        "request.timeout.ms": 2,
+        "request.timeout.ms": 2000,
         "message.send.max.retries": 30,
-        "retry.backoff.ms": 2,
+        "retry.backoff.ms": 2000,
         "queue.buffering.max.messages": 10_000,
         "queue.buffering.max.kbytes": 10_000,
         "socket.keepalive.enable": true
@@ -137,16 +136,15 @@ module Streamy
       example_delivery(:essential)
 
       bus.expects(:build_producer).with(
-        max_queue_size: 5_000,
-        delivery_threshold: 100,
-        delivery_interval: 10,
         "bootstrap.servers": "localhost:9092",
         "request.required.acks": -1,
-        "request.timeout.ms": 2,
+        "request.timeout.ms": 2000,
         "message.send.max.retries": 30,
-        "retry.backoff.ms": 2,
+        "retry.backoff.ms": 2000,
         "queue.buffering.max.messages": 10_000,
         "queue.buffering.max.kbytes": 10_000,
+        "queue.buffering.max.ms": 10_000,
+        "batch.num.messages": 100,
         "socket.keepalive.enable": true
       ).returns(async_producer)
 
