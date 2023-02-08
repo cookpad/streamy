@@ -13,9 +13,9 @@ module Streamy
         producer(priority).tap do |p|
           case priority
           when :essential
-            sync_producer.produce_sync(payload: payload, key: key, topic: "#{topic}")
+            p.produce_sync(payload: payload, key: key, topic: topic.to_s)
           when :standard, :low
-            async_producer.produce_async(payload: payload, key: key, topic: "#{topic}")
+            p.produce_async(payload: payload, key: key, topic: topic.to_s)
           else
             fail "Unknown priority"
           end
@@ -29,12 +29,12 @@ module Streamy
 
       private
 
-        attr_reader :producer, :config
+        attr_reader :config
 
         def producer(priority)
           case priority
           when :essential
-            return sync_producer
+            sync_producer
           when :standard, :low
             async_producer
           else
@@ -43,10 +43,7 @@ module Streamy
         end
 
         def async_producer
-          @async_producer = WaterDrop::Producer.new do |producer_config|
-            # to be **config.async
-            producer_config.kafka = { 'bootstrap.servers': 'localhost:9092' }
-          end
+          @_async_producer ||= build_async_producer
         end
 
         def async_producer?
@@ -59,9 +56,28 @@ module Streamy
         end
 
         def build_sync_producer
+          build_producer(kafka_config_for(:sync))
+        end
+
+        def build_async_producer
+          build_producer(kafka_config_for(:async))
+        end
+
+        def build_producer(kafka_config)
           WaterDrop::Producer.new do |producer_config|
-            # to be **config.producer
-            producer_config.kafka = { 'bootstrap.servers': 'localhost:9092' }
+            producer_config.logger = Streamy.logger
+            producer_config.kafka = kafka_config
+          end
+        end
+
+        def kafka_config_for(producer_type)
+          case producer_type
+          when :sync
+            config.sync
+          when :async
+            config.async
+          else
+            fail "Unknown producer type"
           end
         end
 

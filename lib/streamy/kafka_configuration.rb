@@ -1,12 +1,13 @@
 module Streamy
   class KafkaConfiguration < SimpleDelegator
     DEFAULT_PRODUCER_CONFIG = {
-      required_acks: -1, # all replicas
-      ack_timeout: 5,
-      max_retries: 30,
-      retry_backoff: 2,
-      max_buffer_size: 10_000,
-      max_buffer_bytesize: 10_000_000
+      "bootstrap.servers": "localhost:9092",
+      "request.required.acks": -1, # all replicas required_acks:
+      "request.timeout.ms": 5, # ack_timeout
+      "message.send.max.retries": 30, # max_retries
+      "retry.backoff.ms": 2, # retry_backoff
+      "queue.buffering.max.messages": 10_000, # max_buffer_size
+      "queue.buffering.max.kbytes": 10_000 # max_buffer_bytesize: 10_000_000
     }.freeze
 
     DEFAULT_ASYNC_CONFIG = {
@@ -15,20 +16,31 @@ module Streamy
       delivery_interval: 10
     }.freeze
 
-    DEFAULT_KAFKA_CONFIG = {
-      logger: Streamy.logger
+    DEFAULT_CLIENT_CONFIG = {
     }.freeze
 
+    SUPPORTED_CLIENT_CONFIG_KEYS = %i(logger max_payload_size max_wait_timeout wait_timeout deliver).freeze
+
     def async
-      slice(*DEFAULT_ASYNC_CONFIG.keys).with_defaults(DEFAULT_ASYNC_CONFIG).merge(producer)
+      # slice(*DEFAULT_ASYNC_CONFIG.keys).with_defaults(DEFAULT_ASYNC_CONFIG).merge(producer)
+
+      sync.with_defaults(DEFAULT_ASYNC_CONFIG)
     end
 
-    def producer
-      slice(*DEFAULT_PRODUCER_CONFIG.keys).with_defaults(DEFAULT_PRODUCER_CONFIG)
+    def sync
+      # slice(*DEFAULT_PRODUCER_CONFIG.keys).with_defaults(DEFAULT_PRODUCER_CONFIG)
+
+      producer_configs.with_defaults(DEFAULT_PRODUCER_CONFIG)
     end
 
-    def kafka
-      except(*async.keys).with_defaults(DEFAULT_KAFKA_CONFIG)
+    def client
+      slice(*SUPPORTED_CLIENT_CONFIG_KEYS).with_defaults(DEFAULT_CLIENT_CONFIG)
     end
+
+    private
+
+      def producer_configs
+        except(*SUPPORTED_CLIENT_CONFIG_KEYS)
+      end
   end
 end
