@@ -11,9 +11,9 @@ module Streamy
     }.freeze
 
     DEFAULT_ASYNC_CONFIG = {
-      max_queue_size: 5_000,
-      delivery_threshold: 100,
-      delivery_interval: 10
+      # max_queue_size: 5_000,
+      # delivery_threshold: 100,
+      # delivery_interval: 10
     }.freeze
 
     DEFAULT_CLIENT_CONFIG = {
