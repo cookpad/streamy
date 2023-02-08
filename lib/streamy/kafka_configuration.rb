@@ -30,11 +30,7 @@ module Streamy
     def sync
       # slice(*DEFAULT_PRODUCER_CONFIG.keys).with_defaults(DEFAULT_PRODUCER_CONFIG)
 
-      producer_configs.with_defaults(DEFAULT_PRODUCER_CONFIG)
-    end
-
-    def client
-      slice(*SUPPORTED_CLIENT_CONFIG_KEYS).with_defaults(DEFAULT_CLIENT_CONFIG)
+      self.with_defaults(DEFAULT_PRODUCER_CONFIG)
     end
 
     private

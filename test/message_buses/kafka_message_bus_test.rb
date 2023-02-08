@@ -118,7 +118,6 @@ module Streamy
     def test_config_overrides
       @config = {
         "request.timeout.ms": 2,
-        max_wait_timeout: 1,
         "socket.keepalive.enable": true
       }
 
@@ -153,32 +152,6 @@ module Streamy
 
       example_delivery(:standard)
     end
-
-    # def test_client_config
-    #   producer_config = {
-    #     max_queue_size: 2,
-    #     delivery_threshold: 2,
-    #     delivery_interval: 2,
-    #     required_acks: 2,
-    #     ack_timeout: 2,
-    #     max_retries: 2,
-    #     retry_backoff: 2,
-    #     max_buffer_size: 2,
-    #     max_buffer_bytesize: 2
-    #   }
-    #
-    #   client_config = {
-    #     logger: Streamy.logger,
-    #     max_payload_size: 1
-    #   }
-    #
-    #   @config = client_config.merge(producer_config)
-    #
-    #   setup
-    #   WaterDrop::Producer.expects(:new).with(client_config).returns(sync_producer)
-    #
-    #   example_delivery(:essential)
-    # end
 
     def test_shutdown
       stub_producers
