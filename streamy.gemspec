@@ -43,7 +43,7 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.add_development_dependency "karafka-testing"
 
   spec.add_dependency "activesupport", ">= 5.2"
-  spec.add_dependency "avro_turf", "~> 1.3.0"
+  spec.add_dependency "avro_turf", "~> 1.8"
   spec.add_dependency "karafka", "~> 2.0"
 
   spec.add_dependency "webmock", "~> 3.3"
