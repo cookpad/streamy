@@ -1,6 +1,7 @@
 require "streamy/kafka_configuration"
 require "active_support/core_ext/hash/indifferent_access"
 require "active_support/json"
+require "active_support/notifications"
 
 module Streamy
   module MessageBuses
@@ -66,7 +67,7 @@ module Streamy
         def build_producer(kafka_config)
           WaterDrop::Producer.new do |producer_config|
             producer_config.logger = Streamy.logger
-            # producer_config.monitor = WaterDrop::Instrumentation::Monitor.new(ActiveSupport::Notifications)
+            producer_config.monitor = WaterDrop::Instrumentation::Monitor.new(::ActiveSupport::Notifications)
             producer_config.kafka = kafka_config
           end
         end
