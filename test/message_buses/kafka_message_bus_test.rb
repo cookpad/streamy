@@ -1,5 +1,5 @@
 require "test_helper"
-require "karafka"
+require "waterdrop"
 require "streamy/message_buses/kafka_message_bus"
 
 module Streamy
@@ -99,7 +99,7 @@ module Streamy
         "request.timeout.ms": 5000,
         "message.send.max.retries": 30,
         "retry.backoff.ms": 2000,
-        "queue.buffering.max.messages": 10_000,
+        "queue.buffering.max.messages": 5_000,
         "queue.buffering.max.kbytes": 10_000,
         "queue.buffering.max.ms": 10_000,
         "batch.num.messages": 100
@@ -133,7 +133,7 @@ module Streamy
         "request.timeout.ms": 2000,
         "message.send.max.retries": 30,
         "retry.backoff.ms": 2000,
-        "queue.buffering.max.messages": 10_000,
+        "queue.buffering.max.messages": 5000,
         "queue.buffering.max.kbytes": 10_000,
         "queue.buffering.max.ms": 10_000,
         "batch.num.messages": 100,
@@ -143,11 +143,17 @@ module Streamy
       example_delivery(:standard)
     end
 
-    def test_shutdown
+    def test_sync_producer_shutdown
       example_delivery(:essential)
-      example_delivery(:standard)
 
       producer.expects(:shutdown)
+
+      bus.shutdown
+    end
+
+    def test_async_producer_shutdown
+      example_delivery(:standard)
+
       producer.expects(:shutdown)
 
       bus.shutdown
