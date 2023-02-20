@@ -30,7 +30,7 @@ module Streamy
   require "streamy/message_buses/message_bus"
 
   class << self
-    attr_accessor :message_bus, :logger, :dispatcher, :notifications_bus
+    attr_accessor :message_bus, :logger, :dispatcher, :notifications_bus, :notifications_bus_namespace
 
     def shutdown
       message_bus.try(:shutdown)
@@ -41,6 +41,7 @@ module Streamy
   self.logger = SimpleLogger.new
   self.dispatcher = Dispatcher
   self.notifications_bus = ::ActiveSupport::Notifications
+  self.notifications_bus_namespace = :kafka
 
   def self.configuration
     @configuration ||= Configuration.new
