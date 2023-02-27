@@ -25,6 +25,8 @@ module Streamy
   require "streamy/errors/event_handler_not_found_error"
   require "streamy/errors/publication_failed_error"
   require "streamy/errors/type_not_found_error"
+  require "streamy/errors/unknown_priority_error"
+  require "streamy/errors/unknown_producer_type_error"
 
   # Message Buses
   require "streamy/message_buses/message_bus"

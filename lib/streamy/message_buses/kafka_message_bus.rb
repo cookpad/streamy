@@ -17,7 +17,7 @@ module Streamy
           when :standard, :low
             p.produce_async(payload: payload, key: key, topic: topic.to_s)
           else
-            fail "Unknown priority"
+            raise ::Streamy::UnknownPriorityError.new(priority)
           end
         end
       end
@@ -38,7 +38,7 @@ module Streamy
           when :standard, :low
             async_producer
           else
-            fail "Unknown priority"
+            raise UnknownPriorityError.new(priority)
           end
         end
 
@@ -65,7 +65,7 @@ module Streamy
 
         def build_producer(kafka_config)
           WaterDrop::Producer.new do |producer_config|
-            producer_config.logger = Streamy.logger
+            producer_config.logger = logger
             producer_config.monitor = WaterDrop::Instrumentation::Monitor.new(
               Streamy.notifications_bus,
               Streamy.notifications_bus_namespace
@@ -81,7 +81,7 @@ module Streamy
           when :async
             config.async
           else
-            fail "Unknown producer type"
+            raise UnknownProducerTypeError.new(producer_type)
           end
         end
 
