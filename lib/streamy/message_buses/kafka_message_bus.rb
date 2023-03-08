@@ -1,29 +1,23 @@
 require "streamy/kafka_configuration"
-require "kafka"
 require "active_support/core_ext/hash/indifferent_access"
 require "active_support/json"
 
 module Streamy
   module MessageBuses
     class KafkaMessageBus < MessageBus
-      delegate :deliver_messages, to: :sync_producer, prefix: true
-
       def initialize(config)
         @config = KafkaConfiguration.new(config)
-        @kafka = Kafka.new(**@config.kafka)
       end
 
       def deliver(key:, topic:, payload:, priority:)
         producer(priority).tap do |p|
-          p.produce(payload, key: key, topic: topic)
           case priority
-          when :essential, :standard
-            p.deliver_messages
-          when :batched
-            if p.buffer_size >= batched_message_limit
-              logger.info "Delivering #{p.buffer_size} batched events now"
-              p.deliver_messages
-            end
+          when :essential
+            p.produce_sync(payload: payload, key: key, topic: topic.to_s)
+          when :standard, :low
+            p.produce_async(payload: payload, key: key, topic: topic.to_s)
+          else
+            raise ::Streamy::UnknownPriorityError.new(priority)
           end
         end
       end
@@ -35,21 +29,21 @@ module Streamy
 
       private
 
-        attr_reader :kafka, :config
+        attr_reader :config
 
         def producer(priority)
           case priority
-          when :essential, :batched
-            return sync_producer
+          when :essential
+            sync_producer
           when :standard, :low
             async_producer
           else
-            fail "Unknown priority"
+            raise UnknownPriorityError.new(priority)
           end
         end
 
         def async_producer
-          @_async_producer ||= kafka.async_producer(**config.async)
+          @_async_producer ||= build_async_producer
         end
 
         def async_producer?
@@ -58,7 +52,37 @@ module Streamy
 
         def sync_producer
           # One synchronous producer per-thread to avoid problems with concurrent deliveries.
-          Thread.current[:streamy_kafka_sync_producer] ||= kafka.producer(**config.producer)
+          Thread.current[:streamy_kafka_sync_producer] ||= build_sync_producer
+        end
+
+        def build_sync_producer
+          build_producer(kafka_config_for(:sync))
+        end
+
+        def build_async_producer
+          build_producer(kafka_config_for(:async))
+        end
+
+        def build_producer(kafka_config)
+          WaterDrop::Producer.new do |producer_config|
+            producer_config.logger = logger
+            producer_config.monitor = WaterDrop::Instrumentation::Monitor.new(
+              Streamy.notifications_bus,
+              Streamy.notifications_bus_namespace
+            )
+            producer_config.kafka = kafka_config
+          end
+        end
+
+        def kafka_config_for(producer_type)
+          case producer_type
+          when :sync
+            config.sync
+          when :async
+            config.async
+          else
+            raise UnknownProducerTypeError.new(producer_type)
+          end
         end
 
         def sync_producers
@@ -69,10 +93,6 @@ module Streamy
 
         def logger
           ::Streamy.logger
-        end
-
-        def batched_message_limit
-          config.producer[:max_buffer_size] - 1
         end
     end
   end
