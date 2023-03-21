@@ -32,7 +32,8 @@ module Streamy
   require "streamy/message_buses/message_bus"
 
   class << self
-    attr_accessor :message_bus, :logger, :dispatcher, :notifications_bus, :notifications_bus_namespace
+    attr_accessor :message_bus, :logger, :dispatcher, :notifications_bus,
+      :notifications_bus_namespace, :max_wait_timeout
 
     def shutdown
       message_bus.try(:shutdown)
@@ -44,6 +45,7 @@ module Streamy
   self.dispatcher = Dispatcher
   self.notifications_bus = ::ActiveSupport::Notifications
   self.notifications_bus_namespace = :kafka
+  self.max_wait_timeout = 5
 
   def self.configuration
     @configuration ||= Configuration.new

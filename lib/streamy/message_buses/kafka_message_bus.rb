@@ -72,6 +72,7 @@ module Streamy
               Streamy.notifications_bus_namespace
             )
             producer_config.kafka = kafka_config
+            producer_config.max_wait_timeout = max_wait_timeout
           end
         end
 
@@ -94,6 +95,10 @@ module Streamy
 
         def logger
           ::Streamy.logger
+        end
+
+        def max_wait_timeout
+          ::Streamy.max_wait_timeout
         end
     end
   end
