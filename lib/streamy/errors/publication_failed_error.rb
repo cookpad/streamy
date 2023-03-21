@@ -4,8 +4,9 @@ module Streamy
 
     def initialize(original_error, event)
       @event_params = event.to_params
-      message = %( Failed publishing event: #{event_params}
-      #{original_error.class} - #{original_error.message}, caused by  #{original_error.try(:cause)}
+      message = %(
+        Failed publishing event: #{event_params}
+        #{original_error.class} - #{original_error.message}, caused by  #{original_error.try(:cause)}
       )
       super message
     end
