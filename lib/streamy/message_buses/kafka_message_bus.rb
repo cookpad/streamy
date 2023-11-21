@@ -24,8 +24,8 @@ module Streamy
       end
 
       def shutdown
-        async_producer.shutdown if async_producer?
-        sync_producers.map(&:shutdown)
+        async_producer.close if async_producer?
+        sync_producers.map(&:close)
       end
 
       private
@@ -48,7 +48,7 @@ module Streamy
         end
 
         def async_producer?
-          @_async_producer.present?
+          !!@_async_producer
         end
 
         def sync_producer
