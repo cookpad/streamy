@@ -146,7 +146,7 @@ module Streamy
     def test_sync_producer_shutdown
       example_delivery(:essential)
 
-      producer.expects(:shutdown)
+      producer.expects(:close)
 
       bus.shutdown
     end
@@ -154,7 +154,7 @@ module Streamy
     def test_async_producer_shutdown
       example_delivery(:standard)
 
-      producer.expects(:shutdown)
+      producer.expects(:close)
 
       bus.shutdown
     end
