@@ -8,6 +8,10 @@ module Streamy
       Streamy.message_bus.deliver(**message_params)
     end
 
+    def self.dispatch_many(events)
+      Streamy.message_bus.deliver_many(events.map(&:to_message))
+    end
+
     private
 
       attr_reader :event
