@@ -16,6 +16,10 @@ module Streamy
       new(**args).publish
     end
 
+    def self.publish_many(events)
+      Streamy.dispatcher.dispatch_many(events)
+    end
+
     priority :standard
 
     def publish

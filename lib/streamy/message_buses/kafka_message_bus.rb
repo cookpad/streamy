@@ -23,6 +23,11 @@ module Streamy
         end
       end
 
+      def deliver_many(messages)
+        messages = messages.map { |message| message.except(:priority) }
+        sync_producer.produce_many_sync(messages)
+      end
+
       def shutdown
         async_producer.close if async_producer?
         sync_producers.map(&:close)
