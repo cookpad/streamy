@@ -45,4 +45,5 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.add_dependency "avro_turf", "~> 1.3.0"
   spec.add_dependency "waterdrop", ">= 2.4.10", "< 3.0.0"
   spec.add_dependency "webmock", "~> 3.3"
+  spec.add_dependency "ostruct"
 end

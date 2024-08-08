@@ -1,6 +1,7 @@
 require "test_helper"
 require "avro_turf/test/fake_confluent_schema_registry_server"
 require "webmock/minitest"
+require "ostruct"
 
 module Streamy
   class AvroDeserializerTest < Minitest::Test
