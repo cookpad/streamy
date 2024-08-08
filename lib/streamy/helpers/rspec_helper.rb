@@ -1,4 +1,4 @@
-require "streamy/helpers/have_hash_matcher"
+require "utensils/have_hash_matcher"
 require "streamy/test_dispatcher"
 
 module Streamy
