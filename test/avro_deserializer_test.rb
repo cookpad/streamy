@@ -1,5 +1,5 @@
 require "test_helper"
-require "avro_turf/test/fake_confluent_schema_registry_server"
+require_relative "support/authorized_fake_confluent_schema_registry_server"
 require "webmock/minitest"
 require "ostruct"
 
@@ -9,8 +9,8 @@ module Streamy
       Streamy.configuration.avro_schema_registry_url = "http://registry.example.com"
       Streamy.configuration.avro_schemas_path = "test/fixtures/schemas"
       Serializers::AvroSerializer.clear_messaging_cache
-      FakeConfluentSchemaRegistryServer.clear
-      stub_request(:any, /^#{Streamy.configuration.avro_schema_registry_url}/).to_rack(FakeConfluentSchemaRegistryServer)
+      stub_request(:any, /^#{Streamy.configuration.avro_schema_registry_url}/).to_rack(AuthorizedFakeConfluentSchemaRegistryServer)
+      AuthorizedFakeConfluentSchemaRegistryServer.clear
     end
 
     class TestEvent < AvroEvent
