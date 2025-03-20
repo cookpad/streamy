@@ -88,7 +88,7 @@ module Streamy
       exception = assert_raises Streamy::PublicationFailedError do
         IncorrectAttributeEvent.publish
       end
-      assert_match("Avro::IO::AvroTypeError", exception.message)
+      assert_match("Avro::SchemaValidator::ValidationError", exception.message)
     end
 
     def test_helpful_error_message_on_event_with_no_schema
